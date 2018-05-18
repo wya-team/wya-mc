@@ -25,5 +25,5 @@
 
 ### 其他
 1. [iconfont项目地址](http://www.iconfont.cn/manage/index?manage_type=myprojects&projectId=672234)
-2. `icon` 图标命名尽可能采用简单易懂的英文
-3. 添加图标方法：打开 `iconfont` 生成的链接，将内容复制到 `wxss` 文件中
+2. `icon` 图标命名尽可能采用简单易懂的英文
+3. 添加图标方法：打开 `iconfont` 生成的链接，将内容复制到 `wxss` 文件中
