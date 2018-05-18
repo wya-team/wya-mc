@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "Icon 图标",
+    "usingComponents": {
+        "icon": "../../components/icon/index"
+    }
+}

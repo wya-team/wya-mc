@@ -2,4 +2,7 @@
     <navigator class="g-btn" url="/pages/popup/popup">
         Pop弹窗
     </navigator>
+    <navigator class="g-btn" url="/pages/icon/icon">
+        ICON
+    </navigator>
 </view>

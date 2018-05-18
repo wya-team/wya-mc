@@ -1,16 +1,38 @@
 /* 
  * flex 
  */
+ .g-flex {
+    display: flex;
+ }
+ .g-flex-ac {
+    display: flex;
+    align-items: center;
+ }
 .g-flex-cc {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .g-fd-c {
     flex-direction: column;
 }
+.g-jc-sa {
+    justify-content: space-around;;
+}
 
+/**
+ * color
+ */
+.g-black {
+    color: #000 !important;
+}
+
+/**
+ * padding
+ */
+.g-pd-20 {
+    padding: 20rpx;
+}
 
 .g-btn {
     background-color: #fff;

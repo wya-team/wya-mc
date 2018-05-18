@@ -1,7 +1,8 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/popup/popup"
+        "pages/popup/popup",
+        "pages/icon/icon"
     ],
     "window": {
       "navigationBarBackgroundColor": "#FAFAFA",
