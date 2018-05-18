@@ -6,13 +6,8 @@ Component({
             type: Boolean,
             value: false
         },
-        // 是否有遮罩层
+        // 是否显示遮罩层
         mask: {
-            type: Boolean,
-            value: true
-        },
-        // 遮罩层是否会显示
-        showMask: {
             type: Boolean,
             value: true
         },

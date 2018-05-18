@@ -2,9 +2,8 @@
     class="pop pop-{{ type }} {{ show ? 'pop-show' : '' }}"
     animation="{{show ? showAnimation : hideAnimation}}"
 >
-    <view 
-        wx:if="{{ mask }}"
-        class="_mask {{ showMask ? '' : '_mask-hide' }}"
+    <view
+        class="_mask {{ mask ? '' : '_mask-hide' }}"
         bind:tap="handleClickMask" 
     />
     <view class="_container">

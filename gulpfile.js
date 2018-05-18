@@ -134,7 +134,7 @@ gulp.task('wxss', () => {
 });
 gulp.task('wxss:components', () => {
 	let combined = combiner.obj([
-		gulp.src(['./example/**/*.{wxss,sass}', '!./example/styles/**']),
+		gulp.src(['./components/**/*.{wxss,sass}', '!./components/styles/**']),
 		sass().on('error', sass.logError),
 		autoprefixer([
 			'iOS >= 8',
