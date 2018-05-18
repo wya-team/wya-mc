@@ -3,15 +3,15 @@
 #### 参数
 | 参数       | 说明      | 类型       | 默认值       | 必传      |
 |-----------|-----------|-----------|-------------|-------------|
-| show | 是否显示弹出层 | Boolean | false | false |
-| mask | 是否显示遮罩层 | Boolean | true | false |
-| maskClosable | 点击蒙层是否允许触发close事件 | Boolean | true | false |
-| type | 从哪个方向弹出, 可选`center`, `left`, `right`, `top`, `bottom` | String | center | false |
+| show | 是否显示弹出层 | Boolean | false | 否 |
+| mask | 是否显示遮罩层 | Boolean | true | 否 |
+| maskClosable | 点击蒙层是否允许触发close事件 | Boolean | true | 否 |
+| type | 从哪个方向弹出, 可选`center`, `left`, `right`, `top`, `bottom` | String | center | 否 |
 
 #### 事件
 | 事件名       | 说明      | 参数       |
 |-----------|-----------|-----------|
-| click-mask | 点击蒙层时触发 | |
+| clickMask | 点击蒙层时触发 | |
 | close | 蒙层关闭时触发 | |
 
 ### 使用指南

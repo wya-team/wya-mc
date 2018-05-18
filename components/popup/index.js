@@ -24,7 +24,7 @@ Component({
 
   methods: {
     handleMaskClick() {
-      this.triggerEvent('click-mask', {});
+      this.triggerEvent('clickMask', {});
 
       if (!this.data.maskClosable) {
         return;

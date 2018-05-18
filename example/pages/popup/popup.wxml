@@ -16,7 +16,7 @@
 <popup
 	show="{{ showPopup }}"
 	type="center"
-	bindclose="togglePopup"
+	bind:close="togglePopup"
 >
 	<view class="g-flex-cc" style="width: 100vw">
     <view style="background: #fff; height: 50vh; width: 80vw">从中间弹出Popup</view>
@@ -25,28 +25,28 @@
 <popup
 	show="{{ showTopPopup }}"
 	type="top"
-	bindclose="toggleTopPopup"
+	bind:close="toggleTopPopup"
 >
 	<view style="background: #fff; height: 50vh; width: 100vw">从顶部弹出Popup</view>
 </popup>
 <popup
 	show="{{ showRightPopup }}"
 	type="right"
-	bindclose="toggleRightPopup"
+	bind:close="toggleRightPopup"
 >
 	<view style="background: #fff; height: 100vh; width: 75vw">从右侧弹出Popup</view>
 </popup>
 <popup
 	show="{{ showBottomPopup }}"
 	type="bottom"
-	bindclose="toggleBottomPopup"
+	bind:close="toggleBottomPopup"
 >
 	<view style="background: #fff; height: 50vh; width: 100vw">从底部弹出Popup</view>
 </popup>
 <popup
 	show="{{ showLeftPopup }}"
 	type="left"
-	bindclose="toggleLeftPopup"
+	bind:close="toggleLeftPopup"
 >
 	<view style="background: #fff; height: 100vh; width: 75vw">从左侧弹出Popup</view>
 </popup>

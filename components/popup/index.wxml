@@ -2,7 +2,7 @@
   show="{{ show }}"
   type="{{ type }}"
   showMask="{{ mask }}"
-  bindclickmask="handleMaskClick"
+  bind:clickMask="handleMaskClick"
 >
   <slot></slot>
 </pop-manager>

@@ -28,7 +28,7 @@ Component({
     },
     methods: {
         handleClickMask() {
-            this.triggerEvent('clickmask', {});
+            this.triggerEvent('clickMask', {});
         }
     }
 });

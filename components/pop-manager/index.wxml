@@ -5,7 +5,7 @@
     <view 
         wx:if="{{ mask }}"
         class="_mask {{ showMask ? '' : '_mask-hide' }}"
-        bindtap="handleClickMask" 
+        bind:tap="handleClickMask" 
     />
     <view class="_container">
         <slot></slot>
