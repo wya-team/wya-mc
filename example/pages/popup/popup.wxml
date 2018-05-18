@@ -1,0 +1,9 @@
+<view bindtap="togglePopup">
+    Popup
+</view>
+<popup
+  show="{{ showPopup }}"
+  type="top"
+>
+<view style="background: #fff; height: 100rpx; width: 100%">222</view>
+</popup>

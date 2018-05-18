@@ -1,0 +1,1 @@
+<view class="pop pop-{{ type }} {{ show ? 'pop-show' : '' }}"><view wx:if="{{ overlay }}" class="_mask {{ showOverlay ? '' : '_mask-hide' }}" bindtap="handleClickMask"/><view class="_container"><slot></slot></view></view>

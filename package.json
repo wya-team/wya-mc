@@ -6,14 +6,14 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "npm run all",
+    "build": "gulp build",
     "serve": "rm -rf ./dist/ && gulp dev",
-    "lint": "esw ./components/ gulpfile.js",
+    "lint": "esw ./example/ gulpfile.js",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
     "all": "npm-run-all --parallel --race --continue-on-error lint:watch serve",
     "lint-staged": "lint-staged",
-    "prompt": "node ./prompt.config.js",
     "pre-commit:install": "cp .hooks/* .git/hooks/"
   },
   "repository": {
