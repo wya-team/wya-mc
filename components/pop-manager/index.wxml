@@ -1,0 +1,13 @@
+<view
+    class="pop pop-{{ type }} {{ show ? 'pop-show' : '' }}"
+    animation="{{show ? showAnimation : hideAnimation}}"
+>
+    <view 
+        wx:if="{{ mask }}"
+        class="_mask {{ showMask ? '' : '_mask-hide' }}"
+        bindtap="handleClickMask" 
+    />
+    <view class="_container">
+        <slot></slot>
+    </view>
+</view>

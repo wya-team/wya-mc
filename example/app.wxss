@@ -1,0 +1,23 @@
+/* 
+ * flex 
+ */
+.g-flex-cc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.g-fd-c {
+    flex-direction: column;
+}
+
+
+.g-btn {
+    background-color: #fff;
+    border: 1px solid #d4d4d4;
+    width: 80vw;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    border-radius: 20rpx;
+}

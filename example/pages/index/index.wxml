@@ -1,0 +1,5 @@
+<view class="g-flex-cc g-fd-c">
+    <navigator class="g-btn" url="/pages/popup/popup">
+        Pop弹窗
+    </navigator>
+</view>

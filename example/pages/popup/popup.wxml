@@ -1,9 +1,52 @@
-<view bindtap="togglePopup">
-    Popup
+<view class="g-btn" bindtap="togglePopup">
+		从中间弹出Popup
+</view>
+<view class="g-btn" bindtap="toggleTopPopup">
+		从顶部弹出Popup
+</view>
+<view class="g-btn" bindtap="toggleRightPopup">
+		从右侧弹出Popup
+</view>
+<view class="g-btn" bindtap="toggleBottomPopup">
+		从底部弹出Popup
+</view>
+<view class="g-btn" bindtap="toggleLeftPopup">
+		从左侧弹出Popup
 </view>
 <popup
-  show="{{ showPopup }}"
-  type="top"
+	show="{{ showPopup }}"
+	type="center"
+	bindclose="togglePopup"
 >
-<view style="background: #fff; height: 100rpx; width: 100%">222</view>
+	<view class="g-flex-cc" style="width: 100vw">
+    <view style="background: #fff; height: 50vh; width: 80vw">从中间弹出Popup</view>
+  </view>
+</popup>
+<popup
+	show="{{ showTopPopup }}"
+	type="top"
+	bindclose="toggleTopPopup"
+>
+	<view style="background: #fff; height: 50vh; width: 100vw">从顶部弹出Popup</view>
+</popup>
+<popup
+	show="{{ showRightPopup }}"
+	type="right"
+	bindclose="toggleRightPopup"
+>
+	<view style="background: #fff; height: 100vh; width: 75vw">从右侧弹出Popup</view>
+</popup>
+<popup
+	show="{{ showBottomPopup }}"
+	type="bottom"
+	bindclose="toggleBottomPopup"
+>
+	<view style="background: #fff; height: 50vh; width: 100vw">从底部弹出Popup</view>
+</popup>
+<popup
+	show="{{ showLeftPopup }}"
+	type="left"
+	bindclose="toggleLeftPopup"
+>
+	<view style="background: #fff; height: 100vh; width: 75vw">从左侧弹出Popup</view>
 </popup>
