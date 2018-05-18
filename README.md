@@ -1,6 +1,6 @@
 # wya-mc
 微一案小程序组件库（Mini Program）
-## 下载
+## 下载
 ``` bash
 git clone https://github.com/youzan/zanui-weapp.git
 ```
