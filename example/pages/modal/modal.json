@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "Modal 弹出框",
+    "usingComponents": {
+        "modal": "../../components/modal/index"
+    }
+}

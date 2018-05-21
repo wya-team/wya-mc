@@ -2,7 +2,8 @@
     "pages": [
         "pages/index/index",
         "pages/popup/popup",
-        "pages/icon/icon"
+        "pages/icon/icon",
+        "pages/modal/modal"
     ],
     "window": {
       "navigationBarBackgroundColor": "#FAFAFA",

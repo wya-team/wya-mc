@@ -1,0 +1,16 @@
+<view class="g-btn" bind:tap="toggleModal">
+	modal
+</view>
+
+<modal 
+    show="{{show}}"
+    title="弹出框"
+    maskClosable="{{true}}"
+    isTip="{{true}}"
+    bind:close="toggleModal"
+    bind:ok="toggleModal"
+>
+    <view>
+        lalallalallala
+    </view>
+</modal>

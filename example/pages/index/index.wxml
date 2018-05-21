@@ -5,4 +5,7 @@
     <navigator class="g-btn" url="/pages/icon/icon">
         ICON
     </navigator>
+    <navigator class="g-btn" url="/pages/modal/modal">
+        Modal
+    </navigator>
 </view>
