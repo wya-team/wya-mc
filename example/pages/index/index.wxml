@@ -8,4 +8,7 @@
     <navigator class="g-btn" url="/pages/modal/modal">
         Modal
     </navigator>
+    <navigator class="g-btn" url="/pages/toast/toast">
+        Toast
+    </navigator>
 </view>

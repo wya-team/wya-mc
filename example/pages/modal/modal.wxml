@@ -1,16 +1,32 @@
 <view class="g-btn" bind:tap="toggleModal">
-	modal
+	当个按钮
+</view>
+
+<view class="g-btn" bind:tap="toggleDobuleModal">
+	两个按钮
 </view>
 
 <modal 
     show="{{show}}"
-    title="弹出框"
+    title="单个按钮弹出框"
     maskClosable="{{true}}"
     isTip="{{true}}"
     bind:close="toggleModal"
     bind:ok="toggleModal"
 >
     <view>
-        lalallalallala
+        单个按钮弹出框
+    </view>
+</modal>
+
+<modal 
+    show="{{showDobule}}"
+    title="两个按钮弹出框"
+    maskClosable="{{true}}"
+    bind:close="toggleDobuleModal"
+    bind:ok="toggleDobuleModal"
+>
+    <view>
+        两个按钮弹出框
     </view>
 </modal>
