@@ -14,7 +14,7 @@ const getPageCtx = () => {
     return ctx;
 }
 
-const Toast = (options = {}) => {
+const Toast = (options = {}, timeout) => {
     if (typeof options === 'string') {
         options = { message: options };
     }
@@ -61,17 +61,15 @@ Toast.clear = function () {
 Toast.loading = function (options = {}, timeout) {
     Toast({
         ...options,
-        timeout,
         type: 'loading'
-    });
+    },  timeout);
 };
 // 显示 success
 Toast.success = function (options = {}, timeout) {
     Toast({
         ...options,
-        timeout,
         type: 'success'
-    });
+    },  timeout);
 };
 // 显示 fail
 Toast.fail = function (options = {}, timeout) {
@@ -79,7 +77,7 @@ Toast.fail = function (options = {}, timeout) {
         ...options,
         timeout,
         type: 'fail'
-    });
+    },  timeout);
 };
 
 export default Toast;

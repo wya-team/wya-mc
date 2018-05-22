@@ -13,7 +13,7 @@
 #### 方法
 | 方法名       | 参数      | 返回值       | 介绍 |
 |-----------|-----------|-----------|-----------|
-| Toast | `options` | - | 展示提示 | 
+| Toast | `options`  `timeout` | - | 展示提示 | 
 | Toast.loading | `options`  `timeout` | - | 展示加载提示 |
 | Toast.success | `options`  `timeout` | - | 展示成功提示 |
 | Toast.fail | `options`  `timeout` | - | 展示失败提示 |
