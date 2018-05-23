@@ -2,7 +2,7 @@
 微一案小程序组件库（Mini Program）
 ## 下载
 ``` bash
-git clone https://github.com/youzan/zanui-weapp.git
+git clone https://github.com/wya-team/wya-mc.git
 ```
 
 ## 开发&预览
