@@ -1,0 +1,19 @@
+<view style="padding: 20rpx">
+    <countdown mode="DD天hh时mm分ss秒" id="day_text" bind:end="handleEnd"/>
+</view>
+
+<view style="padding: 20rpx">
+    <countdown mode="hh:mm:ss" id="hour_code" bind:end="handleEnd" is-listen="{{true}}" bind:listen="handleListen" />
+</view>
+
+<view style="padding: 20rpx">
+    <countdown mode="hh时mm分ss秒" id="hour_text" bind:end="handleEnd" />
+</view>
+
+<view style="padding: 20rpx">
+    <countdown mode="mm:ss" id="min_code" bind:end="handleEnd" />
+</view>
+
+<view style="padding: 20rpx">
+    <countdown mode="mm分ss秒" id="sec_text" bind:end="handleEnd" />
+</view>

@@ -14,4 +14,7 @@
     <navigator class="g-btn" url="/pages/notice/notice">
         Notice
     </navigator>
+    <navigator class="g-btn" url="/pages/countdown/countdown">
+        倒计时
+    </navigator>
 </view>
