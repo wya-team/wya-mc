@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "Notice 滚动提示",
+    "usingComponents": {
+        "notice": "../../components/notice/index"
+    }
+}

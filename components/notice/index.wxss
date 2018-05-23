@@ -1,0 +1,42 @@
+.notice-bar {
+    display: flex;
+    padding: 18rpx 20rpx;
+    font-size: 24rpx;
+    line-height: 1.5;
+}
+.notice-bar-within-right-icon {
+    position: relative;
+    padding-right: 60rpx;
+}
+.notice-bar-within-left-icon {
+    position: relative;
+    padding-left: 55rpx;
+}
+
+.notice-bar ._left-icon {
+    position: absolute;
+    top: 20rpx;
+    left: 15rpx;
+    font-size: 30rpx;
+    line-height: 1;
+}
+
+.notice-bar ._right-icon {
+    position: absolute;
+    top: 20rpx;
+    right: 20rpx;
+    font-size: 30rpx;
+    line-height: 1;
+}
+
+.notice-bar ._content-wrap {
+    position: relative;
+    flex: 1;
+    height: 36rpx;
+    overflow: hidden;
+}
+
+.notice-bar ._content {
+    position: absolute;
+    white-space: nowrap;
+}

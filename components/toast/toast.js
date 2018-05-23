@@ -75,9 +75,8 @@ Toast.success = function (options = {}, timeout) {
 Toast.fail = function (options = {}, timeout) {
     Toast({
         ...options,
-        timeout,
         type: 'fail'
-    },  timeout);
+    }, timeout);
 };
 
 export default Toast;

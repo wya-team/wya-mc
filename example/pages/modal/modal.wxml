@@ -9,8 +9,8 @@
 <modal 
     show="{{show}}"
     title="单个按钮弹出框"
-    maskClosable="{{true}}"
-    isTip="{{true}}"
+    mask-closable="{{true}}"
+    is-tip="{{true}}"
     bind:close="toggleModal"
     bind:ok="toggleModal"
 >
@@ -22,7 +22,7 @@
 <modal 
     show="{{showDobule}}"
     title="两个按钮弹出框"
-    maskClosable="{{true}}"
+    mask-closable="{{true}}"
     bind:close="toggleDobuleModal"
     bind:ok="toggleDobuleModal"
 >

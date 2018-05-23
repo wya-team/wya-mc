@@ -11,4 +11,7 @@
     <navigator class="g-btn" url="/pages/toast/toast">
         Toast
     </navigator>
+    <navigator class="g-btn" url="/pages/notice/notice">
+        Notice
+    </navigator>
 </view>
