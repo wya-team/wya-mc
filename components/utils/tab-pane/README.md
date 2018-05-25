@@ -36,4 +36,4 @@
 ```
 
 ### Tip
-使用时需搭配 [tab](https://github.com/wya-team/wya-mc/blob/master/components/tab/READNME.md) 组件才有效
+使用时需搭配 [tab](https://github.com/wya-team/wya-mc/blob/master/components/tabs/README.md) 组件才有效
