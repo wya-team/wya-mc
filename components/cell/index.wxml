@@ -7,7 +7,6 @@
 			<view wx:if="{{ label }}" class="__label">{{ label }}</view>
 		</view>
 		<view wx:if="{{ value }}" class="__title">{{ value }}</view>
-		
 	</view>
 
 </view>

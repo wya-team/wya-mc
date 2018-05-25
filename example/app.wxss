@@ -47,6 +47,10 @@ page {
     padding-left: 20rpx;
     padding-right: 20rpx;
 }
+.g-pd-tb-20 {
+    padding-top: 20rpx;
+    padding-bottom: 20rpx;
+}
 
 /**
  * margin
@@ -54,6 +58,7 @@ page {
 .g-m-r-10 {
     margin-right: 10rpx;
 }
+
 
 /**
  * btn按钮

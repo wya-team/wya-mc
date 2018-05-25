@@ -27,4 +27,4 @@ npm run start
 
 ## 规范
 1. 在组件中定义属性采用小驼峰`aB`，在使用组件时采用`a-b`
-2. 外部传入的类名是classes、外部传入的样式使用styles
+2. 外部传入的类名使用classes、外部传入的样式使用styles

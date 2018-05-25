@@ -8,7 +8,8 @@
 		"pages/notice/notice",
 		"pages/countdown/countdown",
 		"pages/tab/tab",
-		"pages/cell/cell"
+		"pages/cell/cell",
+		"pages/notes/notes"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#FAFAFA",

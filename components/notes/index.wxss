@@ -1,0 +1,7 @@
+.notes {
+    font-size: 24rpx;
+    color: #999999;
+    line-height: 36rpx;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+}

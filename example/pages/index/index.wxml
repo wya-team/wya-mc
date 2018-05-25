@@ -20,7 +20,10 @@
     <navigator class="g-btn" url="/pages/tab/tab">
         Tabs
     </navigator>
-     <navigator class="g-btn" url="/pages/cell/cell">
+    <navigator class="g-btn" url="/pages/cell/cell">
         Cell
+    </navigator>
+    <navigator class="g-btn" url="/pages/notes/notes">
+        notes
     </navigator>
 </view>
