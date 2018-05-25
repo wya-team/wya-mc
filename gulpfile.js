@@ -194,10 +194,14 @@ gulp.task('scriptsPro', () => {
 gulp.task('dev', ['clean', 'move'], () => {
 	runSequence(
 		'json',
+		'json:components',
 		'assets',
 		'templates',
+		'templates:components',
 		'wxss',
+		'wxss:components',
 		'scripts',
+		'scripts:components',
 		'watch',
 		'watch:components',
 	);
