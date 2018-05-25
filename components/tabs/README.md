@@ -38,4 +38,4 @@
 ```
 
 ### Tip
-使用时需搭配 [tab-pane](https://github.com/wya-team/wya-mc/blob/master/components/tab-pane/READNME.md) 组件才有效
+使用时需搭配 [tab-pane](https://github.com/wya-team/wya-mc/blob/master/components/utils/tab-pane/READNME.md) 组件才有效
