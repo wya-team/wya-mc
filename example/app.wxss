@@ -20,7 +20,7 @@ page {
     flex-direction: column;
 }
 .g-jc-sa {
-    justify-content: space-around;;
+    justify-content: space-around;
 }
 
 /**
