@@ -3,17 +3,18 @@
 ### API
 
 #### options的具体参数
-| 参数       | 说明                 | 类型             | 默认值          | 可选值                                      | 必传   |
-| -------- | ------------------ | -------------- | ------------ | ---------------------------------------- | ---- |
-| title    | 标题                 | String         | -            | -                                        | 是    |
-| value    | 详细信息               | String         | -            | -                                        | -    |
-| label    | 标题下方的附加描述          | String         | -            | -                                        | -    |
-| isLink   | 显示右箭头              | Boolean/String | -            | -                                        | -    |
-| linkType | 链接类型               | String         | `navigateTo` | `navigateTo` `redirectTo` `switchTab` `reLaunch` | -    |
-| url      | 跳转路由，要带上isLink才起作用 | String         | -            |                                          | -    |
-| extra    | 额外文字，右箭头左侧文字       | String         | -            | -                                        | -    |
-| classes  | 外部传入的类名            | String         | -            | -                                        | -    |
-| styles   | 外部传入的行内样式          | String         | -            | -                                        | -    |
+| 参数       | 说明                 | 类型             | 默认值          | 可选值       |
+| -------- | ------------------ | -------------- | ------------ | --------- |
+| title    | 标题                 | String         | -            |           |
+| value    | 详细信息               | String         | -            |           |
+| label    | 标题下方的附加描述          | String         | -            |           |
+| isLink   | 显示右箭头              | Boolean/String | -            |           |
+| linkType | 链接类型               | String         | `navigateTo` |           |
+| url      | 跳转路由，要带上isLink才起作用 | String         | -            |           |
+| extra    | 额外文字，右箭头左侧文字       | String         | -            |           |
+| classes  | 外部传入的类名            | String         | -            |           |
+| styles   | 外部传入的行内样式          | String         | -            |           |
+| slot     | 插槽，左侧icon或者右侧输入框   | dom            |              | icon、form |
 
 #### 方法
 

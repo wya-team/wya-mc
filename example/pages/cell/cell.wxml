@@ -17,7 +17,7 @@
 <view class="g-m-t-10">
     <notes>带左边 icon 的 cell</notes>
     <cell title="我是标题" value="详细信息">
-      <icon type="success" classes="g-m-r-10"/>
+      <icon type="success" classes="g-m-r-10" slot="icon"/>
     </cell>
 </view>
 
@@ -49,4 +49,11 @@
 	></cell>
 </view>
 
-
+<view class="g-m-t-10">
+    <notes>表单单元格</notes>
+    <cell 
+		title="我是标题"
+	>
+        <input slot="form" placeholder="请输入内容"/>
+    </cell>
+</view>
