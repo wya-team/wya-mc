@@ -1,6 +1,6 @@
 Component({
     relations: {
-        '../tabs/index': {
+        '../../tabs/index': {
             type: 'parent', // 关联的目标节点为父节点
             linked(target) {
                 // 每次有tab被插入时执行，target是该节点实例对象，触发在该节点attached生命周期之后

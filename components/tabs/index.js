@@ -3,7 +3,7 @@ Component({
         multipleSlots: true // 支持多slot
     },
     relations: {
-        '../tab-pane/index': {
+        '../utils/tab-pane/index': {
             type: 'child', // 关联的目标节点为子节点
             linked(target) {
                 // 每次有tab-pane被插入时执行，target是该节点实例对象，触发在该节点attached生命周期之后
@@ -40,7 +40,6 @@ Component({
         this.setData({
             currentIndex: this._getCurrentIndex()
         });
-        console.log(this.data.currentIndex)
     },
     data: {
         nodes: [],
@@ -48,7 +47,7 @@ Component({
     },
     methods: {
         _getAllTabPane() {
-            const nodes = this.getRelationNodes('../tab-pane/index');
+            const nodes = this.getRelationNodes('../utils/tab-pane/index');
             this.setData({nodes: this._formatNodes(nodes)});
         },
         _formatNodes(nodes) {
