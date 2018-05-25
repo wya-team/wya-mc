@@ -9,6 +9,8 @@
 | scrollable | 是否允许滚动（tab过多时可开启） | Boolean | false | 否 |
 | fixed | tab栏是否采用绝对定位到顶部 | Boolean | false | 否 |
 | height | tab栏的高度 | Number | 90 | 否 |
+| tab-class | tab的样式 | - | - | 否 |
+| active-class | 被选中的tab的样式 | - | - | 否 |
 
 ### 使用指南
 在`.josn`文件中引入组件
