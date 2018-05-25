@@ -4,13 +4,13 @@ page {
 /* 
  * flex 
  */
- .g-flex {
+.g-flex {
     display: flex;
- }
- .g-flex-ac {
+}
+.g-flex-ac {
     display: flex;
     align-items: center;
- }
+}
 .g-flex-cc {
     display: flex;
     align-items: center;
