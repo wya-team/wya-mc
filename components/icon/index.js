@@ -9,7 +9,7 @@ Component({
 			value: ''
 		}
 	},
-	externalClasses: ["icon-class"],
+	externalClasses: ["classes"],
 	methods: {
 		handleClick() {
 			this.triggerEvent('click', {}, {});

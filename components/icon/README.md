@@ -3,11 +3,11 @@
 ### API
 
 #### 参数
-| 参数         | 说明      | 类型     | 默认值  | 必传   |
-| ---------- | ------- | ------ | ---- | ---- |
-| type       | 图标类型    | String |      | 是    |
-| icon-class | 外部传入的样式 | String |      | 否    |
-| styles     | 外部传入的样式 | String |      | 否    |
+| 参数      | 说明        | 类型     | 默认值  | 必传   |
+| ------- | --------- | ------ | ---- | ---- |
+| type    | 图标类型      | String |      | 是    |
+| classes | 外部传入的类名   | String |      | 否    |
+| styles  | 外部传入的行内样式 | String |      | 否    |
 
 #### 事件
 | 事件名   | 说明       | 参数   |
@@ -15,7 +15,7 @@
 | click | 点击图标时时触发 |      |
 
 ### 使用指南
-在`.josn`文件中引入组件
+在`.json`文件中引入组件
 ```json
 {
   "usingComponents": {
@@ -27,7 +27,7 @@
 在`.wxml`文件中使用组件
 
 ```html
-<icon type="success" styles="color:red" icon-class="g-pd-lr-20"/>
+<icon type="success" styles="color:red" classes="g-pd-20"/>
 ```
 
 ### 其他
