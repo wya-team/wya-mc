@@ -6,7 +6,8 @@
         "pages/modal/modal",
         "pages/toast/toast",
         "pages/notice/notice",
-        "pages/countdown/countdown"
+        "pages/countdown/countdown",
+        "pages/tab/tab"
     ],
     "window": {
       "navigationBarBackgroundColor": "#FAFAFA",

@@ -17,4 +17,7 @@
     <navigator class="g-btn" url="/pages/countdown/countdown">
         倒计时
     </navigator>
+    <navigator class="g-btn" url="/pages/tab/tab">
+        Tabs
+    </navigator>
 </view>
