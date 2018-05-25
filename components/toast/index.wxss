@@ -6,27 +6,27 @@
     transform: translate3d(-50%, -50%, 0);
     background: rgba(0, 0, 0, 0.7);
     color: #fff;
-    font-size: 14px;
+    font-size: 28rpx;
     line-height: 1.5em;
     margin: 0 auto;
     box-sizing: border-box;
-    padding: 10px 18px;
+    padding: 20rpx 36rpx;
     text-align: center;
-    border-radius: 4px;
+    border-radius: 8rpx;
     z-index: 100;
 }
 .toast-notitle {
-    padding: 18px;
+    padding: 36rpx;
 }
   
 .__icon {
     display: block;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    width: 80rpx;
+    height: 80rpx;
+    line-height: 80rpx;
     margin: 0 auto;
-    padding: 12px 15px;
-    font-size: 38px;
+    padding: 24rpx 30rpx;
+    font-size: 76rpx;
     text-align: center;
     color: #ffffff;
 }
@@ -37,8 +37,8 @@
 }
 
 .__loading {
-    width:20px;
-    height:20px;
+    width:40rpx;
+    height:40rpx;
     display: inline-block;
     vertical-align: middle;
     animation: weuiLoading 1s steps(12, end) infinite;
@@ -47,6 +47,6 @@
 }
 
 .__icon-loading .__loading {
-    width: 40px;
-    height: 40px;
+    width: 80rpx;
+    height: 80rpx;
 }
