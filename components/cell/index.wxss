@@ -1,7 +1,7 @@
 .cell {
-    padding-left: 20rpx;
-    padding-right: 20rpx;
+    padding:10rpx 20rpx;
     background-color: #ffffff;
+    border-bottom: 1rpx solid #f0f0f0;
     .__item {
         display: flex;
         justify-content: space-between;
@@ -18,5 +18,26 @@
         width: 100%;
         color: #999999;
         font-size: 24rpx;
+        line-height: 36rpx;
     }
+    .__right {
+        position: relative;
+        text-align: right;
+        color: #666;
+    }
+    .__arrow::after {
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        content: " ";
+        display: inline-block;
+        height: 6px;
+        width: 6px;
+        border-width: 2px 2px 0 0;
+        border-color: #c8c8c8;
+        border-style: solid;
+        -webkit-transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0);
+        transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0)
+    }
+    
 }

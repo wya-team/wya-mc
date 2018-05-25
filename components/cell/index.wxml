@@ -1,12 +1,19 @@
-<view class="cell">
-
+<view 
+	class="classes cell"
+	catchtap="cellTap"
+	style="{{styles}}"
+>
 	<view class="__item">
 		<view class="__left">
 			<slot></slot>
 			<view wx:if="{{ title }}" class="__title">{{ title }}</view>
 			<view wx:if="{{ label }}" class="__label">{{ label }}</view>
 		</view>
-		<view wx:if="{{ value }}" class="__title">{{ value }}</view>
+		<view class="__right" >
+			<block wx:if="{{ value }}">{{ value }}</block>
+			<view wx:if="{{ isLink && !value }}" class="__arrow" style="padding-left:5rpx;padding-right:20rpx">{{ extra }}</view>
+		</view>
+		
 	</view>
 
 </view>

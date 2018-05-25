@@ -1,30 +1,46 @@
-## Toast 轻提示
+## Cell 单元格
 
 ### API
 
 #### options的具体参数
-| 参数       | 说明      | 类型       | 默认值       | 可选值      |
-|-----------|-----------|-----------|-------------|-------------|
-| message | `toast`显示文案 | String | - |  |
-| type | 提示类型 | String | - | `loading` `success` `fail` |
-| icon | `toast`显示的图标，只能是`icon`组件中的可用图标 | String | - |  |
-| timeout | `toast`显示时间，小于0则会一直显示，需手动调用`Toast.clear` | String | `3000` |  |
+| 参数       | 说明                 | 类型             | 默认值          | 可选值                                      | 必传   |
+| -------- | ------------------ | -------------- | ------------ | ---------------------------------------- | ---- |
+| title    | 标题                 | String         | -            | -                                        | 是    |
+| value    | 详细信息               | String         | -            | -                                        | -    |
+| label    | 标题下方的附加描述          | String         | -            | -                                        | -    |
+| isLink   | 显示右箭头              | Boolean/String | -            | -                                        | -    |
+| linkType | 链接类型               | String         | `navigateTo` | `navigateTo` `redirectTo` `switchTab` `reLaunch` | -    |
+| url      | 跳转路由，要带上isLink才起作用 | String         | -            |                                          | -    |
+| extra    | 额外文字，右箭头左侧文字       | String         | -            | -                                        | -    |
+| classes  | 外部传入的类名            | String         | -            | -                                        | -    |
+| styles   | 外部传入的行内样式          | String         | -            | -                                        | -    |
 
 #### 方法
-| 方法名       | 参数      | 返回值       | 介绍 |
-|-----------|-----------|-----------|-----------|
-| Toast | `options`  `timeout` | - | 展示提示 | 
-| Toast.loading | `options`  `timeout` | - | 展示加载提示 |
-| Toast.success | `options`  `timeout` | - | 展示成功提示 |
-| Toast.fail | `options`  `timeout` | - | 展示失败提示 |
-| Toast.clear | - | - | 关闭提示 |
+
+| 方法名  | 参数   | 返回值  | 介绍   |
+| ---- | ---- | ---- | ---- |
+| -    | -    | --   | -    |
 
 ### 使用指南
-在`.josn`文件中引入组件
+在`.json`文件中引入组件
 ```json
 {
   "usingComponents": {
-    "toast": "path/to/the/custom/component"
+    "cell": "path/to/the/custom/component"
   }
 }
 ```
+在`.wxml`文件中使用组件
+
+```html
+<view class="g-m-t-10">
+    <notes>显示箭头和额外文字，可跳转到其他页面</notes>
+    <cell 
+		title="我是标题" 
+		is-link
+        extra="查看更多"
+        url="/pages/index/index"
+	></cell>
+</view>
+```
+

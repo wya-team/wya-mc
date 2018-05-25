@@ -55,6 +55,9 @@ page {
 /**
  * margin
  */
+.g-m-t-10 {
+    margin-top: 10rpx;
+}
 .g-m-r-10 {
     margin-right: 10rpx;
 }
@@ -71,14 +74,4 @@ page {
     line-height: 100rpx;
     text-align: center;
     border-radius: 20rpx;
-}
-
-/**
- * notes小部件
- */
-.g-notes {
-    font-size: 24rpx;
-    color: #999999;
-    line-height: 36rpx;
-    padding: 0 20rpx;
 }
