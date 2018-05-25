@@ -1,0 +1,21 @@
+.cell {
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+    .__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28rpx;
+        line-height: 56rpx;
+    }
+    .__left {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .__label {
+        width: 100%;
+        color: #999999;
+        font-size: 24rpx;
+    }
+}
