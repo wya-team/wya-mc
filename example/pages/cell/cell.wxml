@@ -17,7 +17,7 @@
 <view class="g-m-t-10">
     <notes>带左边 icon 的 cell</notes>
     <cell title="我是标题" value="详细信息">
-      <icon type="success" classes="g-m-r-10" slot="icon"/>
+      <icon slot="left" type="success" classes="g-m-r-10"/>
     </cell>
 </view>
 
@@ -32,7 +32,7 @@
 <view class="g-m-t-10">
     <notes>不显示箭头，可跳转到其他页面</notes>
     <cell 
-		title="我是标题" 
+		title="我是标题"
 		value="查看更多"
 		is-link
 		url="/pages/index/index"
@@ -54,6 +54,6 @@
     <cell 
 		title="我是标题"
 	>
-        <input slot="form" placeholder="请输入内容"/>
+        <input slot="right" placeholder="请输入内容"/>
     </cell>
 </view>
