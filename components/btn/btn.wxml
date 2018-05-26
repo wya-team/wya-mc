@@ -1,0 +1,26 @@
+
+<button 
+    class="{{className}}"
+    loading="{{loading}}"
+    form-type="{{formType}}"
+    open-type="{{openType}}"
+    hover-stop-propagation="{{hoverStopPropagation}}"
+    hover-start-time="{{hoverStartTime}}"
+    hover-stay-time="{{hoverStayTime}}"
+    lang="{{lang}}"
+    bindgetuserinfo="bindgetuserinfo"
+    session-from="{{sessionFrom}}"
+    send-message-title="{{sendMessageTitle}}"
+    send-message-path="{{sendMessagePath}}"
+    send-message-img="{{sendMessageImg}}"
+    show-message-card="{{showMessageCard}}"
+    bindcontact="bindcontact"
+    bindgetphonenumber="bindgetphonenumber"
+    app-parameter="appParameter" 
+    binderror="binderror"
+    bind:tap="handleClick"
+    bindopensetting="binderror"
+>
+
+    <slot></slot>
+</button>

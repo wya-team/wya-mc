@@ -199,7 +199,8 @@ gulp.task('dev', ['clean', 'move'], () => {
 		'wxss',
 		'scripts',
 		'watch',
-		'watch:components',
+		'wxss:components',
+		'watch:components'
 	);
 });
 

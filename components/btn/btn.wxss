@@ -1,0 +1,140 @@
+/* 大按钮 */
+.g-big-btn-red {
+	margin:0 auto;
+	width: 90%;
+	height: 88rpx;
+	line-height: 84rpx;
+	border-radius: 44rpx;
+	font-size: 32rpx;
+	font-weight: 300;
+	background-color: #d3171a;
+	color: #ffffff;
+	text-align: center;
+	box-sizing: border-box;
+	&:active {
+		background-color: #c61316;
+	}
+}
+
+.g-big-btn-line {
+	margin:0 auto;
+	width: 90%;
+	height: 88rpx;
+	line-height: 84rpx;
+	border-radius: 44rpx;
+	font-size: 32rpx;
+	font-weight: 300;
+	background-color: #ffffff;
+	color: #000000;
+	text-align: center;
+	border: 1px solid #d6d5d6;
+	box-sizing: border-box;
+	&:active {
+		background-color: #fafafa;
+	}
+}
+
+.g-big-disabled-btn {
+	margin:0 auto;
+	width: 90%;
+	height: 88rpx;
+	line-height: 84rpx;
+	border-radius: 44rpx;
+	font-size: 32rpx;
+	font-weight: 300;
+	background-color: #bdbdbd;
+	color: #ffffff;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+/* 中按钮 */
+.g-middle-btn-red-line {
+	min-width: 320rpx;
+	height: 72rpx;
+	line-height: 68rpx;
+	border-radius: 36rpx;
+	font-size: 28rpx;
+	font-weight: 350;
+	background-color: #ffffff;
+	border: 1px solid #d3171a;
+	color:#d3171a;
+	text-align: center;
+	box-sizing: border-box;
+	&:active {
+		background-color: #d3171a;
+		color: #ffffff;
+	}
+}
+
+.g-middle-disabled-btn-line {
+	min-width: 320rpx;
+	height: 72rpx;
+	line-height: 68rpx;
+	border-radius: 36rpx;
+	font-size: 28rpx;
+	font-weight: 300;
+	background-color: #ffffff;
+	border: 1px solid #d6d5d6;
+	color:#d6d5d6;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+/* 小按钮 */
+.g-small-btn-red-line {
+	display:inline-block;
+	margin-left:10rpx;
+	min-width: 156rpx;
+	height: 54rpx;
+	line-height: 50rpx;
+	border-radius: 27rpx;
+	font-size: 26rpx;
+	font-weight: 300;
+	background-color: #ffffff;
+	border: 1px solid #d3171a;
+	color:#d3171a;
+	text-align: center;
+	box-sizing: border-box;
+	&:active {
+		background-color: #d3171a;
+		color: #ffffff;
+	}
+}
+
+.g-small-btn-line {
+	display:inline-block;
+	margin-left:10rpx;
+	min-width: 156rpx;
+	height: 54rpx;
+	line-height: 54rpx;
+	border-radius: 27rpx;
+	font-size: 26rpx;
+	font-weight: 300;
+	background-color: #ffffff;
+	border: 1px solid #d6d5d6;
+	color:#333333;
+	text-align: center;
+	box-sizing: border-box;
+	&:active {
+		background-color: #fafafa;
+	}
+}
+.g-mini-btn-red {
+	display:inline-block;
+	min-width: 100rpx;
+	height: 50rpx;
+	line-height: 50rpx;
+	background-color: #d3171a;
+	color: #fff;
+	text-align: center;
+	font-size:22rpx;
+	border-radius: 24rpx;
+	border: 1px solid #d3171a;
+	box-sizing: border-box;
+	&:active {
+		background-color: #fafafa;
+		color: #d3171a;
+		border: 1rpx solid #d3171a;
+	}
+}
