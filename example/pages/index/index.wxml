@@ -26,4 +26,7 @@
     <navigator class="g-btn" url="/pages/notes/notes">
         notes
     </navigator>
+    <navigator class="g-btn" url="/pages/card/card">
+        Card
+    </navigator>
 </view>

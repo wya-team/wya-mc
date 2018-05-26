@@ -9,7 +9,8 @@
 		"pages/countdown/countdown",
 		"pages/tab/tab",
 		"pages/cell/cell",
-		"pages/notes/notes"
+		"pages/notes/notes",
+		"pages/card/card"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#FAFAFA",
