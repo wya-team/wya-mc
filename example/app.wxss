@@ -58,6 +58,12 @@ page {
 .g-m-t-10 {
     margin-top: 10rpx;
 }
+.g-m-b-10 {
+    margin-bottom: 10rpx;
+}
+.g-m-l-10 {
+    margin-left: 10rpx;
+}
 .g-m-r-10 {
     margin-right: 10rpx;
 }

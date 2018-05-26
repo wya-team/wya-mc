@@ -39,5 +39,4 @@
         -webkit-transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0);
         transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0)
     }
-    
 }
