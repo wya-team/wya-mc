@@ -1,32 +1,53 @@
-<view class="g-flex-cc g-fd-c">
-    <navigator class="g-btn" url="/pages/popup/popup">
-        Pop弹窗
-    </navigator>
-    <navigator class="g-btn" url="/pages/icon/icon">
-        ICON
-    </navigator>
-    <navigator class="g-btn" url="/pages/modal/modal">
-        Modal
-    </navigator>
-    <navigator class="g-btn" url="/pages/toast/toast">
-        Toast
-    </navigator>
-    <navigator class="g-btn" url="/pages/notice/notice">
-        Notice
-    </navigator>
-    <navigator class="g-btn" url="/pages/countdown/countdown">
-        倒计时
-    </navigator>
-    <navigator class="g-btn" url="/pages/tab/tab">
-        Tabs
-    </navigator>
-    <navigator class="g-btn" url="/pages/cell/cell">
-        Cell
-    </navigator>
-    <navigator class="g-btn" url="/pages/notes/notes">
-        notes
-    </navigator>
-    <navigator class="g-btn" url="/pages/card/card">
-        Card
-    </navigator>
+<view>
+    <notes>基础组件</notes>
+    <cell
+        title="Pop 弹窗"    
+        url="/pages/popup/popup"
+        isLink 
+    ></cell>
+    <cell
+        title="Icon 图标"    
+        url="/pages/popup/popup"
+        isLink 
+    ></cell>
+    <cell
+        title="Modal 对话弹框"    
+        url="/pages/modal/modal"
+        isLink 
+    ></cell>
+    <cell
+        title="Toast 轻提示"    
+        url="/pages/toast/toast"
+        isLink 
+    ></cell>
+    <cell
+        title="Notice 跑马灯"    
+        url="/pages/notice/notice"
+        isLink 
+    ></cell>
+    <cell
+        title="countdown 倒计时"    
+        url="/pages/countdown/countdown"
+        isLink 
+    ></cell>
+    <cell
+        title="Tabs 切换栏"    
+        url="/pages/tab/tab"
+        isLink 
+    ></cell>
+    <cell
+        title="Cell 单元格"    
+        url="/pages/cell/cell"
+        isLink 
+    ></cell>
+    <cell
+        title="notes 解释型文字"    
+        url="/pages/notes/notes"
+        isLink 
+    ></cell>
+    <cell
+        title="Card 商品卡片"    
+        url="/pages/card/card"
+        isLink 
+    ></cell>
 </view>
