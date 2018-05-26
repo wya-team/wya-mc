@@ -10,7 +10,8 @@
 		"pages/tab/tab",
 		"pages/cell/cell",
 		"pages/notes/notes",
-		"pages/card/card"
+		"pages/card/card",
+		"pages/actionsheet/actionsheet"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#FAFAFA",

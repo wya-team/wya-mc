@@ -11,9 +11,9 @@
 			<slot name="right"></slot>
 			<view wx:if="{{ label }}" class="__label">{{ label }}</view>
 		</view>
-		<view class="__right" >
-			<block wx:if="{{ value }}">{{ value }}</block>
-			<view wx:if="{{ isLink && !value }}" class="__arrow" style="padding-left:5rpx;padding-right:20rpx">{{ extra }}</view>
+		<view class="__right">
+			<view wx:if="{{ value }}" class="__value">{{ value }}</view>
+			<view wx:if="{{ isLink && !value }}" class="__arrow">{{ extra }}</view>
 			<slot></slot>
 		</view>
 		

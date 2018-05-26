@@ -1,4 +1,4 @@
-<view>
+<view class="g-m-t-10">
     <notes>基础组件</notes>
     <cell
         title="Pop 弹窗"    
@@ -38,6 +38,7 @@
     <cell
         title="Cell 单元格"    
         url="/pages/cell/cell"
+        label="内含 Cells 单元格组组件"
         isLink 
     ></cell>
     <cell
@@ -48,6 +49,15 @@
     <cell
         title="Card 商品卡片"    
         url="/pages/card/card"
+        isLink 
+    ></cell>
+</view>
+
+<view class="g-m-t-10">
+    <notes>操作反馈</notes>
+    <cell
+        title="Actionsheet 行动按钮"    
+        url="/pages/actionsheet/actionsheet"
         isLink 
     ></cell>
 </view>

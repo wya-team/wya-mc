@@ -1,0 +1,19 @@
+
+
+<view 
+	style="margin-top: 30rpx;text-align:center" 
+	bind:tap="openActionsheet"
+>
+	Click Me！
+</view>
+
+<actionsheet
+	show="{{ show }}"
+	actions="{{ actions }}"
+	cancel-text="{{ cancelText }}"
+	cancel-with-mask="{{ cancelWithMask }}"
+	bind:cancel="closeActionSheet"
+	bind:actionclick="clickAction"
+	mask-class="tiny"
+/>
+

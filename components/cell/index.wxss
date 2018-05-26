@@ -1,5 +1,5 @@
 .cell {
-    padding:10rpx 20rpx;
+    padding:18rpx 20rpx;
     border-bottom: 1rpx solid #f0f0f0;
     background: #ffffff;
     .__item {
@@ -14,6 +14,11 @@
         align-items: center;
         flex-wrap: wrap;
     }
+    .__title {
+        font-size: 28rpx;
+        color: #000;
+        line-height: 42rpx;
+    }
     .__label {
         width: 100%;
         color: #999999;
@@ -24,6 +29,16 @@
         position: relative;
         text-align: right;
         color: #666;
+    }
+    .__value {
+        color: #999;
+        font-size: 24rpx;
+    }
+    .__arrow {
+        padding-left: 5rpx;
+        padding-right: 20rpx;
+        color: #999;
+        font-size: 24rpx;
     }
     .__arrow::after {
         position: absolute;
