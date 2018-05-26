@@ -1,14 +1,13 @@
 .card {
-    background: #fff;
     display: flex;
     margin-left: 0;
-    padding: 5px 15px;
+    padding: 10rpx 20rpx;
     overflow: hidden;
     position: relative;
-    font-size: 14px;
+    font-size: 28rpx;
     .__thumb {
-        width: 90px;
-        height: 90px;
+        width: 180rpx;
+        height: 180rpx;
         position: relative;
         margin-left: auto;
         margin-right: auto;
@@ -28,21 +27,21 @@
     }
     .__detail {
         flex:1;
-        margin-left:10px;
+        margin-left:20rpx;
         position:relative;
     }
     ._detail-row {
         overflow:hidden;
-        line-height:20px;
-        min-height:20px;
-        margin-bottom:3px;
+        line-height:40rpx;
+        min-height:40rpx;
+        margin-bottom:6rpx;
     }
     .__right-col {
         float:right;
         line-height: 1.5;
     }
     .__left-col {
-        margin-right:80px;
+        margin-right:160rpx;
         line-height: 1.5;
     }
 

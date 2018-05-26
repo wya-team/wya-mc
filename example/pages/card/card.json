@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "Card 卡片",
   "usingComponents": {
-    "card": "../../components/card/index"
+    "card": "../../components/card/index",
+    "notes": "../../components/notes/index"
   }
 }

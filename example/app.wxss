@@ -31,6 +31,13 @@ page {
 }
 
 /**
+ * background
+ */
+.g-bg-white {
+    background-color: #ffffff;
+}
+
+/**
  * font-size
  */
 .g-fs-24 {
