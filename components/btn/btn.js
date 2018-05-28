@@ -23,11 +23,9 @@ Component({
     },
     methods:{
         handleClick(){
-            console.log(this.data);
             if (this.data.disabled){
                 return
             }else{
-                console.log(666)
                 this.triggerEvent('myevent');
             }
         }
