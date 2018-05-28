@@ -6,4 +6,6 @@
 </view>
 <view class="g-flex-ac g-jc-sa g-pd-20">
     <icon type="close" styles="color:#515151" classes="g-pd-20"/>
+    <icon type="left" styles="color:#515151" classes="g-pd-20"/>
+    <icon type="right" styles="color:#515151" classes="g-pd-20"/>
 </view>
