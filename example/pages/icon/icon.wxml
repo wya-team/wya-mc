@@ -1,3 +1,3 @@
 <view class="g-flex-ac g-jc-sa g-pd-20">
-    <icon type="close" />
+    <icon type="close" styles="color:red" classes="g-pd-20"/>
 </view>

@@ -1,0 +1,57 @@
+.cell {
+    padding:18rpx 20rpx;
+    border-bottom: 1rpx solid #f0f0f0;
+    background: #ffffff;
+    .__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28rpx;
+        line-height: 56rpx;
+    }
+    .__left {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .__title {
+        font-size: 28rpx;
+        color: #000;
+        line-height: 42rpx;
+    }
+    .__label {
+        width: 100%;
+        color: #999999;
+        font-size: 24rpx;
+        line-height: 36rpx;
+    }
+    .__right {
+        position: relative;
+        text-align: right;
+        color: #666;
+    }
+    .__value {
+        color: #999;
+        font-size: 24rpx;
+    }
+    .__arrow {
+        padding-left: 5rpx;
+        padding-right: 20rpx;
+        color: #999;
+        font-size: 24rpx;
+    }
+    .__arrow::after {
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        content: " ";
+        display: inline-block;
+        height: 6px;
+        width: 6px;
+        border-width: 2px 2px 0 0;
+        border-color: #c8c8c8;
+        border-style: solid;
+        -webkit-transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0);
+        transform: translateY(-50%) matrix(.71, .71, -.71, .71, 0, 0)
+    }
+}

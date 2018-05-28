@@ -1,0 +1,43 @@
+<view
+    class="tabs-container"
+    style="{{ height ? 'height:' + height + 'rpx' : '' }}"
+>
+    <block wx:if="{{scrollable}}">
+        <scroll-view
+            class="tabs-list tabs-list-scroll {{fixed ? 'tabs-list-fixed' : ''}}"
+            scroll-x
+            style="height: {{ height ? height + 'rpx' : 'auto' }}"
+        >
+            <template is="tab-list" data="{{nodes, defaultActivityKey, height, currentIndex}}"></template>
+        </scroll-view>
+    </block>
+    <block wx:else>
+        <view class="tabs-list {{fixed ? 'tabs-list-fixed' : ''}}">
+            <template is="tab-list" data="{{nodes, defaultActivityKey, height, currentIndex}}"></template>
+        </view>
+    </block>
+</view>
+<swiper
+    indicator-dots="{{false}}" 
+    current="{{currentIndex || 0}}"
+    duration="{{300}}"
+    bind:change="handleChangeSwiper"
+>
+    <swiper-item wx:for="{{nodes}}" wx:for-index="index" wx:for-item="paneItem">
+        <slot name="{{paneItem.key}}"></slot>
+    </swiper-item>
+</swiper>
+
+<template name="tab-list">
+    <block wx:for="{{nodes}}" wx:for-index="index" wx:for-item="tabItem">
+        <view 
+            class="_tab-title {{currentIndex == index ? '_active active-class' : ''}} tab-class" 
+            style="{{ height ? 'height:' + height + 'rpx;line-height:' + height + 'rpx' : '' }}"
+            bind:tap="handleChangeTab" 
+            id="{{index}}"
+            data-id="{{currentIndex}}"
+        >
+            {{tabItem.tab}}
+        </view>
+    </block>
+</template>

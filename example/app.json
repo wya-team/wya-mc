@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "pages": [
       "pages/button/button",
         "pages/index/index",
@@ -18,3 +19,28 @@
     },
     "debug": true
   }
+=======
+	"pages": [
+		"pages/index/index",
+		"pages/popup/popup",
+		"pages/icon/icon",
+		"pages/modal/modal",
+		"pages/toast/toast",
+		"pages/notice/notice",
+		"pages/countdown/countdown",
+		"pages/tab/tab",
+		"pages/cell/cell",
+		"pages/notes/notes",
+		"pages/card/card",
+		"pages/actionsheet/actionsheet"
+	],
+	"window": {
+		"navigationBarBackgroundColor": "#FAFAFA",
+		"navigationBarTitleText": "ZanUI-WeApp",
+		"navigationBarTextStyle": "black",
+		"backgroundTextStyle": "dark",
+		"backgroundColor": "#f9f9f9"
+	},
+	"debug": true
+}
+>>>>>>> origin/master

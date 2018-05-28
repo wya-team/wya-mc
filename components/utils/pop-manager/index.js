@@ -1,4 +1,4 @@
-import { showAnimate, hideAnimate } from '../utils/utils';
+import { showAnimate, hideAnimate } from '../utils';
 
 Component({
     properties: {

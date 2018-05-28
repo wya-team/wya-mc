@@ -1,0 +1,43 @@
+.tabs-container {
+    height: 88rpx;
+}
+
+.tabs-list-scroll {
+    display: block;
+    white-space: nowrap;
+}
+
+.tabs-list-fixed {
+    position: fixed;
+    top: 0;
+    z-index: 2;
+}
+
+.tabs-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #FFFFFF;
+    width: 100vw;
+    border-bottom: 1rpx solid #e5e5e5;
+}
+
+.tabs-list ._tab-title {
+    display: inline-block;
+    line-height: 88rpx;
+    height: 88rpx;
+    padding: 0 5rpx;
+    margin: 0 10rpx;
+    font-size: 32rpx;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+    color: #333333;
+}
+
+.tabs-list ._active {
+    border-bottom: 4rpx solid #f44;
+    color: #f44;
+}

@@ -1,0 +1,16 @@
+<view>
+    <tabs defaultActivityKey="1">
+        <tab-pane key="1" tab="使用记录" slot="1">
+            <view style="height: 90vh">抓不到我吧</view>
+        </tab-pane>
+        <tab-pane key="2" tab="使用记录1" slot="2">
+            哈哈哈哈哈
+        </tab-pane>
+        <tab-pane key="3" tab="使用记录2" slot="3">
+            啦啦啦啦啦啦啦啦啦啦
+        </tab-pane>
+        <tab-pane key="4" tab="使用记录3" slot="4">
+            啦啦啦啦啦啦啦啦啦啦
+        </tab-pane>
+    </tabs>
+</view>

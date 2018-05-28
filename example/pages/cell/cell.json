@@ -1,0 +1,9 @@
+{
+    "navigationBarTitleText": "Cell单元格",
+    "usingComponents": {
+        "cell": "../../components/cell/index",
+        "cells": "../../components/cells/index",
+        "icon": "../../components/icon/index",
+        "notes": "../../components/notes/index"
+    }
+}

@@ -1,6 +1,6 @@
 {
     "component": true,
     "usingComponents": {
-        "pop-manager": "../pop-manager/index"
+        "pop-manager": "../utils/pop-manager/index"
     } 
 }
