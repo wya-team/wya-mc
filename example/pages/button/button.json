@@ -1,6 +1,6 @@
 {
     "navigationBarTitleText": "按钮",
     "usingComponents": {
-        "btn":"../../../components/btn/btn"
+        "btn":"../../../components/btn/index"
     }
 }
