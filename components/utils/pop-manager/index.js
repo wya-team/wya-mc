@@ -24,6 +24,7 @@ Component({
     methods: {
         handleClickMask() {
             this.triggerEvent('clickMask', {});
-        }
+        },
+        preventD() {}
     }
 });

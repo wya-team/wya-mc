@@ -5,6 +5,7 @@
     <view
         class="_mask {{ mask ? '' : '_mask-hide' }}"
         bind:tap="handleClickMask" 
+        catchtouchmove="preventD"
     />
     <view class="_container">
         <slot></slot>
