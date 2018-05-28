@@ -1,6 +1,6 @@
 
 <button 
-    class="{{className}}"
+    class="{{classes}}"
     loading="{{loading}}"
     form-type="{{formType}}"
     open-type="{{openType}}"
@@ -20,6 +20,7 @@
     binderror="binderror"
     bind:tap="handleClick"
     bindopensetting="binderror"
+    style="{{styles}}"
 >
 
     <slot></slot>

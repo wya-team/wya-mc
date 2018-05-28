@@ -12,11 +12,11 @@ Component({
             type: Boolean,
             value: false,
         },
-        className: {
+        classes: {
             type: String,
             value: 'g-small-btn-line'
         },
-        style:{
+        styles:{
             type: String,
             value: ''
         }
