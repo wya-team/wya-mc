@@ -1,5 +1,5 @@
 Component({
-	externalClasses: ['mask-class', 'container-class'],
+	externalClasses: ['action-class'],
 	properties: {
 		actions: {
 			type: Array,
@@ -9,7 +9,7 @@ Component({
 			type: Boolean,
 			value: false
 		},
-		cancelWithMask: {
+		maskClosable: {
 			type: Boolean,
 			value: true
 		},
@@ -20,11 +20,11 @@ Component({
 	},
 	methods: {
 		onMaskClick() {
-			if (this.data.cancelWithMask) {
-				this.cancelClick();
+			if (this.data.maskClosable) {
+				this.handleClose();
 			}
 		},
-		cancelClick() {
+		handleClose() {
 			this.triggerEvent('cancel');
 		},
 		handleBtnClick({ currentTarget = {} }) {

@@ -11,9 +11,8 @@
 	show="{{ show }}"
 	actions="{{ actions }}"
 	cancel-text="{{ cancelText }}"
-	cancel-with-mask="{{ cancelWithMask }}"
+	mask-closable="{{flase}}"
 	bind:cancel="closeActionSheet"
 	bind:actionclick="clickAction"
-	mask-class="tiny"
 />
 

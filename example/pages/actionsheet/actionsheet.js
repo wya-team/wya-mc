@@ -26,13 +26,13 @@ Page({
 
 	openActionsheet() {
 		this.setData({
-			'show': true
+			show: true
 		});
 	},
 
 	closeActionSheet() {
 		this.setData({
-			'show': false
+			show: false
 		});
 	},
 

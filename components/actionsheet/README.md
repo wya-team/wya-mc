@@ -10,6 +10,8 @@
 | show        | 显示与隐藏        | String | -    |      |
 | actions     | 自定义按钮        | array  | -    |      |
 | cancel-text | 最底下取消按钮的文字内容 | String | -    |      |
+| maskClosable | 点击遮罩层是否允许触发`cancel`事件 | String | -    |      |
+| action-class | actionItem的样式 | String | -    |      |
 
 #### 方法
 
@@ -41,10 +43,9 @@
 	show="{{ show }}"
 	actions="{{ actions }}"
 	cancel-text="{{ cancelText }}"
-	cancel-with-mask="{{ cancelWithMask }}"
+	mask-closable="{{flase}}"
 	bind:cancel="closeActionSheet"
 	bind:actionclick="clickAction"
-	mask-class="tiny"
 />
 ```
 
