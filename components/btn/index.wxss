@@ -138,3 +138,7 @@
 		border: 1rpx solid #d3171a;
 	}
 }
+
+button::after {
+	border: none;
+}
