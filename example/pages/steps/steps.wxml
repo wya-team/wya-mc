@@ -1,0 +1,10 @@
+<view style="background-color:white;padding:20px">
+    <text>横着</text>
+    <view>
+        <steps type="horizon" hasDesc="{{true}}"  steps="{{steps}}" className="cc" color="red"/>
+    </view>
+    <text>竖着</text>
+    <view>
+        <steps type="vertical" hasDesc="{{true}}" steps="{{steps2}}" className="cc" color="red"/>
+    </view>
+</view>

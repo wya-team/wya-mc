@@ -1,27 +1,4 @@
-<<<<<<< HEAD
-<view class="g-flex-cc g-fd-c">
-    <navigator class="g-btn" url="/pages/popup/popup">
-        Pop弹窗
-    </navigator>
-    <navigator class="g-btn" url="/pages/icon/icon">
-        ICON
-    </navigator>
-    <navigator class="g-btn" url="/pages/modal/modal">
-        Modal
-    </navigator>
-    <navigator class="g-btn" url="/pages/toast/toast">
-        Toast
-    </navigator>
-    <navigator class="g-btn" url="/pages/notice/notice">
-        Notice
-    </navigator>
-    <navigator class="g-btn" url="/pages/countdown/countdown">
-        倒计时
-    </navigator>
-    <navigator class="g-btn" url="/pages/button/button">
-        按钮
-    </navigator>
-=======
+
 <view class="g-m-t-10">
     <notes>基础组件</notes>
     <cell
@@ -75,6 +52,16 @@
         url="/pages/card/card"
         isLink 
     ></cell>
+    <cell
+        title="btn 按钮"    
+        url="/pages/btn/btn"
+        isLink 
+    ></cell>
+    <cell
+        title="steps 步骤条"    
+        url="/pages/steps/steps"
+        isLink 
+    ></cell>
 </view>
 
 <view class="g-m-t-10">
@@ -84,5 +71,4 @@
         url="/pages/actionsheet/actionsheet"
         isLink 
     ></cell>
->>>>>>> origin/master
 </view>
