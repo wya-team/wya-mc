@@ -67,6 +67,11 @@
         url="/pages/steps/steps"
         isLink 
     />
+    <cell
+        title="Badge 角标"    
+        url="/pages/badge/badge"
+        isLink 
+    />
 </view>
 
 <view class="g-m-t-10">

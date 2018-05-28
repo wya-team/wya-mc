@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "角标",
+    "usingComponents": {
+        "badge": "../../components/badge/index"
+    }
+}
