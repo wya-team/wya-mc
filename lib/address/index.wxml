@@ -1,0 +1,1 @@
+<popup show="{{ true }}" type="bottom" bind:close="handleClose"><picker mode="multiSelector"></picker></popup>
