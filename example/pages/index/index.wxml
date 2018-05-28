@@ -5,63 +5,68 @@
         title="Pop 弹窗"    
         url="/pages/popup/popup"
         isLink 
-    ></cell>
+    />
     <cell
         title="Icon 图标"    
-        url="/pages/popup/popup"
+        url="/pages/icon/icon"
         isLink 
-    ></cell>
+    />
     <cell
         title="Modal 对话弹框"    
         url="/pages/modal/modal"
         isLink 
-    ></cell>
+    />
     <cell
         title="Toast 轻提示"    
         url="/pages/toast/toast"
         isLink 
-    ></cell>
+    />
     <cell
         title="Notice 跑马灯"    
         url="/pages/notice/notice"
         isLink 
-    ></cell>
+    />
     <cell
         title="countdown 倒计时"    
         url="/pages/countdown/countdown"
         isLink 
-    ></cell>
+    />
     <cell
         title="Tabs 切换栏"    
         url="/pages/tab/tab"
         isLink 
-    ></cell>
+    />
+    <cell
+        title="Address 地址选择"    
+        url="/pages/address/address"
+        isLink 
+    />
     <cell
         title="Cell 单元格"    
         url="/pages/cell/cell"
         label="内含 Cells 单元格组组件"
         isLink 
-    ></cell>
+    />
     <cell
         title="notes 解释型文字"    
         url="/pages/notes/notes"
         isLink 
-    ></cell>
+    />
     <cell
         title="Card 商品卡片"    
         url="/pages/card/card"
         isLink 
-    ></cell>
+    />
     <cell
         title="btn 按钮"    
         url="/pages/btn/btn"
         isLink 
-    ></cell>
+    />
     <cell
         title="steps 步骤条"    
         url="/pages/steps/steps"
         isLink 
-    ></cell>
+    />
 </view>
 
 <view class="g-m-t-10">
@@ -70,5 +75,5 @@
         title="Actionsheet 行动按钮"    
         url="/pages/actionsheet/actionsheet"
         isLink 
-    ></cell>
+    />
 </view>

@@ -17,7 +17,7 @@
         <icon
             wx:else
             type="{{ icon }}"
-            icon-class="__icon"
+            classes="__icon"
         />
     </block>
 

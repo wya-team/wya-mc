@@ -5,8 +5,8 @@
 >
     <view wx:if="{{leftIcon}}">
         <icon 
-            icon-class="_left-icon"
-            iconStyle="color: {{color}}"
+            classes="_left-icon"
+            styles="color: {{color}}"
             type="{{leftIcon}}" 
         />
     </view>
@@ -17,8 +17,8 @@
     </view>
     <view wx:if="{{closable}}">
         <icon 
-            icon-class="_right-icon"
-            iconStyle="color:{{color}}"
+            classes="_right-icon"
+            styles="color:{{color}}"
             type="cancel"
             bind:tap="_handleButtonClick"
         />

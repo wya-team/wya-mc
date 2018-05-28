@@ -8,7 +8,7 @@
             <view class="_title-container" wx:if="{{showTitle}}">
                 <view class="__title">{{title}}</view>
                 <block wx:if="{{closable}}">
-                    <icon type="close" icon-class="__close" bind:click="handleCancel" />
+                    <icon type="close" classes="__close" bind:click="handleCancel" />
                 </block>
             </view>
             <view class="_content">

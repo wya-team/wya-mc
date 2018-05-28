@@ -1,6 +1,5 @@
 {
 	"pages": [
-		"pages/steps/steps",
 		"pages/index/index",
 		"pages/button/button",
 		"pages/popup/popup",
@@ -10,10 +9,12 @@
 		"pages/notice/notice",
 		"pages/countdown/countdown",
 		"pages/tab/tab",
+		"pages/address/address",
 		"pages/cell/cell",
 		"pages/notes/notes",
 		"pages/card/card",
-		"pages/actionsheet/actionsheet"
+		"pages/actionsheet/actionsheet",
+		"pages/steps/steps"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#FAFAFA",
