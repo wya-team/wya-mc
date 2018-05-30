@@ -150,7 +150,6 @@ Component({
             }
         },
         _initItem(data, indexArray) {
-            console.log(indexArray)
             this.setData({
                 selectedIndexArray: [...indexArray],
                 value: [...indexArray], // 将外部传入的地址数据（code / name）数组改为index(索引)数组
@@ -180,7 +179,6 @@ Component({
         },
         handleCancel(event) {
             const { value, addressRange, oldAddressRange } = this.data;
-            console.log(value)
             
             // 点击取消返回原先的状态
             this.setData({
