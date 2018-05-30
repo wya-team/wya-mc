@@ -2,8 +2,34 @@
 <view class="g-m-t-10">
     <notes>基础组件</notes>
     <cell
-        title="Pop 弹窗"    
-        url="/pages/popup/popup"
+        title="Address 地址选择"    
+        url="/pages/address/address"
+        isLink 
+    />
+    <cell
+        title="Badge 角标"    
+        url="/pages/badge/badge"
+        isLink 
+    />
+    <cell
+        title="Button 按钮"    
+        url="/pages/btn/btn"
+        isLink 
+    />
+    <cell
+        title="Card 商品卡片"    
+        url="/pages/card/card"
+        isLink 
+    />
+    <cell
+        title="Cell 单元格"    
+        url="/pages/cell/cell"
+        label="内含 Cells 单元格组组件"
+        isLink 
+    />
+    <cell
+        title="Countdown 倒计时"    
+        url="/pages/countdown/countdown"
         isLink 
     />
     <cell
@@ -16,9 +42,9 @@
         url="/pages/modal/modal"
         isLink 
     />
-    <cell
-        title="Toast 轻提示"    
-        url="/pages/toast/toast"
+     <cell
+        title="Notes 解释型文字"    
+        url="/pages/notes/notes"
         isLink 
     />
     <cell
@@ -27,49 +53,23 @@
         isLink 
     />
     <cell
-        title="countdown 倒计时"    
-        url="/pages/countdown/countdown"
+        title="Pop 弹窗"    
+        url="/pages/popup/popup"
         isLink 
     />
     <cell
+        title="Steps 步骤条"    
+        url="/pages/steps/steps"
+        isLink 
+    />
+     <cell
         title="Tabs 切换栏"    
         url="/pages/tab/tab"
         isLink 
     />
     <cell
-        title="Address 地址选择"    
-        url="/pages/address/address"
-        isLink 
-    />
-    <cell
-        title="Cell 单元格"    
-        url="/pages/cell/cell"
-        label="内含 Cells 单元格组组件"
-        isLink 
-    />
-    <cell
-        title="notes 解释型文字"    
-        url="/pages/notes/notes"
-        isLink 
-    />
-    <cell
-        title="Card 商品卡片"    
-        url="/pages/card/card"
-        isLink 
-    />
-    <cell
-        title="btn 按钮"    
-        url="/pages/btn/btn"
-        isLink 
-    />
-    <cell
-        title="steps 步骤条"    
-        url="/pages/steps/steps"
-        isLink 
-    />
-    <cell
-        title="Badge 角标"    
-        url="/pages/badge/badge"
+        title="Toast 轻提示"    
+        url="/pages/toast/toast"
         isLink 
     />
 </view>
