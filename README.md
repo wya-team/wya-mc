@@ -6,6 +6,8 @@ git clone https://github.com/wya-team/wya-mc.git
 ```
 
 ## 开发&预览
+小程序码
+![小程序码](https://github.com/wya-team/wya-mc/blob/master/assets/wya-rc.jpg)
 1. 安装项目
 ``` bash
 # 安装项目依赖
