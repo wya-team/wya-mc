@@ -1,0 +1,1 @@
+.address-item{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:auto;-webkit-align-items:auto;align-items:auto;font-size:28rpx;color:#343434;padding:20rpx;background:#fff}

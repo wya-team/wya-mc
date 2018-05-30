@@ -1,0 +1,22 @@
+<notes>默认的Item样式</notes>
+<address 
+    bind:close="togglePopup"
+/>
+<notes>自定义的Item样式</notes>
+<address 
+    customer="{{true}}"
+    value="{{initValue}}"
+    valueType="name"
+    bind:close="toggleCustomerPopup"
+    bind:ok="handleOk"
+    bind:ready="handleReady"
+>
+    <view class="address-item">
+        <view style="width: 150rpx">选择地区</view>
+        <view>
+            {{value.province_name}} 
+            {{value.city_name}} 
+            {{value.district_name}} 
+        </view>
+    </view>
+</address>
