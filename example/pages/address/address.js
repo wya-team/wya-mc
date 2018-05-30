@@ -2,7 +2,14 @@ Page({
 	data: {
 		show: false,
 		customerShow: false,
-		initValue: ["浙江省", "杭州市", "拱墅区"]
+		initValue: []
+	},
+	onShow() {
+		setTimeout(() => {
+			this.setData({
+				initValue: ["浙江省", "杭州市", "拱墅区"]
+			});
+		}, 1000);
 	},
 	togglePopup() {
 		this.setData({

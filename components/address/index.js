@@ -1,13 +1,19 @@
-import { getItem } from '../utils/utils';
+import { getItem, setItem } from '../utils/utils';
 import address from './data';
 
 const VALUE_TYPE = ['code', 'name'];
 
 Component({
     properties: {
-        value: {
+        defaultValue: {
             type: Array,
-            value: []
+            value: [],
+            observer: function(newVal, oldVal) {
+                // 当默认值改变的时候重新初始化
+                this.setData({defaultValue: newVal});
+                let localData = getItem('areaData') || "";
+                this._initData(localData || address);
+            }
         },
         valueType: {
             type: String,
@@ -38,7 +44,8 @@ Component({
         provinceData: [],               // 省的数组
         cityData: {},                   // 所有市的数据
         districtData: {},               // 所有区域的数据
-        selectedIndexArray: [0, 0, 0],  //滑动中被选中的item在数组中的位置
+        selectedIndexArray: [0, 0, 0],  // 滑动中被选中的item在数组中的位置
+        value: [],                      // 默认Item选中的值
     },
     methods: {
         _loadData(url) {
@@ -48,6 +55,7 @@ Component({
                     url,
                     method: 'GET',
                     success(res) {
+                        this.setItem('areaData', res.data)
                         this._initData(res.data);
                     },
                     fail(error) {
@@ -57,24 +65,29 @@ Component({
             }
         },
         _initData(fetchedAddress) {
-            const { value, valueType } = this.data;
+            const { defaultValue, valueType } = this.data;
+            const addressData = this._formatAddress(fetchedAddress);
+            const { provinceData, cityData, districtData } = addressData;
+            
             if (VALUE_TYPE.indexOf[valueType] === -1) {
                 throw new Error('address组件valueType必须是code和name中的一个');
             }
-            const addressData = this._formatAddress(fetchedAddress);
-            const { provinceData, cityData, districtData } = addressData;
+
+            let provinceValue = valueType === 'code' ? '110000' : '北京市';
+            let cityValue = valueType === 'code' ? '110100' : '北京市辖区';
+            let districtValue = valueType === 'code' ? '110101' : '东城区';
     
-            let provinceIndex = this._findIndex(provinceData, value[0] || '110000', valueType);
+            let provinceIndex = this._findIndex(provinceData, defaultValue[0] || provinceValue, valueType);
             let province_code = provinceData[provinceIndex].national_code;
             let province_name = provinceData[provinceIndex].region_name;
             
             let city = cityData[province_code];
-            let cityIndex = this._findIndex(city, value[1] || '110100', valueType);
+            let cityIndex = this._findIndex(city, defaultValue[1] || cityValue, valueType);
             let city_code = city[cityIndex].national_code;
             let city_name = city[cityIndex].region_name;
     
             let district = districtData[city_code];
-            let districtIndex = this._findIndex(district, value[2] || '110101', valueType);
+            let districtIndex = this._findIndex(district, defaultValue[2] || districtValue, valueType);
             let district_code = district[districtIndex].national_code;
             let district_name = district[districtIndex].region_name;
     
@@ -85,7 +98,7 @@ Component({
                 addressRange: [provinceData, city, district],
                 oldAddressRange: [provinceData, city, district],
             });
-            value.length === 3 && this._initItem(
+            defaultValue.length === 3 && this._initItem(
                 {
                     province_code, province_name,
                     city_code, city_name,

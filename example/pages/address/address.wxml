@@ -1,11 +1,9 @@
 <notes>默认的Item样式</notes>
-<address 
-    bind:close="togglePopup"
-/>
+<address />
 <notes>自定义的Item样式</notes>
 <address 
     customer="{{true}}"
-    value="{{initValue}}"
+    default-value="{{initValue}}"
     valueType="name"
     bind:close="toggleCustomerPopup"
     bind:ok="handleOk"
@@ -13,10 +11,11 @@
 >
     <view class="address-item">
         <view style="width: 150rpx">选择地区</view>
-        <view>
+        <view wx:if="{{value}}">
             {{value.province_name}} 
             {{value.city_name}} 
             {{value.district_name}} 
         </view>
+        <view wx:else style="color: #999">请选择</view>
     </view>
 </address>

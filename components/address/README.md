@@ -5,7 +5,7 @@
 ### 参数
 | 参数       | 说明      | 类型       | 默认值       | 可选值      | 必传      |
 |-----------|-----------|-----------|-------------|-------------|-------------|
-| value | 初始值 | Array | [] | | 否 |
+| defaultValue | 初始值 | Array | [] | | 否 |
 | valueType | value的类型,传入的是地址code还是地址名称 | String | `code` | `code` & `name` | 否 |
 | customer | 是否自定义Item样式 | Boolean | false |  | 否 |
 | url | 获取地址数据的url | String | - |  | 否 |
