@@ -38,6 +38,11 @@
         isLink 
     />
     <cell
+        title="Loading 加载框"    
+        url="/pages/loading/loading"
+        isLink 
+    />
+    <cell
         title="Modal 对话弹框"    
         url="/pages/modal/modal"
         isLink 
@@ -58,6 +63,11 @@
         isLink 
     />
     <cell
+        title="Search 搜索框"    
+        url="/pages/search/search"
+        isLink 
+    />
+    <cell
         title="Steps 步骤条"    
         url="/pages/steps/steps"
         isLink 
@@ -72,6 +82,11 @@
         url="/pages/toast/toast"
         isLink 
     />
+    <!-- <cell
+        title="WebView"    
+        url="/pages/web/web"
+        isLink 
+    /> -->
 </view>
 
 <view class="g-m-t-10">

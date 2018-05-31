@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "搜索栏",
+    "usingComponents": {
+        "search": "../../components/search/index",
+        "notes": "../../components/notes/index"
+    }
+}

@@ -15,7 +15,9 @@
 		"pages/card/card",
 		"pages/actionsheet/actionsheet",
 		"pages/steps/steps",
-		"pages/badge/badge"
+		"pages/badge/badge",
+		"pages/loading/loading",
+		"pages/search/search"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#FAFAFA",
