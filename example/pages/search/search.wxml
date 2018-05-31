@@ -1,2 +1,7 @@
 <notes>搜索框</notes>
-<search></search>
+<search
+    value="lai"
+    placeholder="来~有种就搜一下"
+    bind:cancel="handleCancel"
+    bind:submit="handleSubmit"
+></search>

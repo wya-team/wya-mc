@@ -82,11 +82,6 @@
         url="/pages/toast/toast"
         isLink 
     />
-    <!-- <cell
-        title="WebView"    
-        url="/pages/web/web"
-        isLink 
-    /> -->
 </view>
 
 <view class="g-m-t-10">
