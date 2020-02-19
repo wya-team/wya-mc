@@ -1,1 +1,45 @@
-<view class="count-down" wx:if="{{mode === 'DD天hh时mm分ss秒'}}"><view class="count-class _count" style="{{countStyle}}">{{day}}</view><view class="_unit" style="{{unitStyle}}">天</view><view class="count-class _count" style="{{countStyle}}">{{hour}}</view><view class="_unit" style="{{unitStyle}}">时</view><view class="count-class _count" style="{{countStyle}}">{{min}}</view><view class="_unit" style="{{unitStyle}}">分</view><view class="count-class _count" style="{{countStyle}}">{{sec}}</view><view class="_unit" style="{{unitStyle}}">秒</view></view><view class="count-down" wx:elif="{{mode === 'hh:mm:ss'}}"><view class="count-class _count" style="{{countStyle}}">{{hour}}</view><view class="_unit" style="{{unitStyle}}">:</view><view class="count-class _count" style="{{countStyle}}">{{min}}</view><view class="_unit" style="{{unitStyle}}">:</view><view class="count-class _count" style="{{countStyle}}">{{sec}}</view></view><view class="count-down" wx:elif="{{mode === 'hh时mm分ss秒'}}"><view class="count-class _count" style="{{countStyle}}">{{hour}}</view><view class="_unit" style="{{unitStyle}}">时</view><view class="count-class _count" style="{{countStyle}}">{{min}}</view><view class="_unit" style="{{unitStyle}}">分</view><view class="count-class _count" style="{{countStyle}}">{{sec}}</view><view class="_unit" style="{{unitStyle}}">秒</view></view><view class="count-down" wx:elif="{{mode === 'mm:ss'}}"><view class="count-class _count" style="{{countStyle}}">{{min}}</view><view class="_unit" style="{{unitStyle}}">:</view><view class="count-class _count" style="{{countStyle}}">{{sec}}</view></view><view class="count-down" wx:elif="{{mode === 'mm分ss秒'}}"><view class="count-class _count" style="{{countStyle}}">{{min}}</view><view class="_unit" style="{{unitStyle}}">分</view><view class="count-class _count" style="{{countStyle}}">{{sec}}</view><view class="_unit" style="{{unitStyle}}">秒</view></view>
+<view class="count-down" wx:if="{{mode === 'DD天hh时mm分ss秒'}}">
+    <view class="count-class _count" style="{{countStyle}}">{{day}}</view>
+    <view class="_unit" style="{{unitStyle}}">天</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{hour}}</view>
+    <view class="_unit" style="{{unitStyle}}">时</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{min}}</view>
+    <view class="_unit" style="{{unitStyle}}">分</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{sec}}</view>
+    <view class="_unit" style="{{unitStyle}}">秒</view>
+</view>
+<view class="count-down" wx:elif="{{mode === 'hh:mm:ss'}}">
+    <view class="count-class _count" style="{{countStyle}}">{{hour}}</view>
+    <view class="_unit" style="{{unitStyle}}">:</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{min}}</view>
+    <view class="_unit" style="{{unitStyle}}">:</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{sec}}</view>
+</view>
+<view class="count-down" wx:elif="{{mode === 'hh时mm分ss秒'}}">
+    <view class="count-class _count" style="{{countStyle}}">{{hour}}</view>
+    <view class="_unit" style="{{unitStyle}}">时</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{min}}</view>
+    <view class="_unit" style="{{unitStyle}}">分</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{sec}}</view>
+    <view class="_unit" style="{{unitStyle}}">秒</view>
+</view>
+<view class="count-down" wx:elif="{{mode === 'mm:ss'}}">
+    <view class="count-class _count" style="{{countStyle}}">{{min}}</view>
+    <view class="_unit" style="{{unitStyle}}">:</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{sec}}</view>
+</view>
+<view class="count-down" wx:elif="{{mode === 'mm分ss秒'}}">
+    <view class="count-class _count" style="{{countStyle}}">{{min}}</view>
+    <view class="_unit" style="{{unitStyle}}">分</view>
+
+    <view class="count-class _count" style="{{countStyle}}">{{sec}}</view>
+    <view class="_unit" style="{{unitStyle}}">秒</view>
+</view>

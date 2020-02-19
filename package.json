@@ -6,9 +6,9 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "npm run all",
-    "build": "gulp build",
-    "serve": "rm -rf ./dist/ && gulp dev",
-    "lint": "esw ./example/ gulpfile.js",
+    "build": "node config/build.js",
+    "serve": "node config/dev.js",
+    "lint": "esw ./components/ config/compiler.js",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
@@ -40,11 +40,10 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "cp-cli": "^1.1.0",
-    "del": "^3.0.0",
+    "cssnano": "^4.1.10",
     "eslint": "^4.13.1",
     "eslint-watch": "^3.1.3",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^4.1.0",
+    "gulp": "^4.0.2",
     "gulp-babel": "^7.0.0",
     "gulp-eslint": "^4.0.1",
     "gulp-htmlmin": "^4.0.0",
@@ -52,7 +51,7 @@
     "gulp-jsonminify2": "^1.0.2",
     "gulp-load-plugins": "^1.5.0",
     "gulp-minify-css": "^1.2.4",
-    "gulp-postcss": "^7.0.1",
+    "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-ruby-sass": "^3.0.0",
     "gulp-sass": "^3.1.0",
@@ -63,10 +62,7 @@
     "mockjs": "^1.0.1-beta3",
     "npm-run-all": "^4.1.2",
     "pre-commit": "^1.2.2",
-    "prompt": "^1.0.0",
-    "rimraf": "^2.6.1",
-    "run-sequence": "^2.2.1",
-    "stream-combiner2": "^1.1.1"
+    "prompt": "^1.0.0"
   },
   "lint-staged": {
     "{src,config}/**/*.{js,jsx}": [

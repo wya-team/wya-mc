@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "Actionsheet 行动按钮",
   "usingComponents": {
-    "actionsheet": "../../components/actionsheet/index"
+    "actionsheet": "../../dist/actionsheet/index"
   }
 }

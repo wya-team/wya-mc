@@ -1,1 +1,23 @@
-<popup show="{{show}}" type="bottom" maskclosable="{{maskClosable}}" bind:close="handleClose"><view class="actionsheet"><view class="_action _border-bottom action-class" wx:for="{{ actions }}" wx:key="{{ index }}-{{ item.name }}" open-type="{{ item.openType }}" bind:tap="handleBtnClick" data-index="{{ index }}">{{ item.name }}</view><view class="_action _cancel action-class" catchtap="handleClose">{{ cancelText }}</view></view></popup>
+<popup
+	show="{{show}}"
+	type="bottom"
+	maskClosable="{{maskClosable}}"
+	bind:close="handleClose"
+>
+	<view class="actionsheet">
+		<!-- 选项按钮 -->
+		<view 
+			class="_action _border-bottom action-class"
+			wx:for="{{ actions }}"
+			wx:key="{{ index }}-{{ item.name }}"
+			open-type="{{ item.openType }}"
+			bind:tap="handleBtnClick"
+			data-index="{{ index }}"
+		>
+			{{ item.name }}
+		</view>
+
+		<!-- 关闭按钮 -->
+		<view class="_action _cancel action-class" catchtap="handleClose">{{ cancelText }}</view>
+	</view>
+</popup>

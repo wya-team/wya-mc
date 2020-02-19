@@ -1,4 +1,4 @@
-import CountDown from '../../components/countdown/countdown';
+import CountDown from '../../dist/countdown/countdown';
 
 Page({
 	onShow() {

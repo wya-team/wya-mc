@@ -1,1 +1,26 @@
-<view class="toast {{ !message ? 'toast-notitle' : '' }}" wx:if="{{ show }}" bindtap="clearToast"><block wx:if="{{ icon }}"><view wx:if="{{ icon === 'loading' }}" class="__icon __icon-loading"><view class="__loading"></view></view><icon wx:else type="{{ icon }}" classes="__icon"/></block><view style="word-break: break-all;" wx:if="{{ message }}">{{ message }}</view></view>
+
+<view
+  class="toast {{ !message ? 'toast-notitle' : '' }}"
+  wx:if="{{ show }}"
+  bindtap="clearToast"
+>
+    <!-- icon 展示 -->
+    <block
+        wx:if="{{ icon }}"
+    >
+        <view
+            wx:if="{{ icon === 'loading' }}"
+            class="__icon __icon-loading"
+        >
+            <view class="__loading"></view>
+        </view>
+        <icon
+            wx:else
+            type="{{ icon }}"
+            classes="__icon"
+        />
+    </block>
+
+    <!-- 文案展示 -->
+    <view style="word-break: break-all;" wx:if="{{ message }}">{{ message }}</view>
+</view>

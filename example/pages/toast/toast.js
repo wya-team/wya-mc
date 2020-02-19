@@ -1,4 +1,4 @@
-import Toast from '../../components/toast/toast';
+import Toast from '../../dist/toast/toast';
 
 Page({
 	handleShowMessage() {

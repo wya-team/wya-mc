@@ -4,6 +4,7 @@
 /dist
 /tmp
 # /lib
+/example/dist
 
 # dependencies
 /node_modules

@@ -1,7 +1,7 @@
 {
     "navigationBarTitleText": "WYA小程序UI组件",
     "usingComponents": {
-        "cell": "../../components/cell/index",
-        "notes": "../../components/notes/index"
+        "cell": "../../dist/cell/index",
+        "notes": "../../dist/notes/index"
     }
 }

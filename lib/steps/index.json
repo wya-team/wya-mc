@@ -1,1 +1,6 @@
-{"component":true,"usingComponents":{"icon":"../icon/index"}}
+{
+    "component":true,
+    "usingComponents": {
+        "icon": "../icon/index"
+    }
+}

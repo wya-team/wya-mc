@@ -1,6 +1,6 @@
 {
     "navigationBarTitleText": "notes 注释",
     "usingComponents": {
-        "notes": "../../components/notes/index"
+        "notes": "../../dist/notes/index"
     }
 }

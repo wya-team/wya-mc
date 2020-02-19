@@ -1,1 +1,26 @@
-<view wx:if="{{show}}" class="notice-bar {{closable ? 'notice-bar-within-right-icon' : ''}} {{leftIcon ? 'notice-bar-within-left-icon' : ''}}" style="color: {{color}}; background-color: {{backgroundColor}}"><view wx:if="{{leftIcon}}"><icon classes="_left-icon" styles="color: {{color}}" type="{{leftIcon}}"/></view><view class="_content-wrap"><view class="_content" animation="{{animationData}}">{{content}}</view></view><view wx:if="{{closable}}"><icon classes="_right-icon" styles="color:{{color}}" type="cancel" bind:tap="_handleButtonClick"/></view></view>
+<view 
+    wx:if="{{show}}"
+    class="notice-bar {{closable ? 'notice-bar-within-right-icon' : ''}} {{leftIcon ? 'notice-bar-within-left-icon' : ''}}"
+    style="color: {{color}}; background-color: {{backgroundColor}}"
+>
+    <view wx:if="{{leftIcon}}">
+        <icon 
+            classes="_left-icon"
+            styles="color: {{color}}"
+            type="{{leftIcon}}" 
+        />
+    </view>
+    <view class="_content-wrap">
+        <view class="_content" animation="{{animationData}}">
+            {{content}}
+        </view>
+    </view>
+    <view wx:if="{{closable}}">
+        <icon 
+            classes="_right-icon"
+            styles="color:{{color}}"
+            type="cancel"
+            bind:tap="_handleButtonClick"
+        />
+    </view>
+</view>
