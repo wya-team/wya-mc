@@ -1,0 +1,4 @@
+<view bind:tap="handleOpen"><text>打开弹窗</text></view>
+<view bind:tap="handleClose"><text>关闭弹窗</text></view>
+
+<demo-modal id="portal-modal"></demo-modal>

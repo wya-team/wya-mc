@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/index/index"
+		"pages/portal/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",

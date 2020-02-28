@@ -1,0 +1,4 @@
+<view class="c-tpl" wx:if="{{ visible }}">
+	<text>{{ value }}</text>
+	<slot></slot>
+</view>
