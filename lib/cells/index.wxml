@@ -1,3 +1,0 @@
-<view class="classes cells" style="{{styles}}">
-	<slot></slot>
-</view>

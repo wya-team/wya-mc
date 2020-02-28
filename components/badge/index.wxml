@@ -1,9 +1,0 @@
-
-<view class="badge">
-    <view
-        class="_text"
-        style="color: {{ color }}; background-color: {{ backgroundColor }};font-size: {{ fontSize }}px; box-shadow: {{ boxShadow }};"
-    >
-        <slot></slot>
-    </view>
-</view>

@@ -1,7 +1,0 @@
-{
-    "navigationBarTitleText": "搜索栏",
-    "usingComponents": {
-        "search": "../../dist/search/index",
-        "notes": "../../dist/notes/index"
-    }
-}

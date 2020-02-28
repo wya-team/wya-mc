@@ -1,6 +1,0 @@
-{
-    "navigationBarTitleText": "步骤条",
-    "usingComponents": {
-       "steps":"../../../dist/steps/index"
-    }
-}

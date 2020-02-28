@@ -1,6 +1,0 @@
-{
-    "navigationBarTitleText": "角标",
-    "usingComponents": {
-        "badge": "../../dist/badge/index"
-    }
-}

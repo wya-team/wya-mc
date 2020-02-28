@@ -1,7 +1,0 @@
-<view 
-    bind:tap="handleClick"
-    class="classes notes"
-    style="{{styles}}"
->
-    <slot></slot>
-</view>

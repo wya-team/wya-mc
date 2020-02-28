@@ -1,8 +1,0 @@
-<pop-manager
-  show="{{ show }}"
-  type="{{ type }}"
-  mask="{{ mask }}"
-  bind:clickMask="handleMaskClick"
->
-  <slot></slot>
-</pop-manager>

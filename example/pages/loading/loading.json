@@ -1,6 +1,0 @@
-{
-    "navigationBarTitleText": "Loading 加载",
-    "usingComponents": {
-        "loading": "../../dist/loading/index"
-    }
-}

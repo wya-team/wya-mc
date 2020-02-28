@@ -1,7 +1,0 @@
-{
-    "navigationBarTitleText": "地址选择器",
-    "usingComponents": {
-        "address": "../../dist/address/index",
-        "notes": "../../dist/notes/index"
-    }
-}

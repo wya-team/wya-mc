@@ -1,6 +1,0 @@
-<view 
-    class="classes iconfont icon-{{ type }}"
-    style="{{styles}}"
-    bind:tap="handleClick"
->
-</view>

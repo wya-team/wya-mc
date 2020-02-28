@@ -1,7 +1,0 @@
-{
-    "navigationBarTitleText": "Tab",
-    "usingComponents": {
-        "tabs": "../../dist/tabs/index",
-        "tab-pane": "../../dist/utils/tab-pane/index"
-    }
-}

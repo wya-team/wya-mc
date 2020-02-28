@@ -1,6 +1,0 @@
-{
-    "navigationBarTitleText": "Toast",
-    "usingComponents": {
-        "toast": "../../dist/toast/index"
-    }
-}

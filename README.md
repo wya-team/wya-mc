@@ -11,7 +11,7 @@ git clone https://github.com/wya-team/wya-mc.git
 1. 安装项目
 ``` bash
 # 安装项目依赖
-npm install
+npm install @wya/mc
 # 执行组件编译
 npm run start
 ```
@@ -22,7 +22,7 @@ npm run start
 ```json
 {
     "usingComponents": {
-        "popup": "path/to/the/custom/component"
+        "mc-popup": "path/to/the/custom/component"
     }
 }
 ```
