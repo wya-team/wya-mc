@@ -6,8 +6,49 @@ const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
-const babelConfig = require('./babel-config');
 sass.compiler = require('node-sass');
+
+const babelConfig = {
+	presets: ['@babel/preset-env'],
+	plugins: [
+		'@babel/plugin-proposal-export-namespace-from',
+		'@babel/plugin-proposal-export-default-from',
+		'@babel/plugin-proposal-function-bind',
+		'@babel/plugin-syntax-dynamic-import',
+		[
+			'@babel/plugin-proposal-decorators',
+			{
+				"legacy": true
+			}
+		],
+		[	
+			'@babel/plugin-proposal-class-properties',
+			{
+				"loose": true
+			}
+		],
+		[
+			({ types: t }) => {
+				return {
+					visitor: {
+						MemberExpression(path) {
+							if (path.matchesPattern("process.env.NODE_ENV")) {
+								path.replaceWith(t.valueToNode(process.env.NODE_ENV));
+
+								if (path.parentPath.isBinaryExpression()) {
+									const evaluated = path.parentPath.evaluate();
+									if (evaluated.confident) {
+										path.parentPath.replaceWith(t.valueToNode(evaluated.value));
+									}
+								}
+							}
+						}
+					}
+				};
+			}
+		]
+	]
+};
 
 let src = path.resolve(__dirname, '../src');
 let dist = process.env.NODE_ENV === 'development'
