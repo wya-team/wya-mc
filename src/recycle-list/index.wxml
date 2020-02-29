@@ -1,0 +1,26 @@
+<scroll-view
+	style="height:{{height}}"
+	scroll-y="true"
+	lower-threshold="100"
+	enable-back-to-top="true"
+	class="mc-recycle-list"
+	bind:scroll="handleScroll"
+	bind:scrolltolower="handleEndReached"
+	bind:touchstart="handleTouchStart"
+	bind:touchend="handleTouchEnd"
+>
+	<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="height: {{y}}px; overflow: hidden;">
+		<text>{{ pullDownText }}</text>
+	</view>
+
+	<view 
+		class="mc-recycle-list__content" 
+		bind:touchmove="handleTouchMove" 
+	>
+		<slot />
+	</view>
+
+	<view class="mc-recycle-list__scroll">
+		<text> {{ scrollText }}</text>
+	</view>
+</scroll-view>

@@ -8,7 +8,7 @@
     "dev": "npm run all",
     "build": "cross-env NODE_ENV=production gulp -f ./config/gulpfile.js build --color",
     "serve": "cross-env NODE_ENV=development gulp -f ./config/gulpfile.js dev --color",
-    "lint": "esw ./src/ ./config/",
+    "lint": "esw ./src/ ./config/ ./example/",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
@@ -70,7 +70,7 @@
     }
   },
   "lint-staged": {
-    "{src,config}/**/*.{js,jsx}": [
+    "{src,config,example}/**/*.{js,jsx}": [
       "esw --fix",
       "git add"
     ]

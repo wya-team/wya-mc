@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/portal/index"
+		"pages/recycle-list/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
