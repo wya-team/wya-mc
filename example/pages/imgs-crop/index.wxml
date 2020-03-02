@@ -1,0 +1,3 @@
+<view class="v-index">
+	<mc-imgs-crop elementId="img"></mc-imgs-crop>
+</view>

@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/recycle-list/index"
+		"pages/imgs-crop/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
