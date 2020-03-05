@@ -14,6 +14,7 @@ Component({
 			type: Number,
 			value: 1,
 			observer(value) {
+				this.scale = value;
 				this.update();
 			}
 		},
@@ -23,6 +24,7 @@ Component({
 			type: Number,
 			value: 0,
 			observer(value) {
+				this.rotate = value;
 				this.update();
 			}
 		},
@@ -57,11 +59,11 @@ Component({
 			value: 'import-mc-imgs-crop'
 		}
 	},
-	data: {
-		
-	},
+	data: {},
 	lifetimes: {
 		attached() {
+			this.rotate = this.properties.rotate;
+			this.scale = this.properties.scale;
 			this.image = {
 				width: 0, 
 				height: 0,
@@ -85,12 +87,10 @@ Component({
 	},
 	methods: {
 		update() {
-			const { canvas } = this;
-			if (!canvas) return;
-			const ctx = canvas.getContext('2d');
+			if (!this.ctx) return;
 
-			this.paintBound(ctx);
-			this.paintImage(ctx, { ...this.image }, this.data.border);
+			this.paintBound();
+			this.paintImage(this.image, this.data.border);
 		},
 		init() {
 			const { elementId } = this.properties;
@@ -99,16 +99,15 @@ Component({
 				.fields({ node: true, size: true })
 				.exec((res) => {
 					const { width, height } = this.properties;
-					const canvas = res[0].node;
+					this.canvas = res[0].node;
+					this.canvas.width = width;
+					this.canvas.height = height;
 
-					canvas.width = width;
-					canvas.height = height;
+					this.ctx = res[0].node.getContext('2d');
 
-					const ctx = res[0].node.getContext('2d');
+					this.paintBound();
 
-					this.paintBound(ctx);
-
-					let image = canvas.createImage();
+					let image = this.canvas.createImage();
 					image.src = this.properties.src;
 					image.onload = (e) => {
 						const imageState = this.getInitialSize(image.width, image.height);
@@ -118,62 +117,61 @@ Component({
 						imageState.resource = image;
 
 						this.image = imageState;
-						this.paintImage(ctx, imageState);
+						this.paintImage();
 					};
-
-					this.canvas = canvas;
 				});
 		},
 		/**
 		 * 绘制边框
 		 */
-		paintBound(ctx) {
+		paintBound() {
 			let { borderRadius, color, width, height } = this.data;
 
-			ctx.clearRect(0, 0, width, height);
+			this.ctx.clearRect(0, 0, width, height);
 
-			ctx.save();
+			this.ctx.save();
 			// 画布的参数，不影响容器
-			ctx.scale(1, 1);
-			ctx.translate(0, 0);
+			this.ctx.scale(1, 1);
+			this.ctx.translate(0, 0);
 			// 填充色
-			ctx.fillStyle = 'rgba(' + color.slice(0, 4).join(',') + ')';
+			this.ctx.fillStyle = 'rgba(' + color.slice(0, 4).join(',') + ')';
 
 			const [borderSizeX, borderSizeY] = this.getBorders();
 
 			// 开始绘制
-			ctx.beginPath();
+			this.ctx.beginPath();
 
-			ctx.rect(borderSizeX, borderSizeY, width - borderSizeX * 2, height - borderSizeY * 2);
-			ctx.rect(width, 0, -width, height);
+			this.ctx.rect(borderSizeX, borderSizeY, width - borderSizeX * 2, height - borderSizeY * 2);
+			this.ctx.rect(width, 0, -width, height);
 
-			ctx.fill();
-			ctx.restore();
+			this.ctx.fill();
+			this.ctx.restore();
 		},
 
 		/**
 		 * 绘制图片
 		 */
-		paintImage(ctx, image, border) {
+		paintImage() {
+			const { image } = this;
 			if (!image.resource) return;
 			const { rotate } = this.properties;
 			const { canvas } = this.getDimensions();
 
-			const position = this.calculatePosition(image, border);
+			const position = this.calculatePosition();
 
-			ctx.save();
-			ctx.translate(canvas.width / 2, canvas.height / 2);
-			ctx.rotate(rotate * Math.PI / 180);
-			ctx.translate( 
+			this.ctx.save();
+			this.ctx.translate(canvas.width / 2, canvas.height / 2);
+			this.ctx.rotate(rotate * Math.PI / 180);
+			this.ctx.translate( 
 				-(canvas.width / 2), 
 				-(canvas.height / 2)
 			);
 
-			ctx.scale(1, 1);
+			this.ctx.scale(1, 1);
 			// 在源图像上方显示目标图像
-			ctx.globalCompositeOperation = 'destination-over';
+			this.ctx.globalCompositeOperation = 'destination-over';
 			
-			ctx.drawImage(
+			this.ctx.drawImage(
 				image.resource,
 				position.x,
 				position.y,
@@ -181,7 +179,7 @@ Component({
 				position.height
 			);
 
-			ctx.restore();
+			this.ctx.restore();
 		},
 
 		/**
@@ -240,17 +238,18 @@ Component({
 		/**
 		 * 边框
 		 */
-		getBorders(border = this.data.border) {
+		getBorders() {
+			const { border } = this.data;
 			return Array.isArray(border) ? border : [border, border];
 		},
 
 		/**
 		 * 通过相对位置计算 实际的位置
 		 */
-		calculatePosition(image, border) {
-			const { scale } = this.properties;
+		calculatePosition() {
+			const { scale, image } = this;
 
-			const [borderX, borderY] = this.getBorders(border);
+			const [borderX, borderY] = this.getBorders();
 
 			const croppingRect = this.getCroppingRect();
 
@@ -276,8 +275,7 @@ Component({
 		 * 获取裁剪的startX, startY, width, height [0, 1]
 		 */
 		getCroppingRect() {
-			const { image } = this;
-			const { scale } = this.data;
+			const { image, scale } = this;
 
 			const position = this.data.position || {
 				x: image.x,
@@ -349,7 +347,7 @@ Component({
 		handleStart(e) {
 			this.drag = true;
 			this.startX = e.touches[0].x;
-			this.startY = e.touches[0].x;
+			this.startY = e.touches[0].y;
 			this.moveX = null;
 			this.moveY = null;
 
@@ -381,11 +379,12 @@ Component({
 			this.moveX = null;
 			this.moveY = null;
 			this.previousPinchScale = 1;
+			this.touchDistance = null;
 		},
 
 		handleMove(e) {
 			if (!this.drag) return;
-
+			
 			if (e.touches.length > 1) {
 				let xLen = Math.abs(e.touches[0].x - e.touches[1].x);
 				let yLen = Math.abs(e.touches[0].y - e.touches[1].y);
@@ -393,16 +392,15 @@ Component({
 				// 缩放
 				if (this.touchDistance) {
 					let pinchScale;
+					let scale;
 					if (touchDistance > this.touchDistance) { // 放大
 						pinchScale = touchDistance / this.touchDistance;
-						this.setData({
-							scale: this.data.scale + (pinchScale - this.previousPinchScale),
-						});
+						this.scale += pinchScale - this.previousPinchScale;
+						this.scale = this.scale > 5 ? 5 : this.scale;
 					} else { // 缩小
 						pinchScale = this.touchDistance / touchDistance;
-						this.setData({
-							scale: this.data.scale + this.previousPinchScale - pinchScale,
-						});
+						this.scale += this.previousPinchScale - pinchScale;
+						this.scale = this.scale < 0.1 ? 0.1 : this.scale;
 					}
 					this.previousPinchScale = pinchScale;
 				}
@@ -417,23 +415,17 @@ Component({
 
 
 			// 拖动逻辑
-			const mousePositionX = e.touches[0].x;
-			const mousePositionY = e.touches[0].y;
+			const touchPositionX = e.touches[0].x;
+			const touchPositionY = e.touches[0].y;
 
-			const newState = {
-				mx: mousePositionX,
-				my: mousePositionY
-			};
-
-			let { rotate, scale } = this.data;
-			let { image, moveX, moveY } = this;
+			let { image, moveX, moveY, rotate, scale } = this;
 
 			rotate %= 360;
 			rotate = rotate < 0 ? rotate + 360 : rotate;
 
 			if (moveX && moveY) {
-				moveX -= mousePositionX;
-				moveY -= mousePositionY;
+				moveX -= touchPositionX;
+				moveY -= touchPositionY;
 
 				const width = image.width * scale;
 				const height = image.height * scale;
@@ -468,8 +460,8 @@ Component({
 				this.update();
 			}
 
-			this.moveX = newState.mx;
-			this.moveY = newState.my;
+			this.moveX = touchPositionX;
+			this.moveY = touchPositionY;
 		},
 
 		// 外部调用
