@@ -1,9 +1,16 @@
 <canvas
 	type="2d"
 	disable-scroll="true"
-	bindtouchstart="touchStart"
-	bindtouchmove="touchMove"
-	bindtouchend="touchEnd"
-	style="width: {{ width }}px; height: {{ height }}px; background-color: rgba(0, 0, 0, 0.8)"
+	bindtouchstart="handleStart"
+	bindtouchmove="handleMove"
+	bindtouchend="handleEnd"
+	style="width: {{ width }}rpx; height: {{ height }}rpx; background-color: rgba(255, 255, 255, 0)"
 	id="{{elementId}}"
 ></canvas>
+<canvas
+	type="2d"
+	disable-scroll="true"
+	style="position: fixed; top: -{{width}}rpx; left: -{{height}}rpx; width: {{width}}rpx; height: {{height}}rpx;"
+	id="export-imgs-crop"
+>
+</canvas>

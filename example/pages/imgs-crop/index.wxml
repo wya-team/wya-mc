@@ -1,3 +1,15 @@
-<view class="v-index">
-	<mc-imgs-crop elementId="img"></mc-imgs-crop>
+<view class="v-imgs-crop">
+	<mc-imgs-crop 
+		rotate="{{ rotate }}"
+		elementId="img" 
+		id="imgs-crop"
+	></mc-imgs-crop>
+	<view>
+		<text>Rotate</text>
+		<input type="number" value="{{ rotate }}" bindblur="handleChangeRotate" />
+	</view>
+
+	<button bind:tap="handleClick">获取图片</button>
+	<input type="text" value="{{ src }}" />
+	<image src="{{ src }}" style="width: 750rpx; height: 750rpx"></image>
 </view>
