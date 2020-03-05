@@ -64,6 +64,7 @@ Component({
 		attached() {
 			this.rotate = this.properties.rotate;
 			this.scale = this.properties.scale;
+			
 			this.image = {
 				width: 0, 
 				height: 0,
@@ -154,7 +155,7 @@ Component({
 		paintImage() {
 			const { image } = this;
 			if (!image.resource) return;
-			const { rotate } = this.properties;
+			const { rotate } = this;
 			const { canvas } = this.getDimensions();
 
 			const position = this.calculatePosition();
@@ -186,7 +187,8 @@ Component({
 		 * canvas外形尺寸
 		 */
 		getDimensions() {
-			const { width, height, rotate, border } = this.properties;
+			const { rotate } = this;
+			const { width, height, border } = this.properties;
 
 			const canvas = {};
 
@@ -473,8 +475,7 @@ Component({
 					.exec((res) => {
 						// 获取相对坐标
 						const cropRect = this.getCroppingRect();
-						const { image } = this;
-						const { rotate } = this.data;
+						const { image, rotate } = this;
 
 						// 获取实际像素坐标
 						cropRect.x *= image.resource.width;

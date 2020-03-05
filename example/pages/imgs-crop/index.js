@@ -16,9 +16,9 @@ Page({
 
 			});
 	},
-	handleChangeScale(e) {
+	handleChangeRotate(e) {
 		this.setData({
-			scale: Number(e.detail.value)
+			rotate: Number(e.detail.value)
 		});
 	}
 });
