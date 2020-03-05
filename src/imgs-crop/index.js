@@ -54,6 +54,7 @@ Component({
 
 		elementId: {
 			type: String,
+			value: 'import-mc-imgs-crop'
 		}
 	},
 	data: {
@@ -475,7 +476,7 @@ Component({
 		getImage() {
 			return new Promise((resolve, reject) => {
 				const query = this.createSelectorQuery();
-				query.select(`#export-imgs-crop`)
+				query.select(`#export-mc-imgs-crop`)
 					.fields({ node: true, size: true })
 					.exec((res) => {
 						// 获取相对坐标

@@ -1,7 +1,6 @@
 <view class="v-imgs-crop">
 	<mc-imgs-crop 
 		rotate="{{ rotate }}"
-		elementId="img" 
 		id="imgs-crop"
 		src="https://oss.weiyianmd.com/image/193/20190716/171208/0014105859837484_b.jpg"
 	></mc-imgs-crop>

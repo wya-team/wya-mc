@@ -11,6 +11,6 @@
 	type="2d"
 	disable-scroll="true"
 	style="position: fixed; top: -{{width}}rpx; left: -{{height}}rpx; width: {{width}}rpx; height: {{height}}rpx;"
-	id="export-imgs-crop"
+	id="export-mc-imgs-crop"
 >
 </canvas>
