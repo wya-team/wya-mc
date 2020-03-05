@@ -6,7 +6,7 @@ Component({
 	properties: {
 		src: {
 			type: String,
-			value: 'https://oss.weiyianmd.com/image/193/20190716/171208/0014105859837484_b.jpg'
+			value: ''
 		},
 
 		// 放大的倍数
