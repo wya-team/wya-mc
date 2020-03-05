@@ -45,6 +45,12 @@ Component({
 		},
 		total: {
 			type: Number,
+			value: 0,
+			observer(value) {
+				if (value === 0) {
+					this.loadDataForScroll({ force: true });
+				}
+			}
 		},
 		scroll: {
 			type: Boolean,
@@ -68,6 +74,13 @@ Component({
 		detached() {
 			
 		},
+	},
+	observers: {
+		'show': function (show) {
+			if (this.data.currentPage === 0) {
+				this.loadDataForScroll();
+			}
+		}
 	},
 	methods: {
 		// TODO: 提取
@@ -115,7 +128,7 @@ Component({
 
 				this.$emit('loadData', { 
 					page: 1, 
-					refreshing: true, 
+					refresh: true, 
 					done: () => {
 						this.setData({
 							pullDownText: PULL_DOWN_STATUS["0"],
@@ -143,15 +156,18 @@ Component({
 			return maxY / duration * Math.sin(pulledY / maxY * (Math.PI / 2)) + startY;
 		},
 
-		loadDataForScroll() {
-			if (this.data.show && this.data.scroll && this.data.scrollStatus >= 1) return;
+		loadDataForScroll(opts = {}) {
+			const { force = false } = opts;
+			if (!this.data.show || !this.data.scroll) return;
+			if ((!force && this.data.scrollStatus >= 1)) return;
+
 
 			this.setData({
 				scrollStatus: 1,
 				scrollText: SCROLL_STATUS["1"],
 			});
 
-			let page = this.data.currentPage + 1;
+			let page = force ? 1 : this.data.currentPage + 1;
 			this.$emit('loadData', {
 				page,
 				done: () => {
