@@ -102,6 +102,8 @@ Component({
 					this.canvas.height = height;
 
 					this.ctx = res[0].node.getContext('2d');
+
+					this.paintBound();
 					this.loadImage();
 				});
 		},
@@ -123,8 +125,10 @@ Component({
 		},
 
 		repaint() {
-			if (!this.ctx || !this.image.resource) return;
+			if (!this.ctx) return;
 			this.paintBound();
+
+			if (!this.image.resource) return;
 			this.paintImage(this.image, this.data.border);
 		},
 		/**
