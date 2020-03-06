@@ -6,7 +6,10 @@ Component({
 	properties: {
 		src: {
 			type: String,
-			value: ''
+			value: '',
+			observer(value) {
+				value && this.loadImage();
+			}
 		},
 
 		// 放大的倍数
@@ -15,7 +18,7 @@ Component({
 			value: 1,
 			observer(value) {
 				this.scale = value;
-				this.update();
+				this.repaint();
 			}
 		},
 
@@ -25,7 +28,7 @@ Component({
 			value: 0,
 			observer(value) {
 				this.rotate = value;
-				this.update();
+				this.repaint();
 			}
 		},
 
@@ -87,12 +90,6 @@ Component({
 		},
 	},
 	methods: {
-		update() {
-			if (!this.ctx) return;
-
-			this.paintBound();
-			this.paintImage(this.image, this.data.border);
-		},
 		init() {
 			const { elementId } = this.properties;
 			const query = this.createSelectorQuery();
@@ -105,22 +102,30 @@ Component({
 					this.canvas.height = height;
 
 					this.ctx = res[0].node.getContext('2d');
-
-					this.paintBound();
-
-					let image = this.canvas.createImage();
-					image.src = this.properties.src;
-					image.onload = (e) => {
-						const imageState = this.getInitialSize(image.width, image.height);
-
-						imageState.x = 0.5;
-						imageState.y = 0.5;
-						imageState.resource = image;
-
-						this.image = imageState;
-						this.paintImage();
-					};
+					this.loadImage();
 				});
+		},
+
+		loadImage() {
+			if (!this.canvas) return;
+			let image = this.canvas.createImage();
+			image.src = this.properties.src;
+			image.onload = (e) => {
+				const imageState = this.getInitialSize(image.width, image.height);
+
+				imageState.x = 0.5;
+				imageState.y = 0.5;
+				imageState.resource = image;
+
+				this.image = imageState;
+				this.repaint();
+			};
+		},
+
+		repaint() {
+			if (!this.ctx || !this.image.resource) return;
+			this.paintBound();
+			this.paintImage(this.image, this.data.border);
 		},
 		/**
 		 * 绘制边框
@@ -411,7 +416,7 @@ Component({
 					// TODO
 				}
 
-				this.update();
+				this.repaint();
 				return;
 			}
 
@@ -459,7 +464,7 @@ Component({
 					...position
 				};
 
-				this.update();
+				this.repaint();
 			}
 
 			this.moveX = touchPositionX;
