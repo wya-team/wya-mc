@@ -66,7 +66,10 @@ Component({
 		}
 	},
 	lifetimes: {
-		attached() {
+		/**
+		 * attached 执行早于页面的onLoad, 这里使用ready
+		 */
+		ready() {
 			if (this.data.currentPage === 0) {
 				this.loadDataForScroll();
 			}
