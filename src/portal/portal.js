@@ -1,5 +1,7 @@
 import defaultOptions from './default-options';
 
+const PORTAL_TAG = '@@PORTAL';
+
 class Portal {
 	constructor(registerOptions) {
 		this.waiting = false;
@@ -14,7 +16,6 @@ class Portal {
 	 * userOptions {
 	 * 	store,
 	 * 	router,
-	 * 	getInstance,
 	 * 	param: {
 	 * 	}
 	 * }
@@ -54,7 +55,7 @@ class Portal {
 
 
 	_init(options) {
-		const { onBefore, onSure, onClose, promise, ...rest } = options;
+		const { onBefore, onSure, onClose, promise, multiple, ...rest } = options;
 
 		return promise 
 			? new Promise((resolve, reject) => {
@@ -62,10 +63,12 @@ class Portal {
 					this.waiting = true;
 					onBefore({ 
 						...options 
-					}).then(() => {
+					}).then((response) => {
 						this._render({ 
-							options, 
-							response,
+							options: {
+								...rest,
+								data: response 
+							}, 
 							onSure: resolve,
 							onClose: reject,
 						});
@@ -75,25 +78,54 @@ class Portal {
 					});
 				} else {
 					this._render({ 
-						options, 
+						options: rest, 
 						onSure: resolve,
 						onClose: reject,
 					});
 				}
 			})
 			: this._render({ 
-				options, 
+				options: rest, 
 				onSure, 
 				onClose 
 			});
 	}
 
-	_render({ options, response = {}, onSure, onClose }) {
+	_render({ options, onSure: _onSure, onClose: _onClose }) {
 		const ctx = this._getContext();
-
 		ctx.setData({
 			visible: true
 		});
+
+		let update = ctx.update || ctx.onPortalUpdate;
+		update && update.call(ctx, options);
+
+		if (ctx[PORTAL_TAG] && ctx.$emit) return ctx;
+		let on = ctx.triggerEvent;
+
+		let done = (hook, detail) => {
+			this.destroy();
+			hook && hook(detail);
+		};
+
+		let overrideTrigger = (type, detail) => {
+			switch (type) {
+				case 'sure':
+					done(_onSure, detail);
+					break;
+				case 'close':
+					done(_onClose, detail);
+					break;
+				default:
+					on(type);
+					break;
+					
+			}
+		};
+
+		ctx[PORTAL_TAG] = true;
+		ctx.$emit = overrideTrigger;
+		ctx.triggerEvent = overrideTrigger;
 
 		return ctx;
 	}

@@ -6,8 +6,23 @@ Component({
 		}
 	},
 	data: {
-		visible: false
+		visible: false,
+		count: 0
 	},
+	
 	methods: {
+		onPortalUpdate(options) {
+			this.setData({
+				count: options.count
+			});
+		},
+
+		handleClose() {
+			this.$emit('close', { a: 1 });
+		},
+
+		handleSure() {
+			this.$emit('sure', { a: 1 });
+		}
 	}
 });

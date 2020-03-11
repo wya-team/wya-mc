@@ -3,11 +3,11 @@ import { Modal } from './modal/portal';
 Page({
 	handleOpen() {
 		Modal.popup({
-
-		}).then(() => {
-
-		}).catch(() => {
-
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
 		});
 	},
 

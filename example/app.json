@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/imgs-crop/index"
+		"pages/portal/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
