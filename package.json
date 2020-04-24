@@ -5,14 +5,17 @@
   "main": "lib",
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run all",
+    "dev": "npm run prompt && npm run all",
     "build": "cross-env NODE_ENV=production gulp -f ./config/gulpfile.js build --color",
     "serve": "cross-env NODE_ENV=development gulp -f ./config/gulpfile.js dev --color",
     "lint": "esw ./src/ ./config/ ./example/",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
-    "all": "npm-run-all --parallel --race --continue-on-error lint:watch serve"
+    "all": "npm-run-all --parallel --race --continue-on-error lint:watch serve",
+    "prompt": "node ./config/prompt.config.js",
+    "test": "",
+    "test:watch": ""
   },
   "repository": {
     "type": "git",
@@ -59,7 +62,9 @@
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.0.2",
     "husky": "^4.2.3",
+    "inquirer": "^7.1.0",
     "lint-staged": "^10.0.7",
+    "miniprogram-simulate": "^1.2.1",
     "node-sass": "^4.13.1",
     "npm-run-all": "^4.1.5"
   },
