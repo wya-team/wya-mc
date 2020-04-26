@@ -12,7 +12,7 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
-    "all": "npm-run-all --parallel --race --continue-on-error  serve",
+    "all": "npm-run-all --parallel --race --continue-on-error serve",
     "test": "",
     "test:watch": ""
   },

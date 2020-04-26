@@ -133,12 +133,12 @@ exports.dev = gulp.series(
 		Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]),
 		Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]),
 		() => {
-			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya);
-			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js);
-			gulp.watch([CSS_SRC, CSS_EXAMPLE_SRC], Compiler.sass);
-			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml);
-			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs);
-			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json);
+			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]));
+			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC]));
+			gulp.watch([CSS_SRC, CSS_EXAMPLE_SRC], Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]));
+			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]));
+			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]));
+			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]));
 		}
 	)
 );
