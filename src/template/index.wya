@@ -1,0 +1,23 @@
+<template>
+<view>
+	<text>template</text>
+</view>
+</template>
+<script>
+Component({
+	// TODO
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-tpl {
+	font-size: 12rpx;
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

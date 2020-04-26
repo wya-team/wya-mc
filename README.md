@@ -39,3 +39,10 @@ npm run start
 | padding: x 20rpx; | 左右边距统一为20rpx   |      |
 
 ​	
+
+## TODO
+1. 测试环境
+2. 只运行特定组件
+3. 单文件开发
+4. 文档
+5. 可在浏览器开发-runtime

@@ -1,6 +1,0 @@
-<view class="c-tpl" wx:if="{{ visible }}">
-	<text>{{ value }}</text>
-	<view><text> {{ count }} </text></view>
-	<view bind:tap="handleClose"><text> 内部关闭 </text></view>
-	<slot></slot>
-</view>

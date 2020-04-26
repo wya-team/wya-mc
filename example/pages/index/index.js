@@ -1,5 +1,0 @@
-const app = getApp();
-
-Page({
-	
-});

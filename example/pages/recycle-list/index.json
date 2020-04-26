@@ -1,5 +1,0 @@
-{
-  "usingComponents": {
-  	"mc-recycle-list": "../dist/recycle-list"
-  }
-}

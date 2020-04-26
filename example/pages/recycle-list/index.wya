@@ -1,3 +1,19 @@
+<template>
+<view style="height: 100%">
+	<mc-recycle-list
+		height="100%"
+		total="{{ total }}"
+		bind:loadData="loadData" 
+	>
+		<block wx:for="{{ list }}" wx:key="index" wx:item="item">
+			<view>
+				<text> {{index}}: {{item}} </text>
+			</view>
+		</block>
+	</mc-recycle-list>
+</view>
+</template>
+<script>
 const app = getApp();
 
 const generateArray = base => {
@@ -42,3 +58,12 @@ Page({
 		});
 	}
 });
+
+</script>
+<config>
+{
+  "usingComponents": {
+  	"mc-recycle-list": "../components/recycle-list"
+  }
+}
+</config>

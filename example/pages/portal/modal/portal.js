@@ -1,4 +1,4 @@
-import Portal from '../../../dist/portal/index';
+import Portal from '../../../components/portal/index';
 
 export const Modal = new Portal({ 
 	el: "#portal-modal" 

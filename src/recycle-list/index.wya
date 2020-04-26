@@ -1,3 +1,32 @@
+<template>
+	<scroll-view
+		style="height:{{height}}"
+		scroll-y="true"
+		lower-threshold="100"
+		enable-back-to-top="true"
+		class="mc-recycle-list"
+		bind:scroll="handleScroll"
+		bind:scrolltolower="handleEndReached"
+		bind:touchstart="handleTouchStart"
+		bind:touchend="handleTouchEnd"
+	>
+		<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="height: {{y}}px; overflow: hidden;">
+			<text>{{ pullDownText }}</text>
+		</view>
+
+		<view 
+			class="mc-recycle-list__content" 
+			bind:touchmove="handleTouchMove" 
+		>
+			<slot />
+		</view>
+
+		<view class="mc-recycle-list__scroll">
+			<text> {{ scrollText }}</text>
+		</view>
+	</scroll-view>
+</template>
+<script>
 import { PULL_DOWN_STATUS, PULL_UP_STATUS, SCROLL_STATUS } from './constant';
 
 Component({
@@ -192,3 +221,48 @@ Component({
 		}
 	}
 });
+</script>
+<style lang="scss">
+.mc-recycle-list {
+	position: relative;
+	overflow-y: scroll;
+}
+
+.mc-recycle-list__pull-down {
+	line-height: 60rpx;
+	font-size: 12rpx;
+}
+
+.mc-recycle-list__scroll {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 60rpx;
+	text {
+		color: #333;
+		line-height: 60rpx;
+		font-size: 24rpx;
+	}
+}
+
+.mc-recycle-list__pull-down {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 60rpx;
+	&.is-transition {
+		transition: height .3s ease
+	}
+	text {
+		color: #333;
+		line-height: 60rpx;
+		font-size: 24rpx;
+	}
+}
+
+</style>
+<config>
+{
+	"component": true
+}
+</config>

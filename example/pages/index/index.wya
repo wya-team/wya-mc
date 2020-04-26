@@ -1,0 +1,16 @@
+<template>
+<view class="v-index">欢迎使用@wya/mc</view>
+</template>
+<script>
+const app = getApp();
+
+Page({
+	
+});
+
+</script>
+<config>
+{
+  "usingComponents": {}
+}
+</config>
