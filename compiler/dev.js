@@ -44,7 +44,7 @@ const questions = [
 	},
 	{
 		type: 'checkbox',
-		message: '请选择要运行的组件',
+		message: '请选择要运行的组件，如果组件或者示例中使用了其他组件也请选上',
 		name: 'components',
 		choices,
 		validate: (answer) => {
@@ -71,7 +71,7 @@ prompt(questions).then((res) => {
 
 	process.env.SELECTED_COMPONENTS = ignoreComponents;
 	// 开始构建
-	const $process = exec(`npx gulp -f ${gulpConfig} dev --color`);
+	const $process = exec(`npx gulp -f ${gulpConfig} dev --color & npm run lint:watch`);
 	$process.stdout.on('data', (stdout) => console.info(stdout));
 	$process.stderr.on('data', (stderr) => console.info(stderr));
 });

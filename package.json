@@ -5,14 +5,13 @@
   "main": "lib",
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run all",
+    "dev": "npm run serve",
     "build": "cross-env NODE_ENV=production node ./compiler/build.js",
     "serve": "cross-env NODE_ENV=development node ./compiler/dev.js",
-    "lint": "esw ./src/ ./config/ ./example/",
+    "lint": "esw ./src/ ./config/ ./example/ --ext .wya,.js --color",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
-    "all": "npm-run-all --parallel --race --continue-on-error serve",
     "test": "",
     "test:watch": ""
   },
