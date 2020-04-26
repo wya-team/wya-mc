@@ -13,8 +13,8 @@ const babelConfig = require('./babel-config');
 
 const src = path.resolve(__dirname, '../src');
 const example = path.resolve(__dirname, '../example');
-const dist = path.resolve(__dirname, '../dist');
-const distComponents = path.resolve(__dirname, '../dist/components');
+const dist = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist') : path.resolve(__dirname, '../lib');
+const distComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist/components') : path.resolve(__dirname, '../lib');
 
 /*
  * TODO example打包到dist内
@@ -46,7 +46,7 @@ const WYA_EXAMPLE_SRC = `${example}/**/*.wya`;
 const getGulpConfig = () => {
 	// 因为从环境变量内拿到的是string类型，需要转换下
 	return {
-		ignore: process.env.SELECTED_COMPONENTS.split(',')
+		ignore: (process.env.SELECTED_COMPONENTS || '').split(',')
 	}
 }
 
