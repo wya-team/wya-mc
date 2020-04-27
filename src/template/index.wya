@@ -1,7 +1,7 @@
 <template>
-<view>
-	<text>template</text>
-</view>
+	<view class="mc-tpl">
+		template
+	</view>
 </template>
 <script>
 Component({

@@ -3,6 +3,7 @@
 # compiled output
 dist/
 lib/
+coverage/
 tmp
 
 # dependencies

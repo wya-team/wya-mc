@@ -74,4 +74,6 @@ prompt(questions).then((res) => {
 	const $process = exec(`npx gulp -f ${gulpConfig} dev --color & npm run lint:watch`);
 	$process.stdout.on('data', (stdout) => console.info(stdout));
 	$process.stderr.on('data', (stderr) => console.info(stderr));
+}).catch((error) => {
+	console.error(error);
 });

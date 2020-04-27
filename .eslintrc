@@ -22,10 +22,10 @@
 	"plugins": [
 		"markdown",
 		"babel",
-    "html"
+		"html"
 	],
 	"settings": {
-    "html/html-extensions": [".html", ".wya"],
+		"html/html-extensions": [".html", ".wya"],
 		"import/resolver": {
 			"node": {
 				"extensions": [

@@ -1,6 +1,9 @@
 {
 	"pages": [
-		"pages/imgs-crop/index"
+		"pages/imgs-crop/index",
+		"pages/portal/index",
+		"pages/recycle-list/index",
+		"pages/template/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
