@@ -1,0 +1,242 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+
+	<view
+		class="custom-class {{ utils.bem('list-item', [size, { center, required, borderless: !border, clickable: isLink || clickable }]) }}"
+		hover-class="mc-list-item--hover hover-class"
+		hover-stay-time="70"
+		style="{{ customStyle }}"
+		bind:tap="onClick"
+	>
+	<mc-icon
+		wx:if="{{ icon }}"
+		type="{{ icon }}"
+		class="mc-list-item__left-icon-wrap"
+		custom-class="mc-list-item__left-icon"
+	/>
+	<slot wx:else name="icon" />
+
+	<view
+		style="{{ titleWidth ? 'max-width:' + titleWidth + ';min-width:' + titleWidth : '' }}"
+		class="mc-list-item__title title-class"
+	>
+		<block wx:if="{{ title }}">{{ title }}</block>
+		<slot wx:else name="title" />
+
+		<view wx:if="{{ label || useLabelSlot }}" class="mc-list-item__label label-class">
+		<slot wx:if="{{ useLabelSlot }}" name="label" />
+		<block wx:elif="{{ label }}">{{ label }}</block>
+		</view>
+	</view>
+
+	<view class="mc-list-item__value value-class">
+		<block wx:if="{{ value || value === 0 }}">{{ value }}</block>
+		<slot wx:else />
+	</view>
+
+	<mc-icon
+		wx:if="{{ isLink }}"
+		type="{{ arrowDirection ? 'arrow' + '-' + arrowDirection : 'arrow' }}"
+		class="mc-list-item__right-icon-wrap right-icon-class"
+		custom-class="mc-list-item__right-icon"
+	/>
+		<slot wx:else name="right-icon" />
+		<slot name="extra" />
+	</view>
+
+</template>
+<script>
+
+Component({
+	properties: {
+		title: null,
+		value: null,
+		icon: String,
+		size: String,
+		label: String,
+		center: Boolean,
+		isLink: Boolean,
+		url: String,
+		linkType: {
+			type: String,
+			value: 'navigateTo'
+		},
+		required: Boolean,
+		clickable: Boolean,
+		titleWidth: String,
+		customStyle: String,
+		arrowDirection: String,
+		useLabelSlot: Boolean,
+		border: {
+			type: Boolean,
+			value: true
+		}
+	},
+
+	methods: {
+		onClick(event) {
+			this.triggerEvent('click', event.detail);
+			this.data.isLink && this.jumpLink();
+		},
+		jumpLink() {
+			/* eslint-disable */
+			let {url = '',linkType} = this.data
+			url && wx[linkType]({ url });
+		}
+	}
+});
+</script>
+<style lang="scss">
+@import '../common/index.wxss';
+
+.mc-list-item {
+	position: relative;
+	display: -webkit-flex;
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 10px 16px;
+	padding: var(--list-item-vertical-padding,10px) var(--list-item-horizontal-padding,16px);
+	font-size: 14px;
+	font-size: var(--list-item-font-size,14px);
+	line-height: 24px;
+	line-height: var(--list-item-line-height,24px);
+	color: #323233;
+	color: var(--list-item-text-color,#323233);
+	background-color: #fff;
+	background-color: var(--list-item-background-color,#fff)
+}
+
+.mc-list-item:after {
+	position: absolute;
+	box-sizing: border-box;
+	-webkit-transform-origin: center;
+	transform-origin: center;
+	content: " ";
+	pointer-events: none;
+	top: auto;
+	right: 0;
+	bottom: 0;
+	left: 16px;
+	border-bottom: 1px solid #ebedf0;
+	-webkit-transform: scaleY(.5);
+	transform: scaleY(.5)
+}
+
+.mc-list-item--borderless:after {
+	display: none
+}
+
+.mc-list-item-group {
+	background-color: #fff;
+	background-color: var(--list-item-background-color,#fff)
+}
+
+.mc-list-item__label {
+	margin-top: 3px;
+	margin-top: var(--list-item-label-margin-top,3px);
+	font-size: 12px;
+	font-size: var(--list-item-label-font-size,12px);
+	line-height: 18px;
+	line-height: var(--list-item-label-line-height,18px);
+	color: #969799;
+	color: var(--list-item-label-color,#969799)
+}
+
+.mc-list-item__value {
+	overflow: hidden;
+	text-align: right;
+	vertical-align: middle;
+	color: #969799;
+	color: var(--list-item-value-color,#969799)
+}
+
+.mc-list-item__title,.mc-list-item__value {
+	-webkit-flex: 1;
+	flex: 1
+}
+
+.mc-list-item__title:empty,.mc-list-item__value:empty {
+	display: none
+}
+
+.mc-list-item__left-icon-wrap,.mc-list-item__right-icon-wrap {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-align-items: center;
+	align-items: center;
+	height: 24px;
+	height: var(--list-item-line-height,24px);
+	font-size: 16px;
+	font-size: var(--list-item-icon-size,16px)
+}
+
+.mc-list-item__left-icon-wrap {
+	margin-right: 5px
+}
+
+.mc-list-item__right-icon-wrap {
+	margin-left: 5px;
+	color: #969799;
+	color: var(--list-item-right-icon-color,#969799)
+}
+
+.mc-list-item__left-icon {
+	vertical-align: middle
+}
+
+.mc-list-item__left-icon,.mc-list-item__right-icon {
+	line-height: 24px;
+	line-height: var(--list-item-line-height,24px)
+}
+
+.mc-list-item--clickable.mc-list-item--hover {
+	background-color: #f2f3f5;
+	background-color: var(--list-item-active-color,#f2f3f5)
+}
+
+.mc-list-item--required {
+	overflow: visible
+}
+
+.mc-list-item--required:before {
+	position: absolute;
+	content: "*";
+	left: 8px;
+	left: var(--padding-xs,8px);
+	font-size: 14px;
+	font-size: var(--list-item-font-size,14px);
+	color: #ee0a24;
+	color: var(--list-item-required-color,#ee0a24)
+}
+
+.mc-list-item--center {
+	-webkit-align-items: center;
+	align-items: center
+}
+
+.mc-list-item--large {
+	padding-top: 12px;
+	padding-top: var(--list-item-large-vertical-padding,12px);
+	padding-bottom: 12px;
+	padding-bottom: var(--list-item-large-vertical-padding,12px)
+}
+
+.mc-list-item--large .mc-list-item__title {
+	font-size: 16px;
+	font-size: var(--list-item-large-title-font-size,16px)
+}
+
+.mc-list-item--large .mc-list-item__label {
+	font-size: 14px;
+	font-size: var(--list-item-large-label-font-size,14px)
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>

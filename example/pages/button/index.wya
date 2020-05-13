@@ -1,0 +1,102 @@
+<template>
+	<view class="g-pd-20">按钮类型: primary/text/success/error/warning </view>
+	<!-- /primary/text/success/error/warning -->
+	<view class="g-pd-lr-20">
+		<mc-button custom-style="margin: 0 20rpx 20rpx 0;">default</mc-button>
+		<mc-button type="primary" custom-style="margin: 0 20rpx 20rpx 0;">primary</mc-button>
+		<mc-button type="success" custom-style="margin: 0 20rpx 20rpx 0;">success</mc-button>
+		<mc-button type="error" custom-style="margin: 0 20rpx 20rpx 0;">error</mc-button>
+		<mc-button type="warning" custom-style="margin: 0 20rpx 20rpx 0;">warning</mc-button>
+		<mc-button type="text" custom-style="margin: 0 20rpx 20rpx 0;">text</mc-button>
+		<mc-button type="text" custom-style="margin: 0 20rpx 20rpx 0;color: #7232dd;">text</mc-button>
+	</view>
+
+	<view class="g-pd-20" >朴素按钮:plain </view>
+	<view class="g-pd-lr-20">
+		<mc-button plain type="primary" color="red" custom-style="margin: 0 20rpx 20rpx 0;">朴素按钮</mc-button>
+		<mc-button plain type="primary" color="orange" custom-style="margin: 0 20rpx 20rpx 0;">朴素按钮</mc-button>
+	</view>
+
+	<view class="g-pd-20" >图标按钮：icon </view>
+	<view class="g-pd-lr-20">
+		<mc-button icon="home2" type="primary" color="red" custom-style="margin: 0 20rpx 20rpx 0;"></mc-button>
+		<mc-button type="primary" icon="home2" color="orange" custom-style="margin: 0 20rpx 20rpx 0;">按钮</mc-button>
+		<mc-button plain type="success" icon="home2" color="orange" custom-style="margin: 0 20rpx 20rpx 0;">按钮</mc-button>
+	</view>
+
+
+	<view class="g-pd-20" >禁用按钮: disabled</view>
+	<view class="g-pd-lr-20">
+		<mc-button disabled  color="red" custom-style="margin: 0 20rpx 20rpx 0;">正常按钮</mc-button>
+		<mc-button plain disabled color="orange" custom-style="margin: 0 20rpx 20rpx 0;">朴素按钮</mc-button>
+	</view>
+
+	<view class="g-pd-20" >按钮形状: 不设置/square/ circle</view>
+	<view class="g-pd-lr-20">
+		<mc-button type="primary" custom-style="margin: 0 20rpx 20rpx 0;">正常按钮</mc-button>
+		<mc-button type="success" square custom-style="margin: 0 20rpx 20rpx 0;">方形按钮</mc-button>
+		<mc-button type="warning" circle custom-style="margin: 0 20rpx 20rpx 0;">圆形按钮</mc-button>
+	</view>
+
+	<view class="g-pd-20" >按钮尺寸： large/normal/small/mini</view>
+	<view class="g-pd-lr-20">
+		<mc-button type="success" size="large" custom-style="margin: 0 20rpx 20rpx 0;">超大按钮</mc-button>
+		<mc-button type="success" size="normal" custom-style="margin: 0 20rpx 20rpx 0;">正常按钮</mc-button>
+		<mc-button type="success" size="small" custom-style="margin: 0 20rpx 20rpx 0;">小型按钮</mc-button>
+		<mc-button type="success" size="mini" custom-style="margin: 0 20rpx 20rpx 0;">迷你按钮</mc-button>
+	</view>
+
+	<view class="g-pd-20" >块级按钮: long </view>
+	<view class="g-pd-lr-20">
+		<mc-button type="success" long custom-style="margin: 0 20rpx 20rpx 0;">块级按钮</mc-button>
+	</view>
+
+	<view class="g-pd-20" >自定义颜色: color </view>
+	<view class="g-pd-lr-20">
+		<mc-button color="#7232dd" custom-style="margin: 0 20rpx 20rpx 0;">单色按钮</mc-button>
+		<mc-button color="#7232dd" plain custom-style="margin: 0 20rpx 20rpx 0;">单色按钮</mc-button>
+		<mc-button color="linear-gradient(to right, #4bb0ff, #6149f6)" custom-style="margin: 0 20rpx 20rpx 0;">渐变按钮</mc-button>
+	</view>
+
+	<!-- open-type 检测 -->
+	<view class="g-pd-20" >open-type </view>
+	<view class="g-pd-lr-20 g-pd-b-30">
+		<mc-button
+			type="success"
+			open-type="getUserInfo"
+			bindGetUserInfo="bindGetUserInfo"
+			custom-style="margin-right: 20rpx;"
+		>获取用户信息</mc-button>
+		<mc-button
+			type="success"
+			open-type="getPhoneNumber"
+			bindGetPhoneNumber="bindGetPhoneNumber"
+		>获取用户手机号</mc-button>
+	</view>
+</template>
+
+<script>
+Page({
+	data: {},
+	onLoad() {},
+	bindGetUserInfo(e) {
+		console.log(e, 'userInfo');
+	},
+	bindGetPhoneNumber(e) {
+		console.log(e, 'phone-number');
+	}
+
+});
+</script>
+<style lang="scss">
+page{
+	background: #fff;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-button": "../components/button"
+	}
+}
+</config>

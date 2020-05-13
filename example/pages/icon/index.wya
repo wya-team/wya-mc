@@ -1,0 +1,98 @@
+<template>
+	<view class="g-pd-20" >基础用法 </view>
+	<view class="g-pd-lr-20 g-flex g-jc-sb g-fw-w">
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon type="link"></mc-icon>
+			<text class="g-pd-tb-10">link</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon type="activity"></mc-icon>
+			<text class="g-pd-tb-10">activity</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon type="toplay"></mc-icon>
+			<text class="g-pd-tb-10">toplay</text>
+		</view>
+	</view>
+
+
+	<view class="g-pd-20" >图标颜色 </view>
+	<view class="g-pd-lr-20 g-flex g-jc-sb g-fw-w">
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="color: red;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon  custom-style="color: blue;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon  custom-style="color: green;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon  custom-style="color: orange;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+	</view>
+
+	<view class="g-pd-20" >图标大小</view>
+	<view class="g-pd-lr-20 g-flex g-jc-sb g-fw-w">
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="font-size: 20rpx;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="font-size: 30rpx;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="font-size: 40rpx;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="font-size: 50rpx;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+	</view>
+	<view class="g-pd-20" >使用图标自带颜色: inherit</view>
+	<view class="g-pd-lr-20 g-flex g-jc-sb g-fw-w">
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon custom-style="color: red;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon  inherit custom-style="color: red;" type="phone"></mc-icon>
+			<text class="g-pd-tb-10">phone</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon  custom-style="color: orange;" type="activity"></mc-icon>
+			<text class="g-pd-tb-10">activity</text>
+		</view>
+		<view class="g-flex g-fd-c g-jc-c g-ai-c g-pd-20" >
+			<mc-icon inherit custom-style="color: orange;" type="activity"></mc-icon>
+			<text class="g-pd-tb-10">activity</text>
+		</view>
+	</view>
+</template>
+
+<script>
+Page({
+	data: {},
+	onLoad() {}
+});
+</script>
+<style lang="scss">
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-icon": "../components/icon"
+	}
+}
+</config>

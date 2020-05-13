@@ -1,0 +1,41 @@
+<template>
+	<view
+		wx:if="{{ title }}"
+		class="mc-list__title"
+	>
+		{{ title }}
+	</view>
+	<view class="custom-class mc-list {{ border ? 'mc-hairline--top-bottom' : '' }}">
+		<slot />
+	</view>
+</template>
+<script>
+Component({
+	properties: {
+		title: String,
+		border: {
+			type: Boolean,
+			value: true
+		}
+	}
+});
+</script>
+<style lang="scss">
+@import '../common/index.wxss';
+
+.mc-list__title {
+	padding: 16px 16px 8px;
+	padding: var(--list-title-padding,16px 16px 8px);
+	font-size: 14px;
+	font-size: var(--list-title-font-size,14px);
+	line-height: 16px;
+	line-height: var(--list-title-line-height,16px);
+	color: #969799;
+	color: var(--list-title-color,#969799)
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

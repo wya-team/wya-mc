@@ -1,0 +1,92 @@
+<template>
+	<mc-list title="动画">
+		<mc-list-item title="fade" bindtap="handleClick" data-type="show" />
+		<mc-list-item title="fade-up"  bindtap="handleClick" data-type="showFadeUp"/>
+		<mc-list-item title="fade-down" bindtap="handleClick" data-type="showFadeDown" />
+		<mc-list-item title="fade-left" bindtap="handleClick" data-type="showFadeLeft" />
+		<mc-list-item title="fade-right"  bindtap="handleClick" data-type="showFadeRight"/>
+		<mc-list-item title="slide-up" bindtap="handleClick" data-type="showSlideUp" />
+		<mc-list-item title="slide-down" bindtap="handleClick" data-type="showSlideDown" />
+		<mc-list-item title="slide-left"  bindtap="handleClick" data-type="showSlideLeft"/>
+		<mc-list-item title="slide-right"  bindtap="handleClick" data-type="showSlideRight"/>
+	</mc-list>
+
+
+	<mc-transition show="{{show}}">
+		<text class="box">fade</text>
+	</mc-transition>
+
+
+	<mc-transition name="fade-up" show="{{showFadeUp}}">
+		<text class="box">fade-up</text>
+	</mc-transition>
+	<mc-transition name="fade-down" show="{{showFadeDown}}">
+		<text class="box">fade-down</text>
+	</mc-transition>
+	<mc-transition name="fade-left" show="{{showFadeLeft}}">
+		<text class="box">fade-left</text>
+	</mc-transition>
+	<mc-transition name="fade-right" show="{{showFadeRight}}">
+		<text class="box">fade-right</text>
+	</mc-transition>
+
+
+	<mc-transition name="slide-up" show="{{showSlideUp}}">
+		<text class="box">slide-up</text>
+	</mc-transition>
+	<mc-transition name="slide-down" show="{{showSlideDown}}">
+		<text class="box">slide-down</text>
+	</mc-transition>
+	<mc-transition name="slide-left" show="{{showSlideLeft}}">
+		<text class="box">slide-left</text>
+	</mc-transition>
+	<mc-transition name="slide-right" show="{{showSlideRight}}">
+		<text class="box">slide-right</text>
+	</mc-transition>
+
+</template>
+
+<script>
+Page({
+	data: {
+		show: false,
+		showFadeUp: false,
+		showFadeDown: false,
+		showFadeLeft: false,
+		showFadeRight: false,
+		showSlideUp: false,
+		showSlideDown: false,
+		showSlideLeft: false,
+		showSlideRight: false,
+	},
+	handleClick(e) {
+		let { type } = e.currentTarget.dataset;
+		console.log(type, 'transition');
+		this.setData({
+			[`${type}`]: !this.data[type]
+		});
+	}
+});
+</script>
+<style lang="scss">
+.v-transition {}
+.box {
+	width: 100px;
+	height: 100px;
+	display: block;
+	margin: 10px auto;
+	background: orange;
+	color: #fff;
+	text-align: center;
+	line-height: 100px;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-transition": "../components/transition",
+		"mc-list": "../components/list",
+		"mc-list-item": "../components/list-item"
+	}
+}
+</config>

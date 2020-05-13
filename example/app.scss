@@ -1,3 +1,424 @@
+@import './assets/css/golbal.scss';
+@import './assets/css/reset.scss';
+
+/**app.wxss**/
+.g-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+}
+
 page {
-	height: 100%
+  background: #f2f2f2;
+  color: #333;
+  font-size: 24rpx;
+}
+
+button::after{
+	border: 0
+}
+
+/**
+* 背景色
+*/
+
+.g-bg-white {
+  background: #fff;;
+}
+
+
+/**
+* font-size
+*/
+
+.g-fs-24 {
+	font-size: 24rpx!important;
+}
+
+.g-fs-26 {
+	font-size: 26rpx!important;
+}
+
+.g-fs-28 {
+	font-size: 28rpx!important;
+}
+
+.g-fs-30 {
+	font-size: 30rpx!important;
+}
+
+.g-fs-32 {
+	font-size: 32rpx!important;
+}
+
+.g-fs-34 {
+	font-size: 34rpx!important;
+}
+
+.g-fs-36 {
+	font-size: 36rpx!important;
+}
+.g-fs-40 {
+	font-size: 40rpx!important;
+}
+.g-fs-100 {
+	font-size: 100rpx!important;
+}
+
+.g-fs-64 {
+	font-size: 64rpx!important;
+}
+
+/*gird*/
+
+.g-col {
+	flex: 1
+}
+
+.g-col-2 {
+	flex: 2
+}
+
+.g-col-4 {
+	flex: 4
+}
+
+.g-col-7 {
+	flex: 7
+}
+
+.g-full {
+	flex: 0 0 100%;
+}
+
+.g-1of2 {
+	flex: 0 0 50%;
+}
+
+.g-1of3 {
+	flex: 0 0 33.3333%;
+}
+
+.g-1of4 {
+	flex: 0 0 25%;
+}
+
+
+/**
+* 布局
+*/
+
+.g-pd-10 {
+	padding: 10rpx !important;
+}
+
+.g-pd-20 {
+	padding: 20rpx !important;
+}
+.g-pd-tb-18 {
+	padding: 18rpx 0 !important;
+  }
+.g-pd-tb-20 {
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
+}
+.g-pd-tb-24 {
+	padding: 24rpx 0 !important;
+  }
+
+.g-pd-tb-50 {
+	padding: 50rpx 0 !important;
+}
+.g-pd-tb-64 {
+	padding: 64rpx 0 !important;
+}
+
+.g-pd-t-24 {
+  padding-top: 24rpx !important;
+}
+
+.g-pd-b-24 {
+  padding-bottom: 24rpx !important;
+}
+
+.g-pd-l-24 {
+  padding-left: 24rpx !important;
+}
+
+.g-pd-r-24 {
+  padding-right: 24rpx !important;
+}
+
+.g-pd-lr-24 {
+  padding-left: 24rpx !important;
+  padding-right: 24rpx !important;
+}
+
+.g-pd-24 {
+	padding: 24rpx !important;
+}
+
+.g-pd-30 {
+	padding: 30rpx;
+}
+.g-pd-tb-30 {
+	padding-top: 30rpx;
+	padding-bottom: 30rpx;
+}
+.g-pd-lr-30 {
+	padding-left: 30rpx;
+	padding-right: 30rpx;
+}
+
+
+.g-pd-tb-32 {
+  padding-top: 32rpx !important;
+  padding-bottom: 32rpx !important;
+}
+
+
+.g-pd-tb-40 {
+  padding-top: 40rpx !important;
+  padding-bottom: 40rpx !important;
+}
+
+.g-m-t-8 {
+	margin-top: 8rpx !important;
+  }
+.g-m-t-16 {
+  margin-top: 16rpx !important;
+}
+.g-m-b-16 {
+  margin-bottom: 16rpx !important;
+}
+.g-m-tb-16 {
+	margin-top: 16rpx !important;
+	margin-bottom: 16rpx !important;
+}
+
+.g-m-t-20 {
+  margin-top: 20rpx !important;
+}
+
+.g-m-tb-20 {
+	margin-top: 20rpx !important;
+	margin-bottom: 20rpx !important;
+  }
+
+
+/**
+ * g-oneline
+ * 一行文字
+ */
+
+ .g-oneline {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+}
+
+/**
+ * g-twoline
+ * 两行文字
+ */
+
+ .g-twoline {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	word-break:break-all;
+}
+
+/**
+ * g-two-lh
+ * 两行文字 限高
+ */
+
+ .g-two-lh {
+	height: 63rpx;
+	line-height: 32rpx;
+}
+
+/**
+ * g-two-lh
+ * 一行文字 限高
+ */
+
+.g-one-lh {
+	height: 32rpx;
+	line-height: 32rpx;
+}
+/**
+ * g-nowrap
+ * 一行文字 强制不换行
+ */
+
+ .g-nowrap {
+	white-space: nowrap;
+}
+
+
+/**
+ * g-tc
+ * 文本居中
+ */
+
+.g-tc {
+	text-align: center;
+}
+
+
+/**
+ * g-tl
+ * 文本居左
+ */
+
+.g-tl {
+	text-align: left;
+}
+
+
+/**
+ * g-tr
+ * 文本居右
+ */
+
+.g-tr {
+	text-align: right;
+}
+
+/**
+ * g-td-lh
+ * 文本删除线
+ */
+
+ .g-td-lh {
+	text-decoration: line-through;
+}
+
+
+/**
+ * g-td-ul
+ * 文本下划线
+ */
+
+.g-td-ul {
+	text-decoration: underline;
+}
+
+/*layout*/
+
+.g-flex {
+	display: flex;
+	box-sizing: border-box;
+}
+
+.g-fd-c {
+	flex-direction: column;
+}
+
+.g-fd-re {
+	flex-direction: row-reverse;
+}
+
+.g-jc-sb {
+	justify-content: space-between;
+}
+.g-jc-sa {
+	justify-content: space-around;
+}
+
+.g-jc-c {
+	justify-content: center;
+}
+
+.g-jc-fe {
+	justify-content: flex-end;
+}
+
+.g-ai-a {
+	align-items: start;
+}
+
+
+.g-ai-c {
+	align-items: center;
+}
+
+.g-ai-fe {
+	align-items: flex-end;
+}
+
+.g-ai-fs {
+	align-items: flex-start;
+}
+
+.g-fw-w {
+	flex-wrap: wrap;
+}
+
+.g-ac-fs {
+	align-content: flex-start;
+}
+
+.g-as-s {
+	align-self:stretch
+}
+
+/*水平垂直对齐*/
+
+.g-flex-cc {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+.g-width {
+	width: 100%;
+}
+
+.g-block {
+  display: block;
+}
+
+.g-c-red {
+  color: #FF3C4A;
+}
+/* 文字颜色 */
+.g-c-green {
+	color: #26be76;
+}
+
+.g-c-white {
+	color: #fff;
+}
+
+/* 背景颜色 */
+
+.g-bg-green {
+	background-color: #26be76;
+}
+
+.g-lh-56 {
+	line-height: 56rpx;
+}
+
+
+// 重置MC
+.notice--override {
+	&.mc-notice-bar {
+		padding: 0;
+	}
+	.mc-notice-bar__content {
+		font-size: 26rpx;
+	}
 }

@@ -1,0 +1,68 @@
+<template>
+
+	<view class="g-pd-30" >基础用法 </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-image src="https://img.yzcdn.cn/vant/cat.jpeg" class="g-m-r-20"></mc-image>
+		<mc-image width="120" height="120" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+	</view>
+
+
+	<view class="g-pd-30" >填充模式: none/fill/cover/contain </view>
+	<view class="g-pd-lr-30 g-flex g-jc-sb g-fw-w" >
+		<mc-image fit="none" src="https://img.yzcdn.cn/vant/cat.jpeg" ></mc-image>
+		<mc-image fit="fill" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image fit="contain" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+	</view>
+
+	<view class="g-pd-30" >圆形图片: round </view>
+	<view class="g-pd-lr-30 g-flex g-jc-sb g-fw-w">
+		<mc-image round fit="none" src="https://img.yzcdn.cn/vant/cat.jpeg" ></mc-image>
+		<mc-image round fit="fill" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image round fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image round fit="contain" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+	</view>
+
+	<view class="g-pd-30" >自定义圆角: radius </view>
+	<view class="g-pd-lr-30 g-flex g-jc-sb g-fw-w">
+		<mc-image radius="2px" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" ></mc-image>
+		<mc-image radius="4px" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image radius="8px" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg"></mc-image>
+		<mc-image radius="20px" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" class="g-m-t-16"></mc-image>
+	</view>
+
+	<view class="g-pd-30" >加载过程展示 </view>
+	<view class="g-pd-lr-30 g-flex g-jc-fs g-fw-w">
+		<mc-image fit="cover" class="g-m-r-20"></mc-image>
+		<mc-image use-loading-slot>
+			<text slot="loading">加载中...</text>
+		</mc-image>
+	</view>
+
+
+	<view class="g-pd-30" >加载失败展示 </view>
+	<view class="g-pd-lr-30 g-flex g-jc-fs g-fw-w g-m-b-20">
+		<mc-image fit="cover" src="https://img.yzcdn.cn/vant/c3at.jpeg" class="g-m-r-20"></mc-image>
+		<mc-image use-error-slot src="https://img.yzcdn.cn/vant/c3at.jpeg" >
+			<text slot="error">加载失败...</text>
+		</mc-image>
+	</view>
+
+</template>
+
+<script>
+Page({
+	data: {},
+	onLoad() {}
+});
+</script>
+<style lang="scss">
+.v-image {}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-image": "../components/image"
+	}
+}
+</config>

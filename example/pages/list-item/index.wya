@@ -1,0 +1,67 @@
+<template>
+
+	<view class="g-pd-30" >基础用法 </view>
+	<view >
+		<mc-list-item title="单元格" value="内容"></mc-list-item>
+		<mc-list-item title="单元格" value="内容" label="描述信息" border="{{ false }}" ></mc-list-item>
+	</view>
+
+	<view class="g-pd-30" >单元格大小 </view>
+	<view >
+		<mc-list-item title="单元格" value="内容" size="large" />
+		<mc-list-item title="单元格" value="内容" size="large" label="描述信息" />
+	</view>
+
+	<view class="g-pd-30" >展示图标 </view>
+	<view >
+		<mc-list-item title="单元格" icon="yiwen" />
+	</view>
+
+	<view class="g-pd-30" >跳转 </view>
+	<view >
+		<mc-list-item
+			is-link
+			title="单元格 - 跳转button"
+			link-type="navigateTo"
+			url="/pages/button/index"
+		/>
+	</view>
+
+	<view class="g-pd-30" >使用插槽 </view>
+	<view >
+		<mc-list-item value="内容" icon="yiwen" is-link>
+			<view slot="title">
+				<view >单元格</view>
+				<!-- <mc-tag type="danger">标签</mc-tag> -->
+			</view>
+		</mc-list-item>
+		<mc-list-item title="单元格">
+			<mc-icon slot="right-icon" type="yiwen" class="custom-icon" />
+		</mc-list-item>
+	</view>
+
+
+	<view class="g-pd-30" >垂直居中 </view>
+	<view >
+		<mc-list-item center title="单元格" value="内容" label="描述信息" />
+	</view>
+
+</template>
+
+<script>
+Page({
+	data: {},
+	onLoad() {}
+});
+</script>
+<style lang="scss">
+.v-list-item {}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-list-item": "../components/list-item",
+		"mc-icon": "../components/icon"
+	}
+}
+</config>

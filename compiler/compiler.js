@@ -90,6 +90,7 @@ class Compiler {
 		return gulp
 			.src(src, getGulpConfig())
 			.pipe(babel(babelConfig))
+			.pipe(rename({ extname: '.wxs' }))
 			.pipe(gulp.dest(getGulpOutput));
 	}
 

@@ -1,0 +1,382 @@
+
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+
+	<button
+		id={{id}}
+		disabled="{{disabled}}"
+		open-type="{{ openType }}"
+		lang="{{lang}}"
+		class="custom-class {{ utils.bem('button', [type, size, { long, circle, plain, square, loading, disabled, hairline, unclickable: disabled || loading }]) }} {{ hairline ? 'mc-hairline--surround' : '' }}"
+		style="{{ baseStyle }}{{ customStyle }}"
+		session-from="{{ sessionFrom }}"
+		send-message-title="{{ sendMessageTitle }}"
+		send-message-path="{{ sendMessagePath }}"
+		send-message-img="{{ sendMessageImg }}"
+		show-message-card="{{ showMessageCard }}"
+		app-parameter="{{ appParameter }}"
+		bindtap="onClick"
+		bindgetuserinfo="bindGetUserInfo"
+		bindcontact="bindContact"
+		bindgetphonenumber="bindGetPhoneNumber"
+		binderror="bindError"
+		bindlaunchapp="bindLaunchApp"
+		bindopensetting="bindOpenSetting"
+	>
+		<mc-icon
+			wx:if="{{ icon }}"
+			type="{{ icon }}"
+			class="mc-button__icon"
+			custom-style="font-size: 1.2em;line-height: inherit;"
+		/>
+
+		<view class="mc-button__text">
+			<slot />
+		</view>
+	</button>
+</template>
+<script>
+Component({
+	properties: {
+		id: {
+			type: String,
+			value: ''
+		},
+		type: {
+			type: String,
+			value: 'default' // default|primary|text|success|error|warning
+		},
+		disabled: {
+			type: Boolean,
+			value: false
+		},
+		square: {
+			type: Boolean,
+			value: false
+		},
+		circle: {
+			type: Boolean,
+			value: false
+		},
+		size: {
+			type: String,
+			value: 'normal' // `large`、`medium`、`small`
+		},
+		openType: {
+			type: String,
+		},
+		long: {
+			type: Boolean,
+			value: false
+		},
+		plain: {
+			type: Boolean,
+			value: false
+		},
+		wait: {
+			type: Number,
+			value: 250
+		},
+		icon: String,
+		color: {
+			type: String,
+			observer(color) {
+				let style = '';
+				if (color) {
+					style += "color: " + (this.data.plain ? color : 'white') + ";";
+					if (!this.data.plain) {
+						// Use background instead of backgroundColor to make linear-gradient work
+						style += "background: " + color + ";";
+					}
+					// hide border when color is linear-gradient
+					if (color.indexOf('gradient') !== -1) {
+						style += 'border: 0;';
+					} else {
+						style += "border-color: " + color + ";";
+					}
+				}
+				if (style !== this.data.baseStyle) {
+					this.setData({ baseStyle: style });
+				}
+			}
+		},
+		lang: {
+			type: String,
+			value: 'en' // en-英文  zh_CN-简体中文  zh_TW-繁体中文,
+		},
+		businessId: Number,
+		sessionFrom: String,
+		sendMessageTitle: String,
+		sendMessagePath: String,
+		sendMessageImg: String,
+		showMessageCard: Boolean,
+		appParameter: String,
+		ariaLabel: String,
+		customStyle: String,
+	},
+	data: {
+		baseStyle: ''
+	},
+	methods: {
+		onClick() {
+			if (!this.data.disabled && !this.data.loading) {
+				this.triggerEvent('click');
+			}
+		},
+		bindGetUserInfo(event) {
+			this.triggerEvent('getuserinfo', event.detail);
+		},
+		bindContact(event) {
+			this.triggerEvent('contact', event.detail);
+		},
+		bindGetPhoneNumber(event) {
+			this.triggerEvent('getphonenumber', event.detail);
+		},
+		bindError(event) {
+			this.triggerEvent('error', event.detail);
+		},
+		bindLaunchApp(event) {
+			this.triggerEvent('launchapp', event.detail);
+		},
+		bindOpenSetting(event) {
+			this.triggerEvent('opensetting', event.detail);
+		},
+	}
+});
+</script>
+<style lang="scss">
+@import '../common/index.wxss';
+
+.mc-button {
+	position: relative;
+	display: -webkit-inline-flex;
+	display: inline-flex;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 0;
+	text-align: center;
+	vertical-align: middle;
+	-webkit-appearance: none;
+	-webkit-text-size-adjust: 100%;
+	height: 44px;
+	height: var(--button-default-height,44px);
+	line-height: 20px;
+	line-height: var(--button-line-height,20px);
+	font-size: 16px;
+	font-size: var(--button-default-font-size,16px);
+	transition: opacity .2s;
+	transition: opacity var(--animation-duration-fast,.2s);
+	border-radius: 2px;
+	border-radius: var(--button-border-radius,2px)
+}
+
+.mc-button:before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	height: 100%;
+	border: inherit;
+	border-radius: inherit;
+	-webkit-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	opacity: 0;
+	content: " ";
+	background-color: #000;
+	background-color: var(--black,#000);
+	border-color: #000;
+	border-color: var(--black,#000)
+}
+
+.mc-button:after {
+	border-width: 0
+}
+
+.mc-button--active:before {
+	opacity: .15
+}
+
+.mc-button--unclickable:after {
+	display: none
+}
+
+.mc-button--default {
+	color: #515151;
+	color: var(--button-default-color,#515151);
+	background: #fff;
+	background: var(--button-default-background-color,#fff);
+	border: 1px solid #d9d9d9;
+	border: var(--button-border-width,1px) solid var(--button-default-border-color,#d9d9d9)
+}
+
+.mc-button--primary {
+	color: #fff;
+	color: var(--button-primary-color,#fff);
+	background: #5495f6;
+	background: var(--button-primary-background-color,#5495f6);
+	border: 1px solid #5495f6;
+	border: var(--button-border-width,1px) solid var(--button-primary-border-color,#5495f6)
+}
+
+.mc-button--success {
+	color: #fff;
+	color: var(--button-success-color,#fff);
+	background: #19be6b;
+	background: var(--button-success-background-color,#19be6b);
+	border: 1px solid #19be6b;
+	border: var(--button-border-width,1px) solid var(--button-success-border-color,#19be6b)
+}
+
+.mc-button--error {
+	color: #fff;
+	color: var(--button-error-color,#fff);
+	background: #ed4014;
+	background: var(--button-error-background-color,#ed4014);
+	border: 1px solid #ed4014;
+	border: var(--button-border-width,1px) solid var(--button-error-border-color,#ed4014)
+}
+
+.mc-button--warning {
+	color: #fff;
+	color: var(--button-warning-color,#fff);
+	background: #e6a23c;
+	background: var(--button-warning-background-color,#e6a23c);
+	border: 1px solid #e6a23c;
+	border: var(--button-border-width,1px) solid var(--button-warning-border-color,#e6a23c)
+}
+
+.mc-button--text {
+	color: #515151;
+	background-color: transparent;
+	border-color: transparent;
+}
+
+.mc-button--plain {
+	background: #fff;
+	background: var(--button-plain-background-color,#fff)
+}
+
+.mc-button--plain.mc-button--primary {
+	color: #5495f6;
+	color: var(--button-primary-background-color,#5495f6)
+}
+
+.mc-button--plain.mc-button--success {
+	color: #19be6b;
+	color: var(--button-success-background-color,#19be6b)
+}
+
+.mc-button--plain.mc-button--error {
+	color: #ed4014;
+	color: var(--button-error-background-color,#ed4014)
+}
+
+.mc-button--plain.mc-button--warning {
+	color: #e6a23c;
+	color: var(--button-warning-background-color,#e6a23c)
+}
+
+.mc-button--large {
+	width: 100%;
+	height: 50px;
+	height: var(--button-large-height,50px)
+}
+
+.mc-button--normal {
+	padding: 0 15px;
+	font-size: 14px;
+	font-size: var(--button-normal-font-size,14px)
+}
+
+.mc-button--small {
+	min-width: 60px;
+	min-width: var(--button-small-min-width,60px);
+	height: 30px;
+	height: var(--button-small-height,30px);
+	padding: 0 8px;
+	padding: 0 var(--padding-xs,8px);
+	font-size: 12px;
+	font-size: var(--button-small-font-size,12px)
+}
+
+.mc-button--mini {
+	display: inline-block;
+	min-width: 50px;
+	min-width: var(--button-mini-min-width,50px);
+	height: 22px;
+	height: var(--button-mini-height,22px);
+	font-size: 10px;
+	font-size: var(--button-mini-font-size,10px)
+}
+
+.mc-button--mini+.mc-button--mini {
+	margin-left: 5px
+}
+
+.mc-button--long {
+	display: -webkit-flex;
+	display: flex;
+	width: 100%
+}
+
+.mc-button--circle {
+	border-radius: 999px;
+	border-radius: var(--button-circle-border-radius,999px)
+}
+
+.mc-button--square {
+	border-radius: 0
+}
+
+.mc-button--disabled {
+	opacity: .5;
+	opacity: var(--button-disabled-opacity,.5)
+}
+
+.mc-button__text {
+	display: inline
+}
+
+.mc-button__icon+.mc-button__text:not(:empty),.mc-button__loading-text {
+	margin-left: 4px
+}
+
+.mc-button__icon {
+	min-width: 1em;
+	line-height: inherit!important;
+	vertical-align: top
+}
+
+.mc-button--hairline {
+	padding-top: 1px;
+	border-width: 0
+}
+
+.mc-button--hairline:after {
+	border-color: inherit;
+	border-width: 1px;
+	border-radius: 4px;
+	border-radius: calc(var(--button-border-radius, 2px)*2)
+}
+
+.mc-button--hairline.mc-button--circle:after {
+	border-radius: 999px;
+	border-radius: var(--button-circle-border-radius,999px)
+}
+
+.mc-button--hairline.mc-button--square:after {
+	border-radius: 0
+}
+
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>
