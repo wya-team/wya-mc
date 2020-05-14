@@ -1,0 +1,189 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+
+	<view
+		style="{{ viewStyle }}"
+		class="custom-class {{ utils.bem('image', { round })}}"
+		bind:tap="onClick"
+	>
+		<image
+			wx:if="{{ !error }}"
+			src="{{ src }}"
+			mode="{{ mode }}"
+			lazy-load="{{ lazyLoad }}"
+			class="image-class mc-image__img"
+			show-menu-by-longpress="{{ showMenuByLongpress }}"
+			bind:load="onLoad"
+			bind:error="onError"
+		/>
+
+		<view
+			wx:if="{{ loading && showLoading }}"
+			class="loading-class mc-image__loading"
+		>
+			<slot wx:if="{{ useLoadingSlot }}" name="loading" />
+			<mc-icon wx:else type="playbill" size="22" />
+		</view>
+		<view
+			wx:if="{{ error && showError }}"
+			class="error-class mc-image__error"
+		>
+			<slot wx:if="{{ useErrorSlot }}" name="error" />
+			<mc-icon wx:else type="yiwen" size="22" />
+		</view>
+	</view>
+
+</template>
+<script>
+let utils = require("../common/utils");
+
+let FIT_MODE_MAP = {
+	none: 'center',
+	fill: 'scaleToFill',
+	cover: 'aspectFill',
+	contain: 'aspectFit'
+};
+Component({
+	options: {
+		multipleSlots: true
+	},
+	properties: {
+		 src: {
+			type: String,
+			observer() {
+				this.setData({
+					error: false,
+					loading: true
+				});
+			}
+		},
+		round: Boolean,
+		width: {
+			type: null,
+			value: '100px',
+			observer: 'setStyle'
+		},
+		height: {
+			type: null,
+			value: '100px',
+			observer: 'setStyle'
+		},
+		radius: null,
+		lazyLoad: Boolean,
+		useErrorSlot: Boolean,
+		useLoadingSlot: Boolean,
+		showMenuByLongpress: Boolean,
+		fit: {
+			type: String,
+			value: 'fill',
+			observer: 'setMode'
+		},
+		showError: {
+			type: Boolean,
+			value: true
+		},
+		showLoading: {
+			type: Boolean,
+			value: true
+		}
+	},
+	data: {
+		error: false,
+		loading: true,
+		viewStyle: '',
+	},
+	ready() {
+		this.setMode();
+		this.setStyle();
+	},
+	methods: {
+		setMode() {
+			this.setData({
+				mode: FIT_MODE_MAP[this.data.fit],
+			});
+		},
+		setStyle() {
+			let { width, height, radius } = this.data;
+			let style = '';
+			if (utils.isDef(width)) {
+				style += "width: " + utils.addUnit(width) + ";";
+			}
+			if (utils.isDef(height)) {
+				style += "height: " + utils.addUnit(height) + ";";
+			}
+			if (utils.isDef(radius)) {
+				style += 'overflow: hidden;';
+				style += "border-radius: " + utils.addUnit(radius) + ";";
+			}
+			this.setData({ viewStyle: style });
+		},
+		onLoad(event) {
+			this.setData({
+				loading: false
+			});
+			this.triggerEvent('load', event.detail);
+		},
+		onError(event) {
+			this.setData({
+				loading: false,
+				error: true
+			});
+			this.triggerEvent('error', event.detail);
+		},
+		onClick(event) {
+			this.triggerEvent('click', event.detail);
+		}
+	}
+});
+</script>
+<style lang="scss">
+@import '../common/index.wxss';
+
+.mc-image {
+	position: relative;
+	display: inline-block
+}
+
+.mc-image--round {
+	overflow: hidden;
+	border-radius: 50%
+}
+
+.mc-image--round .mc-image__img {
+	border-radius: inherit
+}
+
+.mc-image__error,.mc-image__img,.mc-image__loading {
+	display: block;
+	width: 100%;
+	height: 100%
+}
+
+.mc-image__error,.mc-image__loading {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	color: #969799;
+	color: var(--image-placeholder-text-color,#969799);
+	font-size: 14px;
+	font-size: var(--image-placeholder-font-size,14px);
+	background-color: #f7f8fa;
+	background-color: var(--image-placeholder-background-color,#f7f8fa)
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>
