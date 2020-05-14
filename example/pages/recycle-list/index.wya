@@ -1,17 +1,17 @@
 <template>
-<view style="height: 100%">
-	<mc-recycle-list
-		height="100%"
-		total="{{ total }}"
-		bind:loadData="loadData" 
-	>
-		<block wx:for="{{ list }}" wx:key="index" wx:item="item">
-			<view>
-				<text> {{index}}: {{item}} </text>
-			</view>
-		</block>
-	</mc-recycle-list>
-</view>
+	<view style="height: 100vh">
+		<mc-recycle-list
+			height="100%"
+			total="{{ total }}"
+			bind:loadData="loadData" 
+		>
+			<block wx:for="{{ list }}" wx:key="index" wx:item="item">
+				<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
+					<text> {{index}}: {{item}} </text>
+				</view>
+			</block>
+		</mc-recycle-list>
+	</view>
 </template>
 <script>
 const app = getApp();
@@ -28,11 +28,11 @@ Page({
 	},
 	
 	loadData(e) {
-		const { page, refreshing, done } = e.detail;
+		const { page, refresh, done } = e.detail;
 		this.request(page)
 			.then(res => {
 				this.setData({
-					list: this.data.list.concat(res.data.list),
+					list: refresh ? res.data.list : this.data.list.concat(res.data.list),
 					current: res.data.page.current,
 					total: res.data.page.total,
 				});
@@ -54,7 +54,7 @@ Page({
 						list: generateArray(page),
 					}
 				});
-			}, 2000);
+			}, 500);
 		});
 	}
 });

@@ -2,11 +2,12 @@ const { resolve } = require('path');
 const { prompt } = require('inquirer');
 const { exec } = require('child_process');
 const { readdirSync, readFileSync, writeFileSync } = require('fs-extra');
+
 const gulpConfig = resolve(__dirname, './compiler.js');
 
 const SRC_DIR = resolve(__dirname, '../src');
 const EXAMPLE_DIR = resolve(__dirname, '../example');
-const exclude = ['common', '__tpl__', 'utils', 'wxs', 'styles'];
+const exclude = ['common', '__tpl__', 'utils', 'wxs', 'styles', 'mixins', 'template'];
 
 const getComponentsList = () => {
 	const lists = readdirSync(SRC_DIR);
@@ -30,7 +31,7 @@ const setPageJSON = (components) => {
 	const config = JSON.parse(readFileSync(projectPath));
 	config.pages = components.map((name) => `pages/${name}/index`);
 	writeFileSync(projectPath, JSON.stringify(config, null, '\t'));
-}
+};
 
 const choices = getComponentsList();
 const questions = [

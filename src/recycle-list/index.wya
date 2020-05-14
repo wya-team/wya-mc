@@ -1,22 +1,26 @@
 <template>
+	<wxs module="scroll" src="./index.wxs"></wxs>
 	<scroll-view
 		style="height:{{height}}"
 		scroll-y="true"
 		lower-threshold="100"
 		enable-back-to-top="true"
 		class="mc-recycle-list"
-		bind:scroll="handleScroll"
+		refresher-enabled="{{false}}"
+		pullDownHeight="{{pullDownHeight}}"
+		change:pullDownHeight="{{scroll.setPullDownHeight}}"
+		bind:scroll="{{scroll.handleScroll}}"
 		bind:scrolltolower="handleEndReached"
-		bind:touchstart="handleTouchStart"
+		bind:touchstart="{{scroll.handleTouchStart}}"
 		bind:touchend="handleTouchEnd"
 	>
-		<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="height: {{y}}px; overflow: hidden;">
+		<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="overflow: hidden;">
 			<text>{{ pullDownText }}</text>
 		</view>
 
-		<view 
-			class="mc-recycle-list__content" 
-			bind:touchmove="handleTouchMove" 
+		<view
+			class="mc-recycle-list__content"
+			bind:touchmove="{{scroll.handleTouchMove}}"
 		>
 			<slot />
 		</view>
@@ -27,9 +31,10 @@
 	</scroll-view>
 </template>
 <script>
+import McComponent from '../common/component';
 import { PULL_DOWN_STATUS, PULL_UP_STATUS, SCROLL_STATUS } from './constant';
 
-Component({
+McComponent({
 	options: {
 		multipleSlots: true
 	},
@@ -95,9 +100,6 @@ Component({
 		}
 	},
 	lifetimes: {
-		/**
-		 * attached 执行早于页面的onLoad, 这里使用ready
-		 */
 		ready() {
 			if (this.data.currentPage === 0) {
 				this.loadDataForScroll();
@@ -115,11 +117,6 @@ Component({
 		}
 	},
 	methods: {
-		// TODO: 提取
-		$emit(event, options) {
-			this.triggerEvent(event, options);
-		},
-
 		handleScroll(e) {
 			this.setData({
 				scrollTop: e.detail.scrollTop
@@ -141,11 +138,13 @@ Component({
 			// 滚动条所在位置
 			if (this.data.scrollTop <= 0) {
 				let pullDownStatus = pulledY > this.data.pauseY ? 2 : 1;
-				this.setData({
-					pullDownStatus,
-					pullDownText: PULL_DOWN_STATUS[pullDownStatus],
-					y: this.easing(pulledY)
-				});
+				if (this.data.pullDownStatus !== pullDownStatus) {
+					this.setData({
+						pullDownStatus,
+						pullDownText: PULL_DOWN_STATUS[pullDownStatus],
+						// y: this.easing(pulledY)
+					});
+				}
 			}
 		},
 		handleTouchEnd(e) {
@@ -155,9 +154,8 @@ Component({
 				this.setData({
 					pullDownStatus: 3,
 					pullDownText: PULL_DOWN_STATUS["3"],
-					y: this.data.pauseY
+					pullDownHeight: this.data.pauseY
 				});
-
 				this.$emit('loadData', { 
 					page: 1, 
 					refresh: true, 
@@ -165,7 +163,7 @@ Component({
 						this.setData({
 							pullDownText: PULL_DOWN_STATUS["0"],
 							pullDownStatus: 0,
-							y: 0
+							pullDownHeight: 0
 						});
 					}
 				});
@@ -173,7 +171,7 @@ Component({
 				this.setData({
 					pullDownText: PULL_DOWN_STATUS["0"],
 					pullDownStatus: 0,
-					y: 0
+					pullDownHeight: 0
 				});
 			}
 		},
@@ -259,7 +257,6 @@ Component({
 		font-size: 24rpx;
 	}
 }
-
 </style>
 <config>
 {

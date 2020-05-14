@@ -1,0 +1,57 @@
+let startY = 0;
+let scrollTop = 0;
+let pullDownView;
+
+function handleScroll(e, instance) {
+	instance.callMethod('handleScroll', e);
+	scrollTop = e.detail.scrollTop;
+}
+function handleTouchStart(e, instance) {
+	instance.callMethod('handleTouchStart', e);
+	if (e.touches.length === 1) {
+		startY = e.touches[0].clientY;
+	}
+	pullDownView = instance.selectComponent('.mc-recycle-list__pull-down');
+}
+
+function easing(pulledY) {
+	// 从顶部开始
+	let startY = 0;
+	// 允许拖拽的最大距离
+	let maxY = 500;
+	// 提示标签最大有效拖拽距离
+	let duration = 2.5;
+	return maxY / duration * Math.sin(pulledY / maxY * (Math.PI / 2)) + startY;
+}
+
+function handleTouchMove(e, instance) {
+	let pulledY = e.touches[0].clientY - startY;
+	instance.callMethod('handleTouchMove', e);
+	if (scrollTop <= 0) {
+		let y = easing(pulledY);
+		pullDownView && pullDownView.setStyle({
+			height: y + 'px'
+		});
+	}
+}
+
+function setPullDownHeight(newValue, oldValue, ownerInstance, instance) {
+	if (!newValue && instance) {
+		pullDownView = instance.selectComponent('.mc-recycle-list__pull-down');
+	}
+	if (!pullDownView) {
+		pullDownView = ownerInstance.selectComponent('.mc-recycle-list__pull-down');
+	}
+	pullDownView.setStyle({
+		height: (newValue || 0) + 'px'
+	});
+}
+
+module.exports = {
+	startY,
+	scrollTop,
+	handleTouchStart,
+	handleTouchMove,
+	setPullDownHeight,
+	handleScroll
+};

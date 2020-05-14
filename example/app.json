@@ -1,9 +1,14 @@
 {
 	"pages": [
+		"pages/button/index",
+		"pages/icon/index",
+		"pages/image/index",
 		"pages/imgs-crop/index",
+		"pages/list/index",
+		"pages/list-item/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
-		"pages/template/index"
+		"pages/transition/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
