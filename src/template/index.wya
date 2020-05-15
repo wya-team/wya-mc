@@ -4,7 +4,9 @@
 	</view>
 </template>
 <script>
-Component({
+import McComponent from '../common/component';
+
+McComponent({
 	// TODO
 });
 
