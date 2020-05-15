@@ -1,3 +1,12 @@
+
+function mapKeys(source, target, map) {
+	Object.keys(map).forEach(function (key) {
+		if (source[key]) {
+			target[map[key]] = source[key];
+		}
+	});
+}
+
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
 	const { externalClasses = [], ...restOpts } = mcOptions;
@@ -8,7 +17,7 @@ function McComponent(mcOptions) {
 		...restOpts,
 		externalClasses,
 		properties: {
-			...mcOptions.properties,
+			...mcOptions.props,
 			mcStyle: String
 		},
 		methods: {

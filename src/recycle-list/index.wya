@@ -38,6 +38,36 @@ McComponent({
 	options: {
 		multipleSlots: true
 	},
+	props: {
+		pauseY: {
+			type: Number,
+			value: 40
+		},
+		height: {
+			type: String
+		},
+		total: {
+			type: Number,
+			value: 0,
+			observer(value) {
+				if (value === 0) {
+					this.loadDataForScroll({ force: true });
+				}
+			}
+		},
+		scroll: {
+			type: Boolean,
+			value: true
+		},
+		pull: {
+			type: Boolean,
+			value: true
+		},
+		show: {
+			type: Boolean,
+			value: true
+		}
+	},
 	data: {
 		y: 0,
 		/**
@@ -68,36 +98,6 @@ McComponent({
 		// 页面
 		currentPage: 0,
 		animate: {}
-	},
-	properties: {
-		pauseY: {
-			type: Number,
-			value: 40
-		},
-		height: {
-			type: String
-		},
-		total: {
-			type: Number,
-			value: 0,
-			observer(value) {
-				if (value === 0) {
-					this.loadDataForScroll({ force: true });
-				}
-			}
-		},
-		scroll: {
-			type: Boolean,
-			value: true
-		},
-		pull: {
-			type: Boolean,
-			value: true
-		},
-		show: {
-			type: Boolean,
-			value: true
-		}
 	},
 	lifetimes: {
 		ready() {

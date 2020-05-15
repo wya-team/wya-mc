@@ -13,7 +13,7 @@ McComponent({
 			type: 'child'
 		}
 	},
-	properties: {
+	props: {
 		border: {
 			type: Boolean,
 			value: true

@@ -48,7 +48,7 @@ McComponent({
 			},
 		}
 	},
-	properties: {
+	props: {
 		label: String,
 		labelWidth: {
 			type: String,
