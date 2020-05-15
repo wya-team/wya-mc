@@ -1,21 +1,18 @@
 <template>
 	<text
-		class="c-icon iconfont icon-{{type}} {{customClass}}"
-		style="{{inherit ? 'color: inherit !important' : '' }};{{customStyle}}"
+		class="c-icon iconfont icon-{{type}} mc-class"
+		style="{{inherit ? 'color: inherit !important' : '' }};{{mcStyle}}"
 	/>
 </template>
 <script>
-Component({
-	options: {
-		addGlobalClass: true
-	},
+import McComponent from '../common/component';
+
+McComponent({
 	properties: {
 		type: { // 图标名
 			type: String,
 			value: ''
 		},
-		customStyle: String,
-		customClass: String,
 		inherit: {
 			type: Boolean,
 			default: false
