@@ -1,0 +1,33 @@
+<template>
+	<view bind:tap="handleOpen"><text>打开弹窗</text></view>
+	<view bind:tap="handleClose"><text>关闭弹窗</text></view>
+
+	<mc-popup id="portal-popup"></mc-popup>
+</template>
+<script>
+import { Popup } from './popup/portal';
+
+Page({
+	handleOpen() {
+		Popup.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+
+	handleClose() {
+		Popup.destroy();
+	}
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-popup": "../../../components/popup/index"
+	}
+}
+</config>

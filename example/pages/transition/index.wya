@@ -1,14 +1,14 @@
 <template>
 	<mc-list title="动画">
-		<mc-list-item title="fade" bindtap="handleClick" data-type="show" />
-		<mc-list-item title="fade-up"  bindtap="handleClick" data-type="showFadeUp"/>
-		<mc-list-item title="fade-down" bindtap="handleClick" data-type="showFadeDown" />
-		<mc-list-item title="fade-left" bindtap="handleClick" data-type="showFadeLeft" />
-		<mc-list-item title="fade-right"  bindtap="handleClick" data-type="showFadeRight"/>
-		<mc-list-item title="slide-up" bindtap="handleClick" data-type="showSlideUp" />
-		<mc-list-item title="slide-down" bindtap="handleClick" data-type="showSlideDown" />
-		<mc-list-item title="slide-left"  bindtap="handleClick" data-type="showSlideLeft"/>
-		<mc-list-item title="slide-right"  bindtap="handleClick" data-type="showSlideRight"/>
+		<mc-list-item label="fade" bindtap="handleClick" data-type="show" />
+		<mc-list-item label="fade-up"  bindtap="handleClick" data-type="showFadeUp"/>
+		<mc-list-item label="fade-down" bindtap="handleClick" data-type="showFadeDown" />
+		<mc-list-item label="fade-left" bindtap="handleClick" data-type="showFadeLeft" />
+		<mc-list-item label="fade-right"  bindtap="handleClick" data-type="showFadeRight"/>
+		<mc-list-item label="slide-up" bindtap="handleClick" data-type="showSlideUp" />
+		<mc-list-item label="slide-down" bindtap="handleClick" data-type="showSlideDown" />
+		<mc-list-item label="slide-left"  bindtap="handleClick" data-type="showSlideLeft"/>
+		<mc-list-item label="slide-right"  bindtap="handleClick" data-type="showSlideRight"/>
 	</mc-list>
 
 

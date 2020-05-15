@@ -1,4 +1,10 @@
 <template>
+	<view
+	wx:if="{{ title }}"
+	class="mc-list__title"
+	>
+		{{ title }}
+	</view>
 	<view class="mc-list {{ border ? 'mc-hairline__top-bottom' : '' }} mc-class">
 		<slot />
 	</view>
@@ -14,6 +20,7 @@ McComponent({
 		}
 	},
 	props: {
+		title: String,
 		border: {
 			type: Boolean,
 			value: true
@@ -22,7 +29,12 @@ McComponent({
 });
 </script>
 <style lang="scss">
-
+.mc-list__title {
+	padding: 32rpx 32rpx 16rpx;
+	font-size: 28rpx;
+	line-height: 32rpx;
+	color: #969799;
+}
 </style>
 <config>
 {
