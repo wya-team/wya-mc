@@ -10,7 +10,7 @@
 		<mc-list-item label="单元格" content="内容" />
 	</mc-list>
 	<mc-list mc-class="g-m-t-40">
-		<mc-list-item label="单元格" content="内容" />
+		<mc-list-item label="单元格" content="内容" left-icon="down"/>
 		<mc-list-item label="单元格" content="内容" />
 	</mc-list>
 

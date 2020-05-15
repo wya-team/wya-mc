@@ -4,7 +4,13 @@
 		style="padding-left: {{indent}}rpx; {{ mcStyle }}"
 		bind:tap="handleClick"
 	>
-		<view class="mc-list-item__wrapper">
+		<view class="mc-list-item__wrapper" style="{{borderIndent ? 'position: relative' : ''}}">
+			<mc-icon
+				wx:if="{{!useLeftIconSlot && leftIcon}}"
+				type="{{leftIcon}}"
+				mc-class="mc-list-item__left-icon"
+			/>
+			<slot wx:else name="right-icon" />
 			<view
 				style="{{ labelStyle }}"
 				class="mc-list-item__label"
@@ -19,8 +25,8 @@
 			</view>
 
 			<mc-icon
-				wx:if="{{!useIconSlot}}"
-				type="{{arrowDirection}}"
+				wx:if="{{!useRightIconSlot}}"
+				type="{{rightIcon}}"
 				mc-class="mc-list-item__right-icon"
 			/>
 			<slot wx:else name="right-icon" />
@@ -56,16 +62,21 @@ McComponent({
 		},
 		content: String,
 		url: String,
+		leftIcon: String,
 		rightIcon: {
 			type: String,
 			value: 'right'
 		},
-		useIconSlot: Boolean,
-		rightIconClass: String,
+		useLeftIconSlot: Boolean,
+		useRightIconSlot: Boolean,
 		indent: Number,
 		linkType: {
 			type: String,
 			value: 'navigateTo'
+		},
+		borderIndent: {
+			type: Boolean,
+			value: true
 		}
 	},
 	observers: {
@@ -97,7 +108,6 @@ McComponent({
 	position: relative;
 	box-sizing: border-box;
 	width: 100%;
-	padding: 26rpx 22rpx 26rpx 0;
 	font-size: 32rpx;
 	line-height: 44rpx;
 	color: #000000;
@@ -108,6 +118,7 @@ McComponent({
 	align-items: center;
 	box-sizing: border-box;
 	width: 100%;
+	padding: 26rpx 22rpx 26rpx 0;
 }
 .mc-list-item__wrapper:after {
 	position: absolute;
@@ -138,6 +149,11 @@ McComponent({
 .mc-list-item__right-icon {
 	color: #8E8E8E;
 	font-size: 24rpx;
+}
+.mc-list-item__left-icon {
+	color: #8E8E8E;
+	font-size: 32rpx;
+	margin-right: 28rpx;
 }
 </style>
 <config>
