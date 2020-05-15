@@ -1,15 +1,34 @@
 <template>
-	<view bind:tap="handleOpen"><text>打开弹窗</text></view>
-	<view bind:tap="handleClose"><text>关闭弹窗</text></view>
+	<mc-list>
+		<mc-list-item label="顶部弹窗" bind:click="handleOpenTop" />
+		<mc-list-item label="底部弹窗" bind:click="handleOpenBottom" />
+		<mc-list-item label="右部弹窗" bind:click="handleOpenRight" />
+		<mc-list-item label="左部弹窗" bind:click="handleOpenLeft" />
+		<mc-list-item label="中间弹窗" bind:click="handleOpenCenter" />
+	</mc-list>
 
-	<mc-popup id="portal-popup"></mc-popup>
+	<mc-popup id="popup-top" mc-style="height: 30%" placement="top">
+		<view>顶部弹窗</view>
+	</mc-popup>
+	<mc-popup id="popup-bottom" mc-style="height: 30%" placement="bottom">
+		<view >底部弹窗</view>
+	</mc-popup>
+	<mc-popup id="popup-right" mc-style="width: 30%; height: 100%" placement="right">
+		<view >右部弹窗</view>
+	</mc-popup>
+	<mc-popup id="popup-left" mc-style="width: 30%; height: 100%" placement="left">
+		<view>左部弹窗</view>
+	</mc-popup>
+	<mc-popup  id="popup-center" mc-style="height: 30%; width: 80%" placement="center">
+		<view>中间弹窗</view>
+	</mc-popup>
 </template>
 <script>
-import { Popup } from './popup/portal';
+import { PopupTop, PopupBottom, PopupLeft, PopupRight, PopupCenter } from './popup/portal';
 
 Page({
-	handleOpen() {
-		Popup.popup({
+	handleOpenTop() {
+		PopupTop.popup({
 			count: 10
 		}).then((res) => {
 			console.log('sure', res);
@@ -17,7 +36,48 @@ Page({
 			console.log('close', err);
 		});
 	},
-
+	handleOpenBottom() {
+		PopupBottom.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+	handleOpenLeft() {
+		PopupLeft.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+	handleOpenRight() {
+		PopupRight.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+	handleOpenCenter() {
+		this.setData({
+			show: true
+		});
+		PopupCenter.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+	data: {
+		show: false
+	},
 	handleClose() {
 		Popup.destroy();
 	}
@@ -27,7 +87,9 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-popup": "../../../components/popup/index"
+		"mc-popup": "../../../components/popup/index",
+		"mc-list": "../../../components/list/index",
+		"mc-list-item": "../../../components/list-item/index"
 	}
 }
 </config>

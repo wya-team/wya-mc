@@ -1,0 +1,219 @@
+<template>
+	<mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}">
+		<view class="mc-popup__mask" bind:tap="handleClose" />
+	</mc-transition>
+	<view 
+		wx:if="{{inited}}" 
+		class="mc-popup {{classes}} mc-popup__{{placement}} mc-class"
+		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{mcStyle}}"
+		bind:transitionend="onTransitionEnd"
+	>
+		<slot></slot>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { transition } from '../mixins/transition';
+
+McComponent({
+	mixins: [transition(false)],
+	externalClasses: [
+		'enter-class',
+		'enter-active-class',
+		'enter-to-class',
+		'leave-class',
+		'leave-active-class',
+		'leave-to-class'
+	],
+	props: {
+		mask: {
+			type: Boolean,
+			value: true
+		},
+		maskClosable: {
+			type: Boolean,
+			value: true
+		},
+		placement: {
+			type: String,
+			value: 'bottom',
+		}
+	},
+	data: {
+	},
+	attached() {
+		this.setData({ name: this.data.placement });
+	},
+	methods: {
+		handleClose() {
+			if (!this.data.maskClosable) return;
+			if (!this['@@PORTAL']) {
+				this.setData({
+					visible: false
+				});
+			}
+			this.$emit('close');
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-popup__mask {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, .4);
+	height: 100%;
+	z-index: 1000;
+}
+
+.mc-popup {
+	position: fixed;
+	box-sizing: border-box;
+	max-height: 100%;
+	overflow-y: auto;
+	transition-timing-function: ease;
+	-webkit-animation: ease both;
+	animation: ease both;
+	-webkit-overflow-scrolling: touch;
+	background-color: #fff;
+	z-index: 1001; 
+}
+
+.mc-popup__center {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate3d(-50%, -50%, 0);
+	transform: translate3d(-50%, -50%, 0)
+}
+
+.mc-popup__center.mc-popup__round {
+	border-radius: 16rpx;
+}
+
+.mc-popup__top {
+	top: 0;
+	left: 0;
+	width: 100%
+}
+
+.mc-popup__top.mc-popup__round {
+	border-radius: 0 0 16rpx 16rpx;
+}
+
+.mc-popup__right {
+	top: 50%;
+	right: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.mc-popup__right.mc-popup__round {
+	border-radius: 16rpx 0 0 16rpx;
+}
+
+.mc-popup__bottom {
+	bottom: 0;
+	left: 0;
+	width: 100%
+}
+
+.mc-popup__bottom.mc-popup__round {
+	border-radius: 16rpx 16rpx 0 0;
+}
+
+.mc-popup__left {
+	top: 50%;
+	left: 0;
+	-webkit-transform: translate3d(0, -50%, 0);
+	transform: translate3d(0, -50%, 0)
+}
+
+.mc-popup__left.mc-popup__round {
+	border-radius: 0 16rpx 16rpx 0;
+}
+
+.mc-scale-enter-active,
+.mc-scale-leave-active {
+	transition-property: opacity, -webkit-transform;
+	transition-property: opacity, transform;
+	transition-property: opacity, transform, -webkit-transform
+}
+
+.mc-scale-enter,
+.mc-scale-leave-to {
+	-webkit-transform: translate3d(-50%, -50%, 0) scale(.7);
+	transform: translate3d(-50%, -50%, 0) scale(.7);
+	opacity: 0
+}
+
+.mc-fade-enter-active,
+.mc-fade-leave-active {
+	transition-property: opacity
+}
+
+.mc-fade-enter,
+.mc-fade-leave-to {
+	opacity: 0
+}
+
+.mc-center-enter-active,
+.mc-center-leave-active {
+	transition-property: opacity
+}
+
+.mc-center-enter,
+.mc-center-leave-to {
+	opacity: 0
+}
+
+.mc-bottom-enter-active,
+.mc-bottom-leave-active,
+.mc-left-enter-active,
+.mc-left-leave-active,
+.mc-right-enter-active,
+.mc-right-leave-active,
+.mc-top-enter-active,
+.mc-top-leave-active {
+	transition-property: -webkit-transform;
+	transition-property: transform;
+	transition-property: transform, -webkit-transform
+}
+
+.mc-bottom-enter,
+.mc-bottom-leave-to {
+	-webkit-transform: translate3d(0, 100%, 0);
+	transform: translate3d(0, 100%, 0)
+}
+
+.mc-top-enter,
+.mc-top-leave-to {
+	-webkit-transform: translate3d(0, -100%, 0);
+	transform: translate3d(0, -100%, 0)
+}
+
+.mc-left-enter,
+.mc-left-leave-to {
+	-webkit-transform: translate3d(-100%, -50%, 0);
+	transform: translate3d(-100%, -50%, 0)
+}
+
+.mc-right-enter,
+.mc-right-leave-to {
+	-webkit-transform: translate3d(100%, -50%, 0);
+	transform: translate3d(100%, -50%, 0)
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-transition": "../transition/index"
+	}
+}
+</config>

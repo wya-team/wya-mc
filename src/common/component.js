@@ -1,14 +1,15 @@
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
-	const { externalClasses = [], ...restOpts } = mcOptions;
+	const { externalClasses = [], mixins, props, ...restOpts } = mcOptions;
 	if (!externalClasses.includes('mc-class')) {
 		externalClasses.push('mc-class');
 	}
 	let options = {
 		...restOpts,
 		externalClasses,
+		behaviors: mixins,
 		properties: {
-			...mcOptions.props,
+			...props,
 			mcStyle: String
 		},
 		methods: {

@@ -2,27 +2,17 @@
 	<view
 		wx:if="{{ inited }}"
 		class="mc-transition {{ classes }}"
-		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }} {{ customStyle }}"
+		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }} {{ mcStyle }}"
 		bind:transitionend="onTransitionEnd"
 	>
 		<slot></slot>
 	</view>
 </template>
 <script>
-let utils = require("../common/utils");
+import McComponent from '../common/component';
+import { transition } from '../mixins/transition';
 
-let nextTick = function () { return new Promise(function (resolve) { return setTimeout(resolve, 1000 / 30); }); };
-
-let getClassNames = function (name) {
-	return ({
-		enter: "mc-" + name + "-enter mc-" + name + "-enter-active enter-class enter-active-class",
-		'enter-to': "mc-" + name + "-enter-to mc-" + name + "-enter-active enter-to-class enter-active-class",
-		leave: "mc-" + name + "-leave mc-" + name + "-leave-active leave-class leave-active-class",
-		'leave-to': "mc-" + name + "-leave-to mc-" + name + "-leave-active leave-to-class leave-active-class"
-	});
-};
-
-Component({
+McComponent({
 	externalClasses: [
 		'enter-class',
 		'enter-active-class',
@@ -31,138 +21,8 @@ Component({
 		'leave-active-class',
 		'leave-to-class'
 	],
-	properties: {
-		customStyle: String,
-		// @ts-ignore
-		show: {
-			type: Boolean,
-			value: true,
-			observer: 'observeShow'
-		},
-		// @ts-ignore
-		duration: {
-			type: null,
-			value: 300,
-			observer: 'observeDuration'
-		},
-		name: {
-			type: String,
-			value: 'fade'
-		}
-	},
-	data: {
-		type: '',
-		inited: false,
-		display: false
-	},
-	attached() {
-		if (this.data.show) {
-			this.enter();
-		}
-	},
-	methods: {
-		observeShow(value) {
-			value ? this.enter() : this.leave();
-		},
-		enter() {
-			let _this = this;
-			let { duration, name } = this.data;
-
-			let classNames = getClassNames(name);
-			let currentDuration = utils.isObj(duration) ? duration.enter : duration;
-			this.status = 'enter';
-			this.triggerEvent('before-enter');
-			Promise.resolve()
-				.then(nextTick)
-				.then(function () {
-					_this.checkStatus('enter');
-					_this.triggerEvent('enter');
-					_this.setData({
-						inited: true,
-						display: true,
-						classes: classNames.enter,
-						currentDuration
-					});
-				})
-				.then(nextTick)
-				.then(function () {
-					_this.checkStatus('enter');
-					_this.transitionEnded = false;
-					_this.setData({
-						classes: classNames['enter-to']
-					});
-				})
-				.catch(function () { });
-		},
-		leave() {
-			let _this = this;
-			if (!this.data.display) {
-				return;
-			}
-			let _a = this.data; let duration = _a.duration; let
-				name = _a.name;
-			let classNames = getClassNames(name);
-			let currentDuration = utils.isObj(duration) ? duration.leave : duration;
-			this.status = 'leave';
-			this.triggerEvent('before-leave');
-			Promise.resolve()
-				.then(nextTick)
-				.then(function () {
-					_this.checkStatus('leave');
-					_this.triggerEvent('leave');
-					_this.setData({
-						classes: classNames.leave,
-						currentDuration
-					});
-				})
-				.then(nextTick)
-				.then(function () {
-					_this.checkStatus('leave');
-					_this.transitionEnded = false;
-					setTimeout(function () { return _this.onTransitionEnd(); }, currentDuration);
-					_this.setData({
-						classes: classNames['leave-to']
-					});
-				})
-				.catch(function () { });
-		},
-		checkStatus(status) {
-			if (status !== this.status) {
-				throw new Error("incongruent status: " + status);
-			}
-		},
-		onTransitionEnd() {
-			if (this.transitionEnded) {
-				return;
-			}
-			this.transitionEnded = true;
-			this.triggerEvent("after-" + this.status);
-			let _a = this.data; let show = _a.show; let
-				display = _a.display;
-			if (!show && display) {
-				this.setData({ display: false });
-			}
-		}
-	}
+	mixins: [transition(false)],
 });
-
-
-// Object.defineProperty(exports, "__esModule", { value: true });
-// let component_1 = require("../common/component");
-// let transition_1 = require("../mixins/transition");
-
-// component_1.McComponent({
-// 	classes: [
-// 		'enter-class',
-// 		'enter-active-class',
-// 		'enter-to-class',
-// 		'leave-class',
-// 		'leave-active-class',
-// 		'leave-to-class'
-// 	],
-// 	mixins: [transition_1.transition(true)]
-// });
-
 </script>
 <style lang="scss">
 @import '../common/index.wxss';

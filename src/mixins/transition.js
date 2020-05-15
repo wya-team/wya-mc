@@ -14,9 +14,8 @@ let nextTick = function () { return new Promise(function (resolve) { return setT
 exports.transition = function (showDefaultValue) {
 	return Behavior({
 		properties: {
-			customStyle: String,
 			// @ts-ignore
-			show: {
+			visible: {
 				type: Boolean,
 				value: showDefaultValue,
 				observer: 'observeShow'
@@ -38,7 +37,7 @@ exports.transition = function (showDefaultValue) {
 			display: false
 		},
 		attached() {
-			if (this.data.show) {
+			if (this.data.visible) {
 				this.enter();
 			}
 		},
@@ -119,9 +118,9 @@ exports.transition = function (showDefaultValue) {
 				}
 				this.transitionEnded = true;
 				this.$emit("after-" + this.status);
-				let _a = this.data; let show = _a.show; let 
+				let _a = this.data; let visible = _a.visible; let 
 					display = _a.display;
-				if (!show && display) {
+				if (!visible && display) {
 					this.setData({ display: false });
 				}
 			}

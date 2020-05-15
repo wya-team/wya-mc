@@ -124,7 +124,6 @@ class Portal {
 		};
 
 		ctx[PORTAL_TAG] = true;
-		ctx.$emit = overrideTrigger;
 		ctx.triggerEvent = overrideTrigger;
 
 		return ctx;

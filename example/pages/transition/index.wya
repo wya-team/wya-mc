@@ -12,35 +12,35 @@
 	</mc-list>
 
 
-	<mc-transition show="{{show}}">
+	<mc-transition visible="{{show}}">
 		<text class="box">fade</text>
 	</mc-transition>
 
 
-	<mc-transition name="fade-up" show="{{showFadeUp}}">
+	<mc-transition name="fade-up" visible="{{showFadeUp}}">
 		<text class="box">fade-up</text>
 	</mc-transition>
-	<mc-transition name="fade-down" show="{{showFadeDown}}">
+	<mc-transition name="fade-down" visible="{{showFadeDown}}">
 		<text class="box">fade-down</text>
 	</mc-transition>
-	<mc-transition name="fade-left" show="{{showFadeLeft}}">
+	<mc-transition name="fade-left" visible="{{showFadeLeft}}">
 		<text class="box">fade-left</text>
 	</mc-transition>
-	<mc-transition name="fade-right" show="{{showFadeRight}}">
+	<mc-transition name="fade-right" visible="{{showFadeRight}}">
 		<text class="box">fade-right</text>
 	</mc-transition>
 
 
-	<mc-transition name="slide-up" show="{{showSlideUp}}">
+	<mc-transition name="slide-up" visible="{{showSlideUp}}">
 		<text class="box">slide-up</text>
 	</mc-transition>
-	<mc-transition name="slide-down" show="{{showSlideDown}}">
+	<mc-transition name="slide-down" visible="{{showSlideDown}}">
 		<text class="box">slide-down</text>
 	</mc-transition>
-	<mc-transition name="slide-left" show="{{showSlideLeft}}">
+	<mc-transition name="slide-left" visible="{{showSlideLeft}}">
 		<text class="box">slide-left</text>
 	</mc-transition>
-	<mc-transition name="slide-right" show="{{showSlideRight}}">
+	<mc-transition name="slide-right" visible="{{showSlideRight}}">
 		<text class="box">slide-right</text>
 	</mc-transition>
 
