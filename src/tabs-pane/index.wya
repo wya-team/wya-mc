@@ -1,0 +1,112 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+	<view
+		class="custom-class {{ utils.bem('tab__pane', { active, inactive: !active }) }}"
+		style="{{ shouldShow ? '' : 'display: none;' }}"
+	>
+		<slot wx:if="{{ shouldRender }}" />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'../tabs/index': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked() {
+				this.parent = null;
+			},
+		}
+	},
+	props: {
+		dot: {
+			type: Boolean,
+			observer: 'update'
+		},
+		info: {
+			type: null,
+			observer: 'update'
+		},
+		title: {
+			type: String,
+			observer: 'update'
+		},
+		disabled: {
+			type: Boolean,
+			observer: 'update'
+		},
+		titleStyle: {
+			type: String,
+			observer: 'update'
+		},
+		name: {
+			type: [Number, String],
+			value: '',
+		}
+	},
+	data: {
+		active: false
+	},
+	methods: {
+		getComputedName() {
+			if (this.data.name !== '') {
+				return this.data.name;
+			}
+			return this.index;
+		},
+		updateRender(active, parent) {
+			let parentData = parent.data;
+			this.inited = this.inited || active;
+			this.setData({
+				active,
+				shouldRender: this.inited || !parentData.lazyRender,
+				shouldShow: active || parentData.animated
+			});
+		},
+		update() {
+			if (this.parent) {
+				this.parent.updateTabs();
+			}
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+:host {
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+	width: 100%
+}
+
+.mc-tab__pane,
+:host {
+	box-sizing: border-box
+}
+
+.mc-tab__pane {
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch
+}
+
+.mc-tab__pane--active {
+	height: auto
+}
+
+.mc-tab__pane--inactive {
+	height: 0;
+	overflow: visible
+}
+
+</style>
+<config>
+{
+	"component": true
+}
+</config>

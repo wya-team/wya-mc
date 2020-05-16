@@ -1,9 +1,12 @@
+import { basic } from '../mixins/basic';
+
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
-	const { externalClasses = [], mixins, props, ...restOpts } = mcOptions;
+	const { externalClasses = [], mixins = [], props, ...restOpts } = mcOptions;
 	if (!externalClasses.includes('mc-class')) {
 		externalClasses.push('mc-class');
 	}
+	mixins.push(basic);
 	let options = {
 		...restOpts,
 		externalClasses,
@@ -12,12 +15,6 @@ function McComponent(mcOptions) {
 			...props,
 			mcStyle: String
 		},
-		methods: {
-			...mcOptions.methods,
-			$emit(event, options) {
-				this.triggerEvent(event, options);
-			},
-		}
 	};
 	Component(options);
 }
