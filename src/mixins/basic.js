@@ -1,15 +1,15 @@
 export const basic = Behavior({
 	methods: {
-	  $emit(...args) {
+		$emit(...args) {
 			this.triggerEvent(...args);
-	  },
-	  set(data, callback) {
+		},
+		set(data, callback) {
 			this.setData(data, callback);
-  
+	
 			return new Promise((resolve) => wx.nextTick(resolve));
-	  },
-  
-	  getRect(selector, all) {
+		},
+	
+		getRect(selector, all) {
 			return new Promise((resolve) => {
 				wx.createSelectorQuery().in(this)[all ? 'selectAll' : 'select'](selector)
 					.boundingClientRect((rect) => {
