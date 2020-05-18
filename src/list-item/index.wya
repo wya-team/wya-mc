@@ -109,7 +109,7 @@ McComponent({
 	box-sizing: border-box;
 	width: 100%;
 	font-size: 32rpx;
-	line-height: 44rpx;
+	line-height: 32rpx;
 	color: #000000;
 	background-color: #fff;
 }
