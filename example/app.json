@@ -1,7 +1,8 @@
 {
 	"pages": [
-		"pages/tabs/index",
+		"pages/input/index",
 		"pages/popup/index",
+		"pages/tabs/index",
 		"pages/button/index",
 		"pages/icon/index",
 		"pages/image/index",

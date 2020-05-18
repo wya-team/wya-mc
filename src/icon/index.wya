@@ -2,6 +2,7 @@
 	<text
 		class="c-icon iconfont icon-{{type}} mc-class"
 		style="{{inherit ? 'color: inherit !important' : '' }};{{mcStyle}}"
+		bindtap="handleClick"
 	/>
 </template>
 <script>
@@ -16,6 +17,11 @@ McComponent({
 		inherit: {
 			type: Boolean,
 			default: false
+		}
+	},
+	methods: {
+		handleClick(event) {
+			this.$emit('click', event.detail);
 		}
 	}
 });

@@ -1,0 +1,146 @@
+<template>
+	<view class="mc-input mc-class">
+		<view class="mc-input__prepend">
+			<slot name="prepend"></slot>
+		</view>
+		<input 
+			class="mc-input__input mc-input-class"
+			type="{{ type }}"
+			focus="{{ focus }}"
+			cursor="{{ cursor }}"
+			value="{{ currentValue }}"
+			auto-focus="{{ autoFocus }}"
+			disabled="{{ disabled || readonly }}"
+			maxlength="{{ maxlength }}"
+			placeholder="{{ placeholder }}"
+			placeholder-style="{{ placeholderStyle }}"
+			placeholder-class="{{ placeholderClass }}"
+			confirm-type="{{ confirmType }}"
+			confirm-hold="{{ confirmHold }}"
+			hold-keyboard="{{ holdKeyboard }}"
+			cursor-spacing="{{ cursorSpacing }}"
+			adjust-position="{{ adjustPosition }}"
+			selection-end="{{ selectionEnd }}"
+			selection-start="{{ selectionStart }}"
+			password="{{ password || type === 'password' }}"
+			bindinput="handleInput"
+			bindblur="handleBlur"
+			bindfocus="handleFocus"
+			bindconfirm="handleConfirm"
+			bindkeyboardheightchange="handleKeyboardHeightChange"
+		/>
+		<view class="mc-input__append">
+			<mc-icon 
+				wx:if="{{!disabled && !useClearSlot && currentValue}}" 
+				type="clear" 
+				mc-class="mc-input__clear" 
+				bind:click="handleClear"
+			/>
+			<slot wx:else name="append"></slot>
+		</view>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { props } from './props';
+
+McComponent({
+	addGlobalClass: ['mc-input-class'],
+	options: {
+		multipleSlots: true
+	},
+	props: {
+		...props,
+		password: Boolean,
+		confirmType: String,
+		confirmHold: Boolean,
+		useClearSlot: {
+			type: Boolean,
+			value: false
+		},
+		clearable: {
+			type: Boolean,
+			value: true
+		}
+	},
+	data: {
+		currentValue: ''
+	},
+	attached() {
+		this.setData({ currentValue: this.data.value });
+	},
+	methods: {
+		handleInput(event) {
+			const value = event.detail.value;
+			this.setData({
+				currentValue: value
+			});
+			this.sync(value);
+		},
+		handleBlur(event) {
+			this.$emit('blur', event.detail);
+		},
+		handleFocus(event) {
+			this.$emit('focus', event.detail);
+		},
+		handleConfirm(event) {
+			const { value = '' } = event.detail || {};
+			this.$emit('confirm', value);
+		},
+		handleKeyboardHeightChange(event) {
+			this.$emit('keyboardheightchange', event.detail);
+		},
+		handleClear() {
+			this.setData({ currentValue: '' });
+			wx.nextTick(() => {
+				this.sync('');
+				this.$emit('clear', '');
+			});
+		},
+		sync(v) {
+			wx.nextTick(() => {
+				this.$emit('input', v);
+				this.$emit('change', v);
+			});
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-input {
+	position: relative;
+	width: 100%;
+	background-color: #ffffff;
+	height: 48rpx;
+	line-height: 1.5;
+	font-size: 26rpx;
+	padding-left: 26rpx;
+	padding-right: 26rpx;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	.mc-input__prepend {
+		padding-right: 20rpx; 
+	}
+	.mc-input__input {
+		flex: 1
+	}
+	.mc-input__append {
+		padding-left: 20rpx; 
+	}
+	.mc-input__clear {
+		color: #999999;
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>

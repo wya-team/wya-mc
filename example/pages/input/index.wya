@@ -1,0 +1,34 @@
+<template>
+	<mc-input value="{{value}}" bind:change="handleChange"/>
+	<mc-input-search bindtap="handleClick" />
+	<text>{{value}}</text>
+</template>
+<script>
+const app = getApp();
+
+Page({
+	handleChange(event) {
+		this.setData({
+			value: event.detail
+		});
+	},
+	handleClick() {
+		console.log('111');
+	}
+});
+
+</script>
+<style lang="scss">
+page {
+	background-color: #ffffff;
+}
+</style>
+
+<config>
+{
+	"usingComponents": {
+		"mc-input": "../components/input",
+		"mc-input-search": "../components/input-search"
+	}
+}
+</config>

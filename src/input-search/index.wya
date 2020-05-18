@@ -1,0 +1,132 @@
+<template>
+	<view class="mc-input-search mc-class">
+		<mc-input
+			style="flex: 1"
+			mc-class="mc-input-search__input mc-input-class"
+			type="{{ type }}"
+			focus="{{ focus }}"
+			cursor="{{ cursor }}"
+			value="{{ currentValue }}"
+			auto-focus="{{ autoFocus }}"
+			disabled="{{ disabled || readonly }}"
+			maxlength="{{ maxlength }}"
+			placeholder="{{ placeholder }}"
+			placeholder-style="{{ placeholderStyle }}"
+			placeholder-class="{{ placeholderClass }}"
+			confirm-type="search"
+			hold-keyboard="{{ holdKeyboard }}"
+			cursor-spacing="{{ cursorSpacing }}"
+			adjust-position="{{ adjustPosition }}"
+			selection-end="{{ selectionEnd }}"
+			selection-start="{{ selectionStart }}"
+			bind:input="handleInput"
+			bind:blur="handleBlur"
+			bind:focus="handleFocus"
+			bind:confirm="handleConfirm"
+			bind:keyboardheightchange="handleKeyboardHeightChange"
+		>
+			<view slot="prepend">
+				<mc-icon type="search" mc-class="mc-input-search__icon" />
+			</view>
+		</mc-input>
+		<view 
+			wx:if="{{!diabled && showCancel}}" 
+			class="mc-input-search__cancel" 
+			bindtap="handleCancel"
+		>
+			{{cancelText}}
+		</view>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { props } from '../input/props';
+
+McComponent({
+	addGlobalClass: ['mc-input-class'],
+	props: {
+		...props,
+		cancelText: {
+			type: String,
+			value: '取消'
+		},
+		showCancel: {
+			type: Boolean,
+			value: true
+		},
+	},
+	attached() {
+		this.setData({ currentValue: this.data.value });
+	},
+	methods: {
+		handleInput(event) {
+			const value = event.detail;
+			this.setData({
+				currentValue: value
+			});
+			this.sync(value);
+		},
+		handleBlur(event) {
+			this.$emit('blur', event.detail);
+		},
+		handleFocus(event) {
+			this.$emit('focus', event.detail);
+		},
+		handleConfirm(event) {
+			this.$emit('confirm', event.detail);
+		},
+		handleKeyboardHeightChange(event) {
+			this.$emit('keyboardheightchange', event.detail);
+		},
+		handleCancel() {
+			if (this.data.readonly) return;
+			this.sync('');
+			this.$emit('cancel');
+		},
+		sync(v) {
+			wx.nextTick(() => {
+				this.$emit('input', v);
+				this.$emit('change', v);
+			});
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-input-search {
+	position: relative;
+	width: 100%;
+	background-color: #F2F2F2;
+	height: 96rpx;
+	padding-left: 28rpx;
+	padding-right: 28rpx;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	.mc-input-search__icon {
+		color: #999999;
+	}
+	.mc-input-search__input {
+		border-radius: 28rpx;
+		width: auto;
+		height: 56rpx;
+	}
+	.mc-input-search__cancel {
+		font-size: 32rpx;
+		color: #3265EF;
+		margin-left: 20rpx;
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-input": "../input/index",
+		"mc-icon": "../icon/index"
+	}
+}
+</config>
