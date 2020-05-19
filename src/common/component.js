@@ -2,13 +2,17 @@ import { basic } from '../mixins/basic';
 
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
-	const { externalClasses = [], mixins = [], props, ...restOpts } = mcOptions;
+	const { externalClasses = [], mixins = [], props, options, ...restOpts } = mcOptions;
 	if (!externalClasses.includes('mc-class')) {
 		externalClasses.push('mc-class');
 	}
 	mixins.push(basic);
-	let options = {
+	let opts = {
 		...restOpts,
+		options: {
+			...options,
+			multipleSlots: true
+		},
 		externalClasses,
 		behaviors: mixins,
 		properties: {
@@ -16,6 +20,6 @@ function McComponent(mcOptions) {
 			mcStyle: String
 		},
 	};
-	Component(options);
+	Component(opts);
 }
 module.exports = McComponent;

@@ -46,9 +46,6 @@ import { props } from './props';
 
 McComponent({
 	addGlobalClass: ['mc-input-class'],
-	options: {
-		multipleSlots: true
-	},
 	props: {
 		...props,
 		password: Boolean,

@@ -14,7 +14,7 @@
 		<mc-list-item label="单元格" content="内容" />
 	</mc-list>
 
-	<mc-list-item label="单元格" content="内容" indent="32" />
+	<mc-list-item mc-style="margin-top: 40rpx" label="单元格" content="内容" />
 </template>
 
 <script>

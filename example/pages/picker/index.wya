@@ -1,0 +1,99 @@
+<template>
+	<mc-picker 
+		label="性别"
+		title="性别"
+		tag="picker-sex"
+		dataSource="{{dataSource1}}"
+	>
+	</mc-picker>
+	<mc-picker 
+		label="时间"
+		title="时间"
+		tag="picker-time"
+		dataSource="{{dataSource2}}"
+	>
+	</mc-picker>
+</template>
+<script>
+const app = getApp();
+import Portal from '../../components/portal/index';
+
+Page({
+	data: {
+		dataSource1: [
+			{ 
+				label: '男',
+				value: 1,
+				children: [
+					{
+						label: '爱好女',
+						value: '2'
+					},
+					{
+						label: '花花',
+						value: '3'
+					}
+				]
+			},
+			{ 
+				label: '女',
+				value: 2,
+				children: [
+					{
+						label: '爱好男',
+						value: '5'
+					},
+					{
+						label: '安抚',
+						value: '4'
+					}
+				] 
+			}
+		],
+		dataSource2: [
+			[{ label: '上午', value: 1 }, { label: '下午', value: 2 }],
+			[
+				{
+					label: '0点',
+					value: 0
+				},
+				{
+					label: '1点',
+					value: 1
+				},
+				{
+					label: '2点',
+					value: 2
+				},
+				{
+					label: '3点',
+					value: 3
+				},
+				{
+					label: '4点',
+					value: 4
+				},
+				{
+					label: '5点',
+					value: 5
+				},
+				{
+					label: '6点',
+					value: 6
+				}
+			]
+		]
+	},
+	onShow() {
+		
+	},
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-picker": "../components/picker"
+	}
+}
+</config>

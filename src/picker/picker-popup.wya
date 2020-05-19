@@ -1,0 +1,89 @@
+<template>
+	<mc-popup mc-class="mc-picker-popup" visible="{{visible}}" bind:close="handleClose">
+		<view wx:if="{{showToolbar}}" class="mc-picker-popup__header">
+			<view 
+				wx:if="{{cancelText}}" 
+				class="mc-picker-popup__item is-left"
+				bindtap="handleCancel"
+			>
+				{{ cancelText }}
+			</view>
+
+			<!-- title -->
+			<view class="mc-picker-popup__item is-title">
+				{{title}}
+			</view>
+
+			<view 
+				wx:if="{{okText}}" 
+				class="mc-picker-popup__item is-right" 
+				bindtap="handleOK"
+			>
+				{{ okText }}
+			</view>
+		</view>
+		<slot></slot>
+	</mc-popup>
+</template>
+<script>
+import McComponent from '../common/component';
+import { pickerPopupProps } from './props';
+
+McComponent({
+	props: {
+		...pickerPopupProps,
+		visible: {
+			type: Boolean,
+			value: false
+		},
+	},
+	methods: {
+		handleClose() {
+			this.$emit('close');
+		},
+		handleCancel() {
+			this.$emit('cancel');
+			this.handleClose();
+		},
+		handleOK() {
+			this.$emit('ok');
+			this.handleClose();
+		},
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-picker-popup {
+	.mc-picker-popup__header {
+		position: relative;
+		display: flex;
+		align-items: center;
+		box-sizing: border-box;
+		background-color: #fff;
+	}
+	.mc-picker-popup__item {
+		padding: 0 30rpx;
+		color: #108ee9;
+		height: 88rpx;
+		font-size: 34rpx;
+		line-height: 88rpx;
+		text-align: center;
+		&.is-title {
+			flex: 1;
+			text-align: center;
+			color: #000;
+		}
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-popup": "../popup/index"
+	}
+}
+</config>

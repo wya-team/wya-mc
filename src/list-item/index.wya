@@ -39,9 +39,6 @@ import McComponent from '../common/component';
 
 McComponent({
 	externalClasses: ['label-class', 'content-class'],
-	options: {
-		multipleSlots: true
-	},
 	relations: {
 		'../list/index': {
 			type: 'parent',
@@ -69,7 +66,10 @@ McComponent({
 		},
 		useLeftIconSlot: Boolean,
 		useRightIconSlot: Boolean,
-		indent: Number,
+		indent: {
+			type: Number,
+			value: 32
+		},
 		linkType: {
 			type: String,
 			value: 'navigateTo'

@@ -35,9 +35,6 @@ import McComponent from '../common/component';
 import { PULL_DOWN_STATUS, PULL_UP_STATUS, SCROLL_STATUS } from './constant';
 
 McComponent({
-	options: {
-		multipleSlots: true
-	},
 	props: {
 		pauseY: {
 			type: Number,

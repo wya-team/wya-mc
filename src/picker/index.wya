@@ -1,0 +1,131 @@
+<template>
+	<view class="mc-picker" bindtap="handleClick">
+		<mc-list-item 
+			wx:if="{{!useItemSlot}}"
+			content="{{extra}}"
+			label="{{label}}"
+			label-width="{{labelWidth}}"
+		/>
+		<slot wx:else></slot>
+	</view>
+	<mc-picker-popup 
+		id="{{tag}}"
+		title="{{title}}"
+		cancel-text="{{cancelText}}"
+		ok-text="{{okText}}"
+		show-toolbar="{{showToolbar}}"
+		bind:ok="handleOK"
+		bind:cancel="handleCancel"
+	>
+		<mc-picker-view
+			value="{{currentValue}}"
+			dataSource="{{dataSource}}"
+			cols="{{cols}}"
+			bind:change="handleChange"
+			bind:ready="handleViewReady"
+		/>
+	</mc-picker-popup>
+</template>
+<script>
+import McComponent from '../common/component';
+import Portal from '../portal/index';
+import { pickerViewProps, pickerPopupProps } from './props';
+
+McComponent({
+	props: {
+		...pickerViewProps,
+		...pickerPopupProps,
+		value: {
+			type: Array,
+			value: [],
+			observer(val) {
+				if (arrayEqual(val, this.data.currentValue)) {
+					this.setData({
+						currentValue: val
+					});
+				}
+			}
+		},
+		label: String,
+		labelWidth: {
+			type: String,
+			optionalTypes: [Number],
+		},
+		tag: {
+			type: String,
+			value: 'picker-popup'
+		},
+		useItemSlot: {
+			type: Boolean,
+			value: false
+		},
+		extra: {
+			type: String,
+			value: '请选择'
+		},
+	},
+	data: {
+		
+	},
+	lifetimes: {
+		attached() {
+			this.setData({
+				currentValue: this.data.value
+			});
+			this.Func = new Portal({ 
+				el: `#${this.data.tag}` 
+			});
+		}
+	},
+	methods: {
+		handleViewReady(event) {
+			this.viewInstance = event.detail;
+		},
+		handleClick(event) {
+			if (this.Func) {
+				this.Func.popup({
+					context: this.selectComponent(`#${this.data.tag}`),
+					title: this.data.title
+				}).then((res) => {
+					console.log('sure', res);
+				}).catch((err) => {
+					console.log('close', err);
+				});
+			}
+		},
+		handleChange(event) {
+			this.setData({
+				pickValue: event.detail
+			});
+		},
+		handleOK() {
+			this.setData({
+				extra: this.viewInstance.getLabelByValue(this.data.pickValue).join(','),
+				currentValue: this.data.pickValue
+			});
+			this.$emit('ok', this.data.currentValue);
+		},
+		handleCancel() {
+			this.viewInstance.reset(this.data.currentValue);
+			this.$emit('cancel');
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-picker {
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-list-item": "../list-item/index",
+		"mc-picker-popup": "./picker-popup",
+		"mc-picker-view": "./picker-view"
+	}
+}
+</config>

@@ -1,12 +1,12 @@
 <template>
 	<mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}">
-		<view class="mc-popup__mask" bind:tap="handleClose" />
+		<view class="mc-popup__mask" catchtap="handleClose" />
 	</mc-transition>
 	<view 
 		wx:if="{{inited}}" 
 		class="mc-popup {{classes}} mc-popup__{{placement}} mc-class"
 		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{mcStyle}}"
-		bind:transitionend="onTransitionEnd"
+		catch:transitionend="onTransitionEnd"
 	>
 		<slot></slot>
 	</view>

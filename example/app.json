@@ -1,16 +1,17 @@
 {
 	"pages": [
-		"pages/list/index",
-		"pages/input/index",
-		"pages/popup/index",
-		"pages/tabs/index",
+		"pages/picker/index",
 		"pages/button/index",
 		"pages/icon/index",
 		"pages/image/index",
 		"pages/imgs-crop/index",
+		"pages/input/index",
+		"pages/list/index",
 		"pages/list-item/index",
+		"pages/popup/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
+		"pages/tabs/index",
 		"pages/transition/index"
 	],
 	"window": {

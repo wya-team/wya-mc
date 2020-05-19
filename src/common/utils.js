@@ -39,3 +39,11 @@ function addUnit(value) {
 	return isNumber(value) ? value + "px" : value;
 }
 exports.addUnit = addUnit;
+
+export const arrayEqual = (arr1, arr2) => {
+	if (!(arr1 instanceof Array) || !(arr2 instanceof Array)) return false;
+	if (arr1.length !== arr2.length) return false;
+	return arr1.every((it, index) => {
+		return it === arr2[index];
+	});
+};

@@ -1,7 +1,7 @@
 <template>
 	<view
-	wx:if="{{ title }}"
-	class="mc-list__title"
+		wx:if="{{ title }}"
+		class="mc-list__title"
 	>
 		{{ title }}
 	</view>

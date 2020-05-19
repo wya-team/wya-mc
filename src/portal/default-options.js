@@ -3,4 +3,5 @@ export default {
 	promise: true,
 	onBefore: null, 
 	data: null,
+	context: null
 };

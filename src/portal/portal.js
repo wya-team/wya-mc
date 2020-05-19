@@ -50,12 +50,13 @@ class Portal {
 		let { el } = this._getDefaultOptions();
 		const page = getCurrentPages().pop();
 		const ctx = page.selectComponent(el);
-		return ctx;
+		return ctx || this.context;
 	}
 
 
 	_init(options) {
-		const { onBefore, onSure, onClose, promise, multiple, ...rest } = options;
+		const { onBefore, onSure, onClose, promise, multiple, context, ...rest } = options;
+		this.context = context;
 
 		return promise 
 			? new Promise((resolve, reject) => {
