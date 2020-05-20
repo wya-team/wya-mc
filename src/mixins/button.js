@@ -1,13 +1,10 @@
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.button = Behavior({
+  
+export const button = Behavior({
 	externalClasses: ['hover-class'],
+  
 	properties: {
 		id: String,
-		lang: {
-			type: String,
-			value: 'en'
-		},
+		lang: String,
 		businessId: Number,
 		sessionFrom: String,
 		sendMessageTitle: String,
@@ -15,6 +12,6 @@ exports.button = Behavior({
 		sendMessageImg: String,
 		showMessageCard: Boolean,
 		appParameter: String,
-		ariaLabel: String
-	}
+		ariaLabel: String,
+	},
 });

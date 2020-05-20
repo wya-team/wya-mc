@@ -1,0 +1,48 @@
+<template>
+	<mc-list>
+		<mc-list-item label="上拉菜单" bind:click="handleOpenActionSheet" />
+	</mc-list>
+
+	<mc-action-sheet 
+		id="action-sheet" 
+		title='title' 
+		actions="{{action1}}"
+	>
+	</mc-action-sheet>
+</template>
+<script>
+import { PopupActionSheet } from './popup/portal';
+
+Page({
+	handleOpenActionSheet() {
+		PopupActionSheet.popup({
+			count: 10
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+	data: {
+		show: false,
+		action1: [
+			{ name: '复制文本', },
+			{ name: '删除', color: '#ff1234' },
+			{ name: '选项', subname: '副文本', disabled: true }
+		],
+	},
+	handleClose() {
+		Popup.destroy();
+	},
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-action-sheet": "../../../components/action-sheet/index",
+		"mc-list": "../../../components/list/index",
+		"mc-list-item": "../../../components/list-item/index"
+	}
+}
+</config>

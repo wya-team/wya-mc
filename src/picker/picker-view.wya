@@ -7,7 +7,7 @@
 		style="width: 100%"
 		bindchange="handleChange" 
 	>
-		<picker-view-column wx:for="{{currentData}}" wx:for-item="column">
+		<picker-view-column wx:for="{{currentData}}" wx:for-item="column" wx:key="index">
 			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">{{item.label}}</view>
 		</picker-view-column>
 	</picker-view>

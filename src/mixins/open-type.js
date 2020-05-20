@@ -1,27 +1,30 @@
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.openType = Behavior({
+export const openType = Behavior({
 	properties: {
-		openType: String
+	  openType: String,
 	},
 	methods: {
-		bindGetUserInfo(event) {
+		bindGetUserInfo() {
 			this.$emit('getuserinfo', event.detail);
 		},
-		bindContact(event) {
+	
+		bindContact() {
 			this.$emit('contact', event.detail);
 		},
-		bindGetPhoneNumber(event) {
+	
+		bindGetPhoneNumber() {
 			this.$emit('getphonenumber', event.detail);
 		},
-		bindError(event) {
+	
+		bindError() {
 			this.$emit('error', event.detail);
 		},
-		bindLaunchApp(event) {
+	
+		bindLaunchApp() {
 			this.$emit('launchapp', event.detail);
 		},
-		bindOpenSetting(event) {
+	
+		bindOpenSetting() {
 			this.$emit('opensetting', event.detail);
 		},
-	}
+	},
 });

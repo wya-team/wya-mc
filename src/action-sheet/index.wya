@@ -1,0 +1,166 @@
+<template>
+	<mc-popup 
+		mc-class="mc-action-sheet mc-class" 
+		visible="{{visible}}" 
+		round="{{ round }}"
+		mask="{{ mask }}"
+		maskClosable="{{ maskClosable }}"
+		bind:close="handleClose"
+	>
+		<view wx:if="{{title}}" class="mc-hairline__bottom mc-action-sheet__title">
+			{{title}}
+		</view>
+		<view wx:if="{{description}}" class="mc-action-sheet__description">
+			{{description}}
+		</view>
+		<button
+			wx:for="{{ actions }}"
+			wx:key="index"
+			open-type="{{ item.openType }}"
+			style="{{ item.color ? 'color: ' + item.color : '' }}"
+			class="mc-action-sheet__item {{item.disabled ? 'is-disabled' : ''}} {{index === 0 && title ? '' : 'mc-hairline__top' }} {{ item.className || '' }}"
+			hover-class="mc-action-sheet__item--hover"
+			data-index="{{ index }}"
+			bindtap="handleSelect"
+			bindgetuserinfo="bindGetUserInfo"
+			bindcontact="bindContact"
+			bindgetphonenumber="bindGetPhoneNumber"
+			binderror="bindError"
+			bindlaunchapp="bindLaunchApp"
+			bindopensetting="bindOpenSetting"
+			lang="{{ lang }}"
+			session-from="{{ sessionFrom }}"
+			send-message-title="{{ sendMessageTitle }}"
+			send-message-path="{{ sendMessagePath }}"
+			send-message-img="{{ sendMessageImg }}"
+			show-message-card="{{ showMessageCard }}"
+			app-parameter="{{ appParameter }}"
+		>
+			{{ item.name }}
+			<text wx:if="{{ item.subname }}" class="mc-action-sheet__subname" >{{ item.subname }}</text>
+		</button>
+		<slot></slot>
+		<view
+			wx:if="{{ cancelText }}"
+			class="mc-action-sheet__cancel"
+			hover-class="mc-action-sheet__cancel--hover"
+			hover-stay-time="70"
+			bind:tap="handleCancel"
+		>
+			{{ cancelText }}
+		</view>
+	</mc-popup>
+</template>
+<script>
+import McComponent from '../common/component';
+import { openType } from '../mixins/open-type';
+import { button } from '../mixins/button';
+import { popup } from '../mixins/popup';
+
+McComponent({
+	mixins: [button, openType, popup],
+	props: {
+		visible: {
+			type: Boolean,
+			value: false
+		},
+		cancelText: {
+			type: String,
+			value: '取消'
+		},
+		title: String,
+		description: String,
+		actions: {
+			type: Array,
+			value: []
+		},
+		closeOnClickAction: {
+			type: Boolean,
+			value: true
+		}
+	},
+	methods: {
+		handleClose() {
+			this.$emit('close');
+		},
+		handleCancel() {
+			this.$emit('cancel');
+			this.handleClose();
+		},
+		handleSelect(event) {
+			let index = event.currentTarget.dataset.index;
+			let item = this.data.actions[index];
+			if (item && !item.disabled) {
+				this.$emit('sure', item);
+				this.$emit('select', item);
+				if (this.data.closeOnClickAction) {
+					this.handleClose();
+				}
+			}
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-action-sheet {
+	max-height: 90% !important;
+	color: #000000;
+	font-family:PingFang SC;
+	.mc-action-sheet__title {
+		text-align: center;
+		font-size: 38rpx;
+		line-height: 100rpx;
+	}
+	.mc-action-sheet__description {
+		text-align: center;
+		padding: 32rpx;
+		color: #646566;
+		font-size: 28rpx;
+		line-height: 40rpx;
+	}
+	.mc-action-sheet__cancel,
+	.mc-action-sheet__item {
+		font-weight: normal;
+		text-align: center;
+		font-size: 36rpx;
+		line-height: 100rpx;
+		background-color: #fff;
+		width: 100%;
+		box-shadow: border-box;
+		padding: 0;
+		&.is-disabled {
+			color: #CDCDCD;
+			background-color: #fff;
+		}
+	}
+	.mc-action-sheet__cancel--hover,
+	.mc-action-sheet__item--hover {
+		background-color: #f2f3f5;
+	}
+	.mc-action-sheet__cancel:before {
+		display: block;
+		content: " ";
+		height: 10rpx;
+		background-color: #F2F2F2;
+	}
+	.mc-action-sheet__subname {
+		margin-left: 8rpx;
+		font-size: 24rpx;
+		color: #646566;
+	}
+	button:after {
+		display: block
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-popup": "../popup/index"
+	}
+}
+</config>

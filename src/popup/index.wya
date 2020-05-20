@@ -4,7 +4,7 @@
 	</mc-transition>
 	<view 
 		wx:if="{{inited}}" 
-		class="mc-popup {{classes}} mc-popup__{{placement}} mc-class"
+		class="mc-popup {{classes}} mc-popup__{{placement}} mc-popup__round mc-class"
 		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{mcStyle}}"
 		catch:transitionend="onTransitionEnd"
 	>
@@ -14,9 +14,10 @@
 <script>
 import McComponent from '../common/component';
 import { transition } from '../mixins/transition';
+import { popup } from '../mixins/popup';
 
 McComponent({
-	mixins: [transition(false)],
+	mixins: [transition(false), popup],
 	externalClasses: [
 		'enter-class',
 		'enter-active-class',
@@ -26,14 +27,6 @@ McComponent({
 		'leave-to-class'
 	],
 	props: {
-		mask: {
-			type: Boolean,
-			value: true
-		},
-		maskClosable: {
-			type: Boolean,
-			value: true
-		},
 		placement: {
 			type: String,
 			value: 'bottom',
