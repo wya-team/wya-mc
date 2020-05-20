@@ -1,0 +1,44 @@
+<template>
+	<mc-notice-bar text="{{text}}" mc-class="g-m-b-40" />
+	<mc-notice-bar mode="closeable" text="{{ text }}" mc-class="g-m-b-40" />
+	<mc-notice-bar mode="link" text="{{ text }}" mc-class="g-m-b-40" />
+	<mc-notice-bar scrollable="{{ false }}" text="{{ text }}" mc-class="g-m-b-40" />
+	<mc-notice-bar wrapable scrollable="{{ false }}" text="{{ text }}" mc-class="g-m-b-40" />
+	<mc-notice-bar  text="{{ text }}" mc-class="g-m-b-40">
+		<view slot="right-icon" class="test">发生</view>
+	</mc-notice-bar>
+	<mc-notice-bar mode="closeable" text="{{ text }}" speed="{{100}}" mc-class="g-m-b-40" />
+	<mc-notice-bar mode="closeable" text="{{ text }}" delay="{{10}}" mc-class="g-m-b-40" />
+</template>
+
+<script>
+Page({
+	data: {
+		text: '足协杯战线连续第2年上演广州德比战，上赛季半决赛上恒大以两回合5-3的总比分淘汰富力。',
+		speedValue: 80
+	},
+	onChange(event) {
+		this.setData({
+			speedValue: event.detail
+		});
+	}
+});
+</script>
+<style lang="scss">
+.g-m-b-40 {
+	margin-bottom: 40rpx
+}
+.test {
+	width: 85rpx;
+	height:44rpx;
+	background: rgba(217,185,135,1);
+	border-radius: 8rpx;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-notice-bar": "../components/notice-bar"
+	}
+}
+</config>

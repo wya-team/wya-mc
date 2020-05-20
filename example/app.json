@@ -1,5 +1,6 @@
 {
 	"pages": [
+		"pages/notice-bar/index",
 		"pages/action-sheet/index",
 		"pages/picker/index",
 		"pages/button/index",
