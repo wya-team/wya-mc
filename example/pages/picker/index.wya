@@ -1,9 +1,11 @@
 <template>
 	<mc-picker 
+		value="{{value}}"
 		label="性别"
 		title="性别"
 		tag="picker-sex"
 		dataSource="{{dataSource1}}"
+		bind:ok="handleOK"
 	>
 	</mc-picker>
 	<mc-picker 
@@ -87,6 +89,12 @@ Page({
 	onShow() {
 		
 	},
+	handleOK(event) {
+		const { value, label } = event.detail;
+		this.setData({
+			value
+		});
+	}
 });
 
 </script>

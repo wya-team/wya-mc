@@ -29,6 +29,7 @@
 	</mc-picker-popup>
 </template>
 <script>
+import { arrayEqual } from '../common/utils';
 import McComponent from '../common/component';
 import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
@@ -41,7 +42,7 @@ McComponent({
 			type: Array,
 			value: [],
 			observer(val) {
-				if (arrayEqual(val, this.data.currentValue)) {
+				if (!arrayEqual(val, this.data.currentValue)) {
 					this.setData({
 						currentValue: val
 					});
@@ -101,11 +102,12 @@ McComponent({
 			});
 		},
 		handleOK() {
+			const label = this.viewInstance.getLabelByValue(this.data.pickValue);
 			this.setData({
-				extra: this.viewInstance.getLabelByValue(this.data.pickValue).join(','),
+				extra: label.join(','),
 				currentValue: this.data.pickValue
 			});
-			this.$emit('ok', this.data.currentValue);
+			this.$emit('ok', { value: this.data.currentValue, label });
 		},
 		handleCancel() {
 			this.viewInstance.reset(this.data.currentValue);
