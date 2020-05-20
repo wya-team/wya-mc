@@ -1,5 +1,4 @@
 <template>
-		<!-- class="mc-class {{ utils.bem('notice-bar', { withicon: mode, wrapable }) }}" -->
 	<view
 		wx:if="{{ show }}"
 		class="mc-class mc-notice-bar {{wrapable ? 'is-wrapper' : ''}}"
