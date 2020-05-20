@@ -21,6 +21,8 @@
 			value="{{currentValue}}"
 			dataSource="{{dataSource}}"
 			cols="{{cols}}"
+			indicator-style="{{indicatorStyle}}"
+			indicator-class="{{indicatorClass}}"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
 		/>

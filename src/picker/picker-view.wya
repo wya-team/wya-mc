@@ -20,14 +20,6 @@ import { pickerViewProps } from './props';
 McComponent({
 	props: {
 		...pickerViewProps,
-		indicatorStyle: {
-			type: String,
-			value: 'height: 80rpx;'
-		},
-		indicatorClass: {
-			type: String,
-			value: ''
-		},
 		value: {
 			type: Array,
 			value: [],

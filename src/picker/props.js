@@ -6,7 +6,15 @@ export const pickerViewProps = {
 	cols: {
 		type: Number,
 		value: 1
-	}
+	},
+	indicatorStyle: {
+		type: String,
+		value: 'height: 80rpx;'
+	},
+	indicatorClass: {
+		type: String,
+		value: ''
+	},
 };
 
 export const pickerPopupProps = {
