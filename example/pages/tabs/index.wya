@@ -132,7 +132,7 @@ Page({
 {
 	"usingComponents": {
 		"mc-tabs": "../components/tabs",
-		"mc-tabs-pane": "../components/tabs-pane"
+		"mc-tabs-pane": "../components/tabs/tabs-pane"
 	}
 }
 </config>

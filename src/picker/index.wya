@@ -127,7 +127,7 @@ McComponent({
 {
 	"component": true,
 	"usingComponents": {
-		"mc-list-item": "../list-item/index",
+		"mc-list-item": "../list/list-item",
 		"mc-picker-popup": "./picker-popup",
 		"mc-picker-view": "./picker-view"
 	}

@@ -18,7 +18,7 @@ import McComponent from '../common/component';
 McComponent({
 	addGlobalClass: ['content-class'],
 	relations: {
-		'../collapse/index': {
+		'./index': {
 			type: 'ancestor',
 			linked(parent) {
 				this.parent = parent;

@@ -60,7 +60,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-list-item": "../components/list-item",
+		"mc-list-item": "../components/list/list-item",
 		"mc-icon": "../components/icon"
 	}
 }

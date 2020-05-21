@@ -8,7 +8,7 @@ import McComponent from '../common/component';
 
 McComponent({
 	relations: {
-		'../collapse-item/index': {
+		'./collapse-item': {
 			type: 'descendant',
 			linked(child) {
 				this.children = this.children || [];

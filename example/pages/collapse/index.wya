@@ -95,7 +95,7 @@ Page({
 {
 	"usingComponents": {
 		"mc-collapse": "../../components/collapse/index",
-		"mc-collapse-item": "../../components/collapse-item/index"
+		"mc-collapse-item": "../../components/collapse/collapse-item"
 	}
 }
 </config>

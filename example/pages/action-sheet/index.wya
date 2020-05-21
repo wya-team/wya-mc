@@ -42,7 +42,7 @@ Page({
 	"usingComponents": {
 		"mc-action-sheet": "../../../components/action-sheet/index",
 		"mc-list": "../../../components/list/index",
-		"mc-list-item": "../../../components/list-item/index"
+		"mc-list-item": "../../../components/list/list-item"
 	}
 }
 </config>

@@ -12,7 +12,7 @@ import McComponent from '../common/component';
 
 McComponent({
 	relations: {
-		'../tabs/index': {
+		'./index': {
 			type: 'ancestor',
 			linked(parent) {
 				this.parent = parent;

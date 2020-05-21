@@ -40,7 +40,7 @@ import McComponent from '../common/component';
 McComponent({
 	externalClasses: ['label-class', 'content-class'],
 	relations: {
-		'../list/index': {
+		'./index': {
 			type: 'parent',
 			linked(target) {
 				if (!this.data.indent) {

@@ -72,7 +72,7 @@ McComponent({
 	mixins: [touch],
 	addGlobalClass: ['nav-class', 'tab-class', 'tab-active-class', 'line-class'],
 	relations: {
-		'../tabs-pane/index': {
+		'./tabs-pane': {
 			type: 'descendant',
 			linked(child) {
 				this.children = this.children || [];
