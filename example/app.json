@@ -1,20 +1,20 @@
 {
 	"pages": [
+		"pages/input/index",
 		"pages/form/index",
-		"pages/picker/index",
-		"pages/tabs/index",
 		"pages/list/index",
-		"pages/collapse/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
+		"pages/collapse/index",
 		"pages/icon/index",
 		"pages/image/index",
 		"pages/imgs-crop/index",
-		"pages/input/index",
 		"pages/notice-bar/index",
+		"pages/picker/index",
 		"pages/popup/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
+		"pages/tabs/index",
 		"pages/transition/index"
 	],
 	"window": {

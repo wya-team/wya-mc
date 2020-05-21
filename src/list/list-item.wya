@@ -1,10 +1,10 @@
 <template>
 	<view
-		class="mc-list-item mc-class"
+		class="mc-list-item {{border ? 'is-border' : ''}} mc-class"
 		style="padding-left: {{indent}}rpx; {{ mcStyle }}"
 		bind:tap="handleClick"
 	>
-		<view class="mc-list-item__wrapper" style="{{borderIndent ? 'position: relative' : ''}}">
+		<view class="mc-list-item__wrapper wrapper-class" style="{{borderIndent ? 'position: relative' : ''}}">
 			<mc-icon
 				wx:if="{{!useLeftIconSlot && leftIcon}}"
 				type="{{leftIcon}}"
@@ -38,7 +38,7 @@
 import McComponent from '../common/component';
 
 McComponent({
-	externalClasses: ['label-class', 'content-class'],
+	externalClasses: ['label-class', 'wrapper-class', 'content-class'],
 	relations: {
 		'./index': {
 			type: 'parent',
@@ -73,6 +73,10 @@ McComponent({
 		linkType: {
 			type: String,
 			value: 'navigateTo'
+		},
+		border: {
+			type: Boolean,
+			value: true
 		},
 		borderIndent: {
 			type: Boolean,
@@ -112,6 +116,9 @@ McComponent({
 	line-height: 32rpx;
 	color: #000000;
 	background-color: #fff;
+	&.is-border .mc-list-item__wrapper:after {
+		display: block;
+	}
 }
 .mc-list-item__wrapper {
 	display: flex;
@@ -119,21 +126,22 @@ McComponent({
 	box-sizing: border-box;
 	width: 100%;
 	padding: 26rpx 22rpx 26rpx 0;
-}
-.mc-list-item__wrapper:after {
-	position: absolute;
-	box-sizing: border-box;
-	-webkit-transform-origin: center;
-	transform-origin: center;
-	content: " ";
-	pointer-events: none;
-	top: auto;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	border-bottom: 1px solid #F2F2F2;
-	-webkit-transform: scaleY(.5);
-	transform: scaleY(.5)
+	&:after {
+		display: none;
+		position: absolute;
+		box-sizing: border-box;
+		-webkit-transform-origin: center;
+		transform-origin: center;
+		content: " ";
+		pointer-events: none;
+		top: auto;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		border-bottom: 1px solid #F2F2F2;
+		-webkit-transform: scaleY(.5);
+		transform: scaleY(.5)
+	}
 }
 .mc-list-item__label {
 	font-size: 34rpx;

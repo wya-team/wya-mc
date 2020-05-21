@@ -19,6 +19,8 @@
 			adjust-position="{{ adjustPosition }}"
 			selection-end="{{ selectionEnd }}"
 			selection-start="{{ selectionStart }}"
+			use-prepend-slot
+			clearable
 			bind:input="handleInput"
 			bind:blur="handleBlur"
 			bind:focus="handleFocus"
@@ -113,6 +115,8 @@ McComponent({
 		border-radius: 28rpx;
 		width: auto;
 		height: 56rpx;
+		padding: 0 26rpx;
+		font-size: 26rpx
 	}
 	.mc-input-search__cancel {
 		font-size: 32rpx;

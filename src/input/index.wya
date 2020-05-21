@@ -1,10 +1,10 @@
 <template>
 	<view class="mc-input mc-class">
-		<view class="mc-input__prepend">
+		<view wx:if="{{usePrependSlot}}" class="mc-input__prepend">
 			<slot name="prepend"></slot>
 		</view>
 		<input 
-			class="mc-input__input mc-input-class"
+			class="mc-input__input {{right ? 'is-right' : ''}} mc-input-class"
 			type="{{ type }}"
 			focus="{{ focus }}"
 			cursor="{{ cursor }}"
@@ -29,9 +29,9 @@
 			bindconfirm="handleConfirm"
 			bindkeyboardheightchange="handleKeyboardHeightChange"
 		/>
-		<view class="mc-input__append">
+		<view wx:if="{{useAppendlot || clearable}}" class="mc-input__append">
 			<mc-icon 
-				wx:if="{{!disabled && !useClearSlot && currentValue}}" 
+				wx:if="{{!disabled && !useClearSlot && currentValue && clearable}}" 
 				type="clear" 
 				mc-class="mc-input__clear" 
 				bind:click="handleClear"
@@ -57,8 +57,11 @@ McComponent({
 		},
 		clearable: {
 			type: Boolean,
-			value: true
-		}
+			value: false
+		},
+		right: Boolean,
+		usePrependSlot: Boolean,
+		useAppendlot: Boolean,
 	},
 	data: {
 		currentValue: ''
@@ -113,17 +116,20 @@ McComponent({
 	background-color: #ffffff;
 	height: 48rpx;
 	line-height: 1.5;
-	font-size: 26rpx;
-	padding-left: 26rpx;
-	padding-right: 26rpx;
+	font-size: 32rpx;
 	display: flex;
 	align-items: center;
 	box-sizing: border-box;
 	.mc-input__prepend {
-		padding-right: 20rpx; 
+		padding-right: 13rpx; 
 	}
 	.mc-input__input {
-		flex: 1
+		flex: 1;
+		&.is-right {
+			text-align: right;
+		}
+		padding-left: 7rpx;
+		padding-right: 7rpx;
 	}
 	.mc-input__append {
 		padding-left: 20rpx; 

@@ -1,0 +1,121 @@
+<template>
+	<view style="padding-left: {{indent}}rpx" class="mc-form-item mc-class">
+		<view class="mc-form-item__wrapper {{classes}}">
+			<label wx:if="{{label || !useLabelSlot}}" for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label">
+				{{label}}
+			</label>
+			<slot name="label"></slot>
+			<view style="{{contentStyle}}" class="mc-form-item__content">
+				<slot />
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+// import { cloneDeep } from 'lodash';
+// import AsyncValidator from 'async-validator';
+import McComponent from '../common/component';
+import { formComponents } from './relations';
+
+McComponent({
+	relations: {
+		'./index': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked() {
+				this.parent = null;
+			},
+		},
+		...formComponents
+	},
+	props: {
+		label: {
+			type: String,
+			value: ''
+		},
+		labelWidth: {
+			type: Number
+		},
+		useLabelSlot: Boolean,
+		prop: {
+			type: String
+		},
+		required: {
+			type: Boolean,
+			value: false
+		},
+		rules: {
+			type: Array,
+			optionalTypes: [Object]
+		},
+		labelFor: {
+			type: String
+		},
+		indent: {
+			type: Number,
+			value: 32
+		}
+	},
+	data: {
+		contentStyle: 'margin-left: 180rpx;', // 即labelWidth
+	},
+	methods: {
+		resetField() {
+
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-form-item {
+	position: relative;
+	.mc-form-item__wrapper {
+		padding-top: 24rpx;
+		padding-bottom: 24rpx;
+		padding-right: 24rpx;
+		vertical-align: middle;
+		&:after {
+			position: absolute;
+			box-sizing: border-box;
+			-webkit-transform-origin: center;
+			transform-origin: center;
+			content: " ";
+			pointer-events: none;
+			top: auto;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			border-bottom: 1px solid #F2F2F2;
+			-webkit-transform: scaleY(.5);
+			transform: scaleY(.5)
+		}
+	}
+	.mc-form-item__content {
+		position: relative;
+		font-size: 32rpx;
+		line-height: 48rpx;
+	}
+	.mc-form-item__label {
+		text-align: right;
+		vertical-align: middle;
+		float: left;
+		color: #000;
+		font-size: 32rpx;
+		line-height: 48rpx;
+		box-sizing: border-box;
+	}
+	.mc-list-item__wrapper {
+		padding: 0 !important;
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

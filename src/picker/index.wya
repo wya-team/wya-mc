@@ -2,9 +2,11 @@
 	<view class="mc-picker" bindtap="handleClick">
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
+			wrapper-class="{{paddingNone ? 'mc-picker__padding-none' : ''}}"
 			content="{{extra}}"
 			label="{{label}}"
 			label-width="{{labelWidth}}"
+			border="{{border}}"
 		/>
 		<slot wx:else></slot>
 	</view>
@@ -35,6 +37,23 @@ import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
 
 McComponent({
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+				this.setData({
+					paddingNone: true
+				});
+			},
+			unlinked(child) {
+				this.parent = null;
+				this.setData({
+					paddingNone: false
+				});
+			}
+		}
+	},
 	props: {
 		...pickerViewProps,
 		...pickerPopupProps,
@@ -62,6 +81,7 @@ McComponent({
 			type: Boolean,
 			value: false
 		},
+		border: Boolean,
 		extra: {
 			type: String,
 			value: '请选择'
@@ -121,6 +141,9 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-picker {
+	.mc-picker__padding-none {
+		padding: 0
+	}
 }
 </style>
 <config>

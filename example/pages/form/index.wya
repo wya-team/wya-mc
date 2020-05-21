@@ -1,0 +1,35 @@
+<template>
+	<mc-form mc-class="g-m-t-40" border label-width="{{180}}">
+		<mc-form-item label="输入框">
+			<mc-input />
+		</mc-form-item>
+		<mc-form-item label="选择器">
+			<mc-picker />
+		</mc-form-item>
+		<mc-form-item label="输入">
+			<mc-input right />
+		</mc-form-item>
+	</mc-form>
+</template>
+
+<script>
+Page({
+	data: {},
+	onLoad() {}
+});
+</script>
+<style lang="scss">
+.g-m-t-40 {
+	margin-top: 40rpx;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-form": "../components/form",
+		"mc-form-item": "../components/form/form-item",
+		"mc-input": "../components/input",
+		"mc-picker": "../components/picker"
+	}
+}
+</config>

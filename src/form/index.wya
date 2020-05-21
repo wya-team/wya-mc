@@ -1,0 +1,114 @@
+<template>
+	<form class="mc-form {{border ? 'mc-hairline__top-bottom' : ''}} mc-class">
+		<slot />
+	</form>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'./form-item': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+			},
+			unlinked(child) {
+				this.children = (this.children || []).filter((it) => it !== child);
+			}
+		}
+	},
+	props: {
+		model: Object,
+		rules: Object,
+		labelWidth: Number,
+		border: {
+			type: Boolean,
+			value: false
+		},
+		showMessage: {
+			type: Boolean,
+			value: true
+		}
+	},
+	methods: {
+		resetFields() {
+			this.children.forEach(child => {
+				child.resetField();
+			});
+		},
+		validate(opts = {}) {
+			return new Promise((resolve, reject) => {
+				let count = 0;
+				let originErrors = [];
+
+				if (!this.children.length) {
+					resolve();
+					return;
+				}
+
+				this.children.forEach(item => {
+					item.validate('', (res = {}) => {
+						if (res.msg || res.message) {
+							originErrors.push(res);
+						}
+						if (++count === this.children.length) {
+							// let errors = this.sortErrors(originErrors);
+							let errors = [];
+
+							// 全部校验完成
+							if (errors.length !== 0) {
+								reject(errors);
+								this._toast(errors[0].msg || errors[0].message);
+								// TODO scroll 自动滚动到校验错误的地方
+							}
+
+							resolve();
+						}
+					});
+				});
+			});
+		},
+		getField(prop) {
+			const field = this.children.find(child => child.prop === prop);
+
+			if (!field) throw new VcError('form', '请选择有用的prop值');
+
+			return field;
+		},
+		validateField(prop, opts = {}) {
+			return new Promise((resolve, reject) => {
+				let field = this.getField(prop);
+				field.validate('', (res = {}) => {
+					let errorMsg = res.msg || res.message;
+					if (errorMsg) {
+						reject(errorMsg);
+						this._toast(errorMsg);
+
+						// TODO scroll 自动滚动到校验错误的地方
+					}
+					resolve();
+				});
+			});
+		},
+		_toast(msg) {
+			this.data.showMessage && wx.showToast({ title: msg });
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-form {
+	background-color: #ffffff;
+	display: block;
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>
