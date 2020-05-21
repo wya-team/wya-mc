@@ -1,0 +1,96 @@
+<template>
+	<view class="mc-collapse-item mc-class" bindtap="handleToggle">
+		<slot></slot>
+		<view 
+			class="mc-collapse-item__wrapper is-transition"
+			style="height: {{ contentHeight }};"
+			bind:transitionend="handleTransitionEnd"
+		>
+			 <view class="mc-collapse-item__content content-class">
+				<slot name="content" />
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	addGlobalClass: ['content-class'],
+	relations: {
+		'../collapse/index': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked() {
+				this.parent = null;
+			},
+		}
+	},
+	props: {
+		name: String,
+	},
+	data: {
+		index: 0,
+		isActive: false,
+		contentHeight: '0px'
+	},
+	observers: {
+		'isActive': function (isActive) {
+			this.updateStyle(isActive);
+		}
+	},
+	methods: {
+		handleToggle(evnet) {
+			this.parent.toggle({
+				name: this.data.name || this.data.index,
+				isActive: this.data.isActive
+			});
+		},
+		updateStyle(isActive) {
+			return this.getRect('.mc-collapse-item__content')
+				.then((rect) => rect.height)
+				.then((height) => {
+					if (isActive) {
+						return this.setData({
+							contentHeight: height ? `${height}px` : 'auto',
+						});
+					} else {
+						this.setData({ contentHeight: `${height}px` });
+						setTimeout(() => {
+							this.setData({ contentHeight: 0 });
+						}, 20);
+					}
+				}).catch((err) => {
+					console.log(err, 'err');
+				});
+		},
+		handleTransitionEnd() {
+			if (this.data.isActive) {
+				this.setData({
+					contentHeight: 'auto'
+				});
+			}
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-collapse-item {
+	.mc-collapse-item__wrapper {
+		overflow: hidden;
+		&.is-transition {
+			transition: height .3s ease-in-out
+		}
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

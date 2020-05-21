@@ -1,5 +1,7 @@
 {
 	"pages": [
+		"pages/collapse/index",
+		"pages/tabs/index",
 		"pages/notice-bar/index",
 		"pages/action-sheet/index",
 		"pages/picker/index",
@@ -13,7 +15,6 @@
 		"pages/popup/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
-		"pages/tabs/index",
 		"pages/transition/index"
 	],
 	"window": {

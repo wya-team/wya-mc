@@ -1,0 +1,101 @@
+<template>
+	<mc-collapse mc-class="v-collapse" value="1" accordion>
+		<mc-collapse-item name="1" mc-class="item">
+			<view class="_title">
+				title1
+			</view>
+			<view slot="content" class="_content">
+				content1
+			</view>
+		</mc-collapse-item>
+		<mc-collapse-item name="2" mc-class="item">
+			<view class="_title">
+				title2
+			</view>
+			<view slot="content" class="_content">
+				content2
+			</view>
+		</mc-collapse-item>
+		<mc-collapse-item name="3" mc-class="item">
+			<view class="_title">
+				title3
+			</view>
+			<view slot="content" class="_content">
+				content3
+			</view>
+		</mc-collapse-item>
+	</mc-collapse>
+	<mc-collapse mc-class="v-collapse g-m-t-40" value="1">
+		<mc-collapse-item name="1" mc-class="item">
+			<view class="_title">
+				title1
+			</view>
+			<view slot="content" class="_content">
+				content1
+			</view>
+		</mc-collapse-item>
+		<mc-collapse-item name="2" mc-class="item">
+			<view class="_title">
+				title2
+			</view>
+			<view slot="content" class="_content">
+				content2
+			</view>
+		</mc-collapse-item>
+		<mc-collapse-item name="3" mc-class="item">
+			<view class="_title">
+				title3
+			</view>
+			<view slot="content" class="_content">
+				content3
+			</view>
+		</mc-collapse-item>
+	</mc-collapse>
+</template>
+
+<script>
+Page({
+	data: {
+		
+	},
+});
+</script>
+<style lang="scss">
+.g-m-t-40 {
+	margin-top: 40rpx;
+}
+.v-collapse {
+	.item {
+		._title {
+			height: 36px; 
+			line-height: 36px; 
+			background: #e4e4e4;
+			font-size: 18px;
+			padding: 0 10px
+		}
+		._icon {
+			position: absolute;
+			right: 10px;
+			top: 0;
+			bottom: 0;
+			margin: auto 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		._content {
+			height: 100px;
+			padding: 20px;
+			background: #e98252
+		} 
+	}
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-collapse": "../../components/collapse/index",
+		"mc-collapse-item": "../../components/collapse-item/index"
+	}
+}
+</config>

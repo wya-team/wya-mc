@@ -1,0 +1,102 @@
+<template>
+	<view class="mc-collapse mc-class">
+		<slot />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'../collapse-item/index': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+			},
+			unlinked(child) {
+				this.children = (this.children || []).filter((it) => it !== child);
+			}
+		}
+	},
+	props: {
+		 value: {
+			type: null,
+			observer(val) {
+				this.setData({
+					currentValue: val
+				});
+				wx.nextTick(() => {
+					this.setActive();
+				});
+			},
+		},
+		accordion: Boolean
+	},
+	data: {
+		currentValue: ''
+	},
+	methods: {
+		setActive() {
+			const activeKey = this.getActiveKey();
+			this.children.forEach((child, index) => {
+				const name = child.data.name || index.toString();
+				child.setData({
+					isActive: activeKey.indexOf(name) > -1,
+					index
+				});
+			});
+		},
+		getActiveKey() {
+			const { currentValue, accordion } = this.data;
+			let activeKey = currentValue || [];
+			if (!Array.isArray(activeKey)) {
+				activeKey = [activeKey];
+			}
+			if (accordion && activeKey.length > 1) {
+				activeKey = [activeKey[0]];
+			}
+			for (let i = 0; i < activeKey.length; i++) {
+				activeKey[i] = activeKey[i].toString();
+			}
+			return activeKey;
+		},
+		toggle(data) {
+			const name = data.name.toString();
+			let result = [];
+			if (this.data.accordion) {
+				if (!data.isActive) {
+					result.push(name);
+				}
+			} else {
+				let activeKey = this.getActiveKey();
+				const nameIndex = activeKey.indexOf(name);
+				if (data.isActive) {
+					if (nameIndex > -1) {
+						activeKey.splice(nameIndex, 1);
+					}
+				} else if (nameIndex < 0) {
+					activeKey.push(name);
+				}
+				result = activeKey;
+			}
+			this.setData({ currentValue: result });
+			this.setActive();
+
+			this.$emit('change', this.data.currentValue);
+		},
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-collapse {
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>
