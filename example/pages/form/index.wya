@@ -1,26 +1,122 @@
 <template>
-	<mc-form mc-class="g-m-t-40" border label-width="{{180}}">
-		<mc-form-item label="输入框">
-			<mc-input />
+	<mc-form 
+		mc-class="g-m-t-40" 
+		border 
+		label-width="{{180}}" 
+		label-position="left"
+		model="{{formValidate}}"
+		rules="{{ruleValidate}}"
+		bind:ready="handleReady"
+	>
+		<mc-form-item label="输入框" prop="input" label-width="{{120}}">
+			<mc-input value="{{formValidate.input}}" bind:blur="handleChange" />
 		</mc-form-item>
-		<mc-form-item label="选择器">
-			<mc-picker />
+		<mc-form-item label="选择器" prop="array">
+			<mc-picker dataSource="{{dataSource1}}" value="{{formValidate.array}}" bind:change="handleSelect"/>
 		</mc-form-item>
-		<mc-form-item label="输入">
-			<mc-input right />
+		<mc-form-item label="输入" prop="input2">
+			<mc-input value="{{formValidate.input2}}" right bind:change="handleChange2" />
 		</mc-form-item>
 	</mc-form>
+	<view class="g-button" bindtap="handleSubmit">提交</view>
 </template>
 
 <script>
+import { RegEx } from '../../components/common/regex';
+
 Page({
-	data: {},
-	onLoad() {}
+	data: {
+		dataSource1: [
+			{ 
+				label: '男',
+				value: 1,
+				children: [
+					{
+						label: '爱好女',
+						value: '2'
+					},
+					{
+						label: '花花',
+						value: '3'
+					}
+				]
+			},
+			{ 
+				label: '女',
+				value: 2,
+				children: [
+					{
+						label: '爱好男',
+						value: '5'
+					},
+					{
+						label: '安抚',
+						value: '4'
+					}
+				] 
+			}
+		],
+		formValidate: {
+			input: '',
+			input2: '',
+			array: [],
+		},
+		ruleValidate: {
+			input: [
+				{
+					required: true,
+					name: '~~input项~~'
+				}
+			],
+			input2: [
+				{
+					required: true,
+					message: '~~input2项必填~~',
+				}
+			],
+			array: [
+				{
+					required: true,
+					name: '~~array项~~'
+				}
+			],
+		}
+	},
+	handleReady(event) {
+		this.form = event.detail;
+	},
+	handleChange(event) {
+		this.setData({
+			'formValidate.input': event.detail
+		});
+	},
+	handleChange2(event) {
+		this.setData({
+			'formValidate.input2': event.detail
+		});
+	},
+	handleSelect(event) {
+		this.setData({
+			'formValidate.array': event.detail.value
+		});
+	},
+	handleSubmit() {
+		this.form.validate().then((res) => {
+			wx.showToast({ title: '校验通过' });
+		}).catch((res) => {
+			console.log(res);
+		});
+	}
 });
 </script>
 <style lang="scss">
 .g-m-t-40 {
 	margin-top: 40rpx;
+}
+.g-button {
+	width: 100rpx;
+	height: 60rpx;
+	background-color: dodgerblue
 }
 </style>
 <config>

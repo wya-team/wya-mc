@@ -20,7 +20,12 @@ McComponent({
 		}
 	},
 	props: {
-		model: Object,
+		model: {
+			type: Object,
+			observer(val) {
+				this.children && this.setFieldsValue();
+			}
+		},
 		rules: Object,
 		labelWidth: Number,
 		border: {
@@ -30,12 +35,26 @@ McComponent({
 		showMessage: {
 			type: Boolean,
 			value: true
+		},
+		labelPosition: {
+			type: String,
+			value: 'right'
+		}
+	},
+	lifetimes: {
+		ready() {
+			this.$emit('ready', this);
 		}
 	},
 	methods: {
 		resetFields() {
 			this.children.forEach(child => {
 				child.resetField();
+			});
+		},
+		setFieldsValue() {
+			this.children.forEach(child => {
+				child.setFieldValue();
 			});
 		},
 		validate(opts = {}) {
@@ -55,7 +74,8 @@ McComponent({
 						}
 						if (++count === this.children.length) {
 							// let errors = this.sortErrors(originErrors);
-							let errors = [];
+							// TODO 动态添加的节点需要排序
+							let errors = originErrors;
 
 							// 全部校验完成
 							if (errors.length !== 0) {
@@ -93,7 +113,7 @@ McComponent({
 			});
 		},
 		_toast(msg) {
-			this.data.showMessage && wx.showToast({ title: msg });
+			this.data.showMessage && wx.showToast({ title: msg, icon: 'none' });
 		}
 	}
 });

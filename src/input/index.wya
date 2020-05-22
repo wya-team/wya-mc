@@ -46,6 +46,17 @@ import { props } from './props';
 
 McComponent({
 	addGlobalClass: ['mc-input-class'],
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked(child) {
+				this.parent = null;
+			}
+		}
+	},
 	props: {
 		...props,
 		password: Boolean,
@@ -78,7 +89,8 @@ McComponent({
 			this.sync(value);
 		},
 		handleBlur(event) {
-			this.$emit('blur', event.detail);
+			this.$emit('blur', this.data.currentValue);
+			this.parent.fieldBlur();
 		},
 		handleFocus(event) {
 			this.$emit('focus', event.detail);
@@ -101,6 +113,7 @@ McComponent({
 			wx.nextTick(() => {
 				this.$emit('input', v);
 				this.$emit('change', v);
+				this.parent.fieldChange();
 			});
 		}
 	}

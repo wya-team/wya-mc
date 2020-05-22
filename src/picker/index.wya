@@ -18,6 +18,7 @@
 		show-toolbar="{{showToolbar}}"
 		bind:ok="handleOK"
 		bind:cancel="handleCancel"
+		bind:close="handleCancel"
 	>
 		<mc-picker-view
 			value="{{currentValue}}"
@@ -106,32 +107,40 @@ McComponent({
 		},
 		handleClick(event) {
 			if (this.Func) {
+				// TODO 异步获取dataSource
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
 					title: this.data.title
 				}).then((res) => {
 					console.log('sure', res);
 				}).catch((err) => {
+					// TODO 为什么第一次点击蒙层会执行这里，第二次就不会，所以picker-popup内蒙层的点击事件改为handleCancel
 					console.log('close', err);
 				});
 			}
 		},
 		handleChange(event) {
 			this.setData({
-				pickValue: event.detail
+				pickValue: event.detail || []
 			});
 		},
 		handleOK() {
-			const label = this.viewInstance.getLabelByValue(this.data.pickValue);
+			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
+			const label = this.viewInstance.getLabelByValue(pickValue);
 			this.setData({
 				extra: label.join(','),
-				currentValue: this.data.pickValue
+				currentValue: pickValue
 			});
-			this.$emit('ok', { value: this.data.currentValue, label });
+			this.$emit('change', { value: this.data.currentValue, label });
+			this.parent.fieldChange();
 		},
 		handleCancel() {
-			this.viewInstance.reset(this.data.currentValue);
 			this.$emit('cancel');
+			this.handleClose();
+		},
+		handleClose() {
+			this.viewInstance.reset(this.data.currentValue);
+			this.$emit('close');
 		}
 	}
 });

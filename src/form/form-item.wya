@@ -12,10 +12,11 @@
 	</view>
 </template>
 <script>
-// import { cloneDeep } from 'lodash';
-// import AsyncValidator from 'async-validator';
+import AsyncValidator from '../libs/async-validator';
+import { RegEx } from '../common/regex';
 import McComponent from '../common/component';
 import { formComponents } from './relations';
+import { getPropByPath, filterEmpty } from '../common/utils';
 
 McComponent({
 	relations: {
@@ -23,6 +24,10 @@ McComponent({
 			type: 'ancestor',
 			linked(parent) {
 				this.parent = parent;
+				// 下面两个方法内部都用到了parent,所以需要在拿到parent之后调用
+				this.setLabelStyle(this.data.labelWidth);
+				this.setRules();
+				this.setFieldValue(this.data.prop);
 			},
 			unlinked() {
 				this.parent = null;
@@ -36,11 +41,17 @@ McComponent({
 			value: ''
 		},
 		labelWidth: {
-			type: Number
+			type: Number,
+			observer(val) {
+				this.parent && this.setLabelStyle(val);
+			}
 		},
 		useLabelSlot: Boolean,
 		prop: {
-			type: String
+			type: String,
+			observer(val) {
+				this.parent && this.setFieldValue();
+			}
 		},
 		required: {
 			type: Boolean,
@@ -48,7 +59,10 @@ McComponent({
 		},
 		rules: {
 			type: Array,
-			optionalTypes: [Object]
+			optionalTypes: [Object],
+			observer(val) {
+				this.parent && this.setRules();
+			}
 		},
 		labelFor: {
 			type: String
@@ -59,11 +73,128 @@ McComponent({
 		}
 	},
 	data: {
-		contentStyle: 'margin-left: 180rpx;', // 即labelWidth
+	},
+	lifetimes: {
+		
 	},
 	methods: {
-		resetField() {
+		setLabelStyle(labelWidth) {
+			const width = labelWidth || this.parent.data.labelWidth;
+			this.setData({
+				labelStyle: `width: ${width > 0 ? `${width}rpx` : 'auto'}; text-align: ${this.parent.data.labelPosition}`,
+				contentStyle: `margin-left: ${width > 0 ? `${width}rpx` : 'unset'}`
+			});	
+		},
+		setRules() {
+			const { required } = this.data;
+			let rules = this.getRules();
+			if (rules.length && required) {
+				return;
+			} else if (rules.length) {
+				this.isRequired = rules.some(rule => {
+					return typeof rule.required === 'function' 
+						? rule.required(() => {}) // 避免报错 契合业务的一种设计（@wya/utils - RegEx: validator）
+						: rule.required;
+				});
+			} else if (required) {
+				this.isRequired = required;
+			}
+		},
+		setFieldValue(prop) {
+			const model = this.parent.data.model;
+			let path = prop || this.data.prop;
+			if (!model || !path) { return; }
+			
+			if (path.includes(':')) {
+				path = path.replace(/:/, '.');
+			}
 
+			this.setData({
+				fieldValue: getPropByPath(model, path).value
+			});
+		},
+		getRules() {
+			const { rules, prop } = this.data;
+			let formRules = this.parent.data.rules;
+			const selfRules = rules;
+			formRules = formRules ? formRules[prop] : [];
+			return selfRules && selfRules.length ? selfRules : formRules && formRules.length ? formRules : [];
+		},
+		getFilteredRule(trigger) {
+			const rules = this.getRules();
+			return rules.filter(rule => !rule.trigger || rule.trigger.includes(trigger));
+		},
+		validate(trigger, callback = () => {}) {
+			let rules = this.getFilteredRule(trigger);
+			rules = rules.map((i) => {
+				if (!i.validator && !i.type && i.required) {
+					return {
+						...i,
+						validator: RegEx.validator // TODO
+					};
+				} else {
+					return i;
+				}
+			});
+			if (!rules || rules.length === 0) {
+				if (!this.data.required) {
+					callback();
+					return true;
+				} else {
+					rules = [{ required: true }];
+				}
+			}
+
+			this.validateState = 'validating';
+			let descriptor = {};
+
+			descriptor[this.data.prop] = rules;
+			let validator = new AsyncValidator(descriptor);
+			let model = {};
+			model[this.data.prop] = filterEmpty(this.data.fieldValue);
+			validator.validate(model, { firstFields: false }, (errors, fields) => {
+				this.validateState = !errors ? 'success' : 'error';
+				this.validateMessage = errors ? errors[0].message : '';
+				callback({
+					prop: this.data.prop,
+					msg: this.validateMessage
+				});
+			});
+			this.validateDisabled = false;
+		},
+		resetField() {
+			this.validateState = '';
+			this.validateMessage = '';
+			
+
+			let model = this.parent.data.model;
+			let value = this.data.fieldValue;
+			let path = this.data.prop;
+			if (path.includes(':')) {
+				path = path.replace(/:/, '.');
+			}
+
+			let prop = getPropByPath(model, path);
+
+			if (Array.isArray(value)) {
+				this.validateDisabled = true;
+				prop.target[prop.key] = [].concat(this.initialValue);
+			} else {
+				this.validateDisabled = true;
+				prop.target[prop.key] = this.initialValue;
+			}
+
+		},
+		fieldBlur() {
+			// TODO 应该搭配页面样式才是预想的blur效果，现在change和blur都必须点击提交才能弹出toast
+			this.validate('blur');
+		},
+		fieldChange(v) {
+			if (this.validateDisabled) {
+				this.validateDisabled = false;
+				return;
+			}
+			this.validate('change');
 		}
 	}
 });

@@ -47,3 +47,34 @@ export const arrayEqual = (arr1, arr2) => {
 		return it === arr2[index];
 	});
 };
+
+export const getPropByPath = (obj, path) => {
+	let target = obj;
+	path = path.replace(/\[(\w+)\]/g, '.$1');
+	path = path.replace(/^\./, '');
+
+	let keyArr = path.split('.');
+	let i = 0;
+
+	for (let len = keyArr.length; i < len - 1; ++i) {
+		let key = keyArr[i];
+		if (key in target) {
+			target = target[key];
+		} else {
+			throw new Error('[@wya/vc]: 无效路径!');
+		}
+	}
+	// Oracle Key Vault?
+	return {
+		target,
+		key: keyArr[i],
+		value: target[keyArr[i]]
+	};
+};
+
+export const filterEmpty = (val) => {
+	if (val instanceof Array) {
+		val = val.filter(i => i !== '');
+	}
+	return val;
+};

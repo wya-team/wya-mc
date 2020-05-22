@@ -24,7 +24,7 @@ McComponent({
 			type: Array,
 			value: [],
 			observer(val) {
-				const value = this.formatValue(val, true);
+				let value = this.formatValue(val, true);
 				if (!arrayEqual(value, this.data.currentValue)) {
 					this.setData({ currentValue: value });
 					this.formatData();
@@ -122,9 +122,10 @@ McComponent({
 				const currentData = this.parseDataByValue(dataSource, { value });
 				this.setData({ currentData });
 			}
-			return value.map((it, index) => {
+			value = value.map((it, index) => {
 				return (this.data.currentData[index] || []).findIndex((i) => i.value === it);
 			});
+			return this.initValue(value);
 		},
 		parserValue(value) {
 			const { currentData } = this.data;
@@ -146,6 +147,14 @@ McComponent({
 			return value.map((it, index) => {
 				return currentData[index][it].label;
 			});
+		},
+		getDefaultValue() {
+			const { currentData } = this.data;
+			return currentData.reduce((pre, cur) => {
+				const item = cur[0] || {};
+				pre.push(item.value);
+				return pre;
+			}, []);
 		},
 		handleChange(event) {
 			const { currentData, dataSource } = this.data;
@@ -169,6 +178,11 @@ McComponent({
 			const { dataSource } = this.data;
 			const value = this.formatValue(val, true);
 			this.setData({ currentValue: value });
+		},
+		// value为空，或者内部出现-1，都换成0
+		initValue(value) {
+			if (value.length === 0) value = [0, 0];
+			return value.map((it) => (it < 0 ? 0 : it));
 		}
 	}
 });
