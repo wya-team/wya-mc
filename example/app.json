@@ -1,10 +1,10 @@
 {
 	"pages": [
-		"pages/cascader/index",
+		"pages/form/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
+		"pages/cascader/index",
 		"pages/collapse/index",
-		"pages/form/index",
 		"pages/icon/index",
 		"pages/image/index",
 		"pages/imgs-crop/index",

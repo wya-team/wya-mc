@@ -17,6 +17,9 @@
 		<mc-form-item label="输入" prop="input2">
 			<mc-input value="{{formValidate.input2}}" right bind:change="handleChange2" />
 		</mc-form-item>
+		<mc-form-item label="输入" prop="input2" label-width="{{0}}" label-position="top">
+			<mc-input value="{{formValidate.input2}}" bind:change="handleChange2" />
+		</mc-form-item>
 	</mc-form>
 	<view class="g-button" bindtap="handleSubmit">提交</view>
 </template>

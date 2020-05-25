@@ -26,6 +26,7 @@ McComponent({
 				this.parent = parent;
 				// 下面两个方法内部都用到了parent,所以需要在拿到parent之后调用
 				this.setLabelStyle(this.data.labelWidth);
+				 this.setLabelPosition(this.data.labelPosition);
 				this.setRules();
 				this.setFieldValue(this.data.prop);
 			},
@@ -44,6 +45,12 @@ McComponent({
 			type: Number,
 			observer(val) {
 				this.parent && this.setLabelStyle(val);
+			}
+		},
+		labelPosition: {
+			type: String,
+			observer(val) {
+				this.parent && this.setLabelPosition(val);
 			}
 		},
 		useLabelSlot: Boolean,
@@ -81,9 +88,16 @@ McComponent({
 		setLabelStyle(labelWidth) {
 			const width = labelWidth || this.parent.data.labelWidth;
 			this.setData({
-				labelStyle: `width: ${width > 0 ? `${width}rpx` : 'auto'}; text-align: ${this.parent.data.labelPosition}`,
+				labelStyle: `width: ${width > 0 ? `${width}rpx` : 'auto'};`,
 				contentStyle: `margin-left: ${width > 0 ? `${width}rpx` : 'unset'}`
 			});	
+		},
+		setLabelPosition(labelPosition) {
+			const position = labelPosition || this.parent.data.labelPosition;
+			if (position === 'top') {
+				this.setData({ contentStyle: 'margin-left: 0' });
+			}
+			this.setData({ classes: `is-${position}` });	
 		},
 		setRules() {
 			const { required } = this.data;
@@ -225,6 +239,18 @@ McComponent({
 			-webkit-transform: scaleY(.5);
 			transform: scaleY(.5)
 		}
+		&.is-right {
+			.mc-form-item__label {
+				text-align: right;
+			}
+		}
+		&.is-top {
+			.mc-form-item__label {
+				float: none;
+				display: inline-block;
+				padding: 0 0 20rpx 0
+			}
+		}
 	}
 	.mc-form-item__content {
 		position: relative;
@@ -232,7 +258,7 @@ McComponent({
 		line-height: 48rpx;
 	}
 	.mc-form-item__label {
-		text-align: right;
+		text-align: left;
 		vertical-align: middle;
 		float: left;
 		color: #000;

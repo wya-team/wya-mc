@@ -38,7 +38,7 @@ McComponent({
 		},
 		labelPosition: {
 			type: String,
-			value: 'right'
+			value: 'left'
 		}
 	},
 	lifetimes: {
