@@ -90,7 +90,7 @@ McComponent({
 		},
 		handleBlur(event) {
 			this.$emit('blur', this.data.currentValue);
-			this.parent.fieldBlur();
+			this.parent && this.parent.fieldBlur();
 		},
 		handleFocus(event) {
 			this.$emit('focus', event.detail);
@@ -113,7 +113,7 @@ McComponent({
 			wx.nextTick(() => {
 				this.$emit('input', v);
 				this.$emit('change', v);
-				this.parent.fieldChange();
+				this.parent && this.parent.fieldChange();
 			});
 		}
 	}

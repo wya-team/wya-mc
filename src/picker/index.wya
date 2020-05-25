@@ -132,7 +132,7 @@ McComponent({
 				currentValue: pickValue
 			});
 			this.$emit('change', { value: this.data.currentValue, label });
-			this.parent.fieldChange();
+			this.parent && this.parent.fieldChange();
 		},
 		handleCancel() {
 			this.$emit('cancel');
