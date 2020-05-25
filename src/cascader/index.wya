@@ -88,8 +88,10 @@ McComponent({
 	},
 	lifetimes: {
 		attached() {
+			let { label, data } = getSelectedData(this.data.value, this.data.dataSource);
 			this.setData({
-				currentValue: this.data.value
+				currentValue: this.data.value,
+				extra: label.join(','),
 			});
 			this.Func = new Portal({ 
 				el: `#${this.data.tag}` 
