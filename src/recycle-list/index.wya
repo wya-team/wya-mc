@@ -109,7 +109,9 @@ McComponent({
 	observers: {
 		'show': function (show) {
 			if (this.data.currentPage === 0) {
-				this.loadDataForScroll();
+				wx.nextTick(() => {
+					this.loadDataForScroll();
+				});
 			}
 		}
 	},
