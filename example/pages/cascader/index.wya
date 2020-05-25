@@ -1,0 +1,38 @@
+<template>
+	<mc-cascader 
+		value="{{value}}"
+		label="地址" 
+		title="选择地址"
+		dataSource="{{dataSource}}"
+		bind:change="handleChange"
+	/>
+</template>
+<script>
+const app = getApp();
+import { areaData } from './mock';
+import Portal from '../../components/portal/index';
+
+Page({
+	data: {
+		value: ["140000", "140500", "140525"],
+		dataSource: areaData
+	},
+	onShow() {
+		
+	},
+	handleChange(event) {
+		const { value, label } = event.detail;
+		this.setData({
+			value
+		});
+	}
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-cascader": "../components/cascader"
+	}
+}
+</config>

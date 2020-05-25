@@ -1,8 +1,8 @@
 <template>
-	<view class="mc-picker" bindtap="handleClick">
+	<view class="mc-cascader" bindtap="handleClick">
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
-			wrapper-class="{{paddingNone ? 'mc-picker__padding-none' : ''}}"
+			wrapper-class="{{paddingNone ? 'mc-cascader__padding-none' : ''}}"
 			content="{{extra}}"
 			label="{{label}}"
 			label-width="{{labelWidth}}"
@@ -10,7 +10,7 @@
 		/>
 		<slot wx:else></slot>
 	</view>
-	<mc-picker-popup 
+	<mc-cascader-popup 
 		id="{{tag}}"
 		title="{{title}}"
 		cancel-text="{{cancelText}}"
@@ -20,22 +20,20 @@
 		bind:cancel="handleCancel"
 		bind:close="handleCancel"
 	>
-		<mc-picker-view
+		<mc-cascader-view
 			value="{{currentValue}}"
 			dataSource="{{dataSource}}"
 			cols="{{cols}}"
-			indicator-style="{{indicatorStyle}}"
-			indicator-class="{{indicatorClass}}"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
 		/>
-	</mc-picker-popup>
+	</mc-cascader-popup>
 </template>
 <script>
-import { isEqualWith } from '../common/utils';
 import McComponent from '../common/component';
+import { isEqualWith, getSelectedData } from '../common/utils';
 import Portal from '../portal/index';
-import { pickerViewProps, pickerPopupProps } from './props';
+import { viewProps, popupProps } from './props';
 
 McComponent({
 	relations: {
@@ -56,8 +54,8 @@ McComponent({
 		}
 	},
 	props: {
-		...pickerViewProps,
-		...pickerPopupProps,
+		...viewProps,
+		...popupProps,
 		value: {
 			type: Array,
 			value: [],
@@ -76,7 +74,7 @@ McComponent({
 		},
 		tag: {
 			type: String,
-			value: 'picker-popup'
+			value: 'cascader-popup'
 		},
 		useItemSlot: {
 			type: Boolean,
@@ -87,9 +85,6 @@ McComponent({
 			type: String,
 			value: '请选择'
 		},
-	},
-	data: {
-		
 	},
 	lifetimes: {
 		attached() {
@@ -107,7 +102,6 @@ McComponent({
 		},
 		handleClick(event) {
 			if (this.Func) {
-				// TODO 异步获取dataSource
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
 					title: this.data.title
@@ -125,11 +119,10 @@ McComponent({
 			});
 		},
 		handleOK() {
-			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
-			const label = this.viewInstance.getLabelByValue(pickValue);
+			let { label, data } = getSelectedData(this.data.pickValue, this.data.dataSource);
 			this.setData({
 				extra: label.join(','),
-				currentValue: pickValue
+				currentValue: this.data.pickValue,
 			});
 			this.$emit('change', { value: this.data.currentValue, label });
 			this.parent && this.parent.fieldChange();
@@ -139,8 +132,10 @@ McComponent({
 			this.handleClose();
 		},
 		handleClose() {
-			this.viewInstance.reset(this.data.currentValue);
 			this.$emit('close');
+			wx.nextTick(() => {
+				this.viewInstance.reset(this.data.currentValue);
+			});
 		}
 	}
 });
@@ -149,8 +144,8 @@ McComponent({
 <style lang="scss">
 @import '../common/index.scss';
 
-.mc-picker {
-	.mc-picker__padding-none {
+.mc-cascader {
+	.mc-cascader__padding-none {
 		padding: 0
 	}
 }
@@ -160,8 +155,8 @@ McComponent({
 	"component": true,
 	"usingComponents": {
 		"mc-list-item": "../list/list-item",
-		"mc-picker-popup": "./picker-popup",
-		"mc-picker-view": "./picker-view"
+		"mc-cascader-popup": "./cascader-popup",
+		"mc-cascader-view": "./cascader-view"
 	}
 }
 </config>

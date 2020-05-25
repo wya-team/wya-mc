@@ -1,0 +1,270 @@
+<template>
+	<view class="mc-cascader-view mc-class">
+		<view class="mc-cascader-view__header">
+			<view
+				wx:for="{{currentValue}}"
+				wx:key="*this"
+				class="mc-cascader-view__label {{currentIndex === index ? 'is-active' : ''}}"
+				data-index="{{index}}"
+				bindtap="handleClickLabel"
+			>
+				{{ currentLabel[index] }}
+			</view>
+			<view 
+				wx:if="{{hasChildren}}" 
+				class="mc-cascader-view__label {{currentIndex === currentValue.length ? 'is-active' : ''}}"
+				bindtap="handleClickTip"
+			>
+				请选择
+			</view>
+		</view>
+		<mc-cascader-col
+			value="{{colValue}}"
+			dataSource="{{colData}}"
+			index="{{currentIndex}}"
+			mc-class="mc-cascader-col"
+			bind:change="handleChange"
+		/>
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+import { viewProps } from './props';
+import { getSelectedData, isEqualWith } from '../common/utils';
+
+McComponent({
+	props: {
+		...viewProps,
+		value: {
+			type: Array,
+			value: []
+		}
+	},
+	data: {
+		currentIndex: 0,
+		currentValue: [],
+		currentLabel: [],
+		rebuildData: [],
+		colData: [],
+		hasChildren: true
+	},
+	observers: {
+		'dataSource': function (dataSource) {
+			this.setData({
+				rebuildData: this.makeRebuildData()
+			});
+			this.resetIndex();
+		},
+		'value': function (value) {
+			if (value && value.length !== 0 && !isEqualWith(value, this.data.currentValue)) {
+				this.setData({
+					currentValue: value
+				});
+				this.setData({
+					rebuildData: this.makeRebuildData()
+				});	
+				this.resetIndex();
+			}
+		},
+		'rebuildData, currentIndex': function (rebuildData, currentIndex) {
+			this.setData({
+				colData: rebuildData[currentIndex]
+			});
+		},
+		'currentValue, currentIndex': function (currentValue, currentIndex) {
+			this.setData({
+				colValue: currentValue[currentIndex] || []
+			});
+		},
+		'currentValue': function (currentValue) {
+			const { label = [] } = this.getInfo(currentValue);
+			this.setData({
+				currentLabel: label.filter(i => i)
+			});
+		}
+	},
+	lifetimes: {
+		ready() {
+			this.$emit('ready', this);
+		},
+	},
+	methods: {
+		getInfo(value) {
+			return getSelectedData(value, this.data.dataSource) || {};
+		},
+		/**
+		 * 单列数据
+		 * @param  {Array} source 数据源
+		 */
+		makeData(source) {
+			let data = source && source.map(i => ({
+				value: i.value,
+				label: i.label,
+				hasChildren: !!(i.children && (i.children.length > 0 || this.data.loadData)),
+				loading: false
+			}));
+			return data;
+		},
+
+		/**
+		 * 调整数据
+		 * @return {Array} 每列的数据
+		 */
+		makeRebuildData() {
+			if (!this.data.dataSource.length) return [];
+			let temp = this.data.dataSource;
+			let data = this.data.currentValue.slice(0).reduce((pre, cur, index) => {
+				pre[index] = this.makeData(temp);
+				temp = ((temp && temp.find(i => i.value == cur)) || {}).children;
+				return pre; 
+			}, []);
+
+			temp && data.push(this.makeData(temp));
+
+			return data;
+		},
+		resetIndex() {
+			const { currentValue, rebuildData } = this.data;
+			if (currentValue.length === 0 || rebuildData.length === 0) {
+				this.setData({ currentIndex: 0 });
+				return;
+			}
+			let value = currentValue.slice(-1)[0];
+			let colIndex = currentValue.length - 1;
+			let rowIndex = rebuildData[colIndex].findIndex(i => i.value === value);
+
+			this.handleChange({ detail: { value, rowIndex, colIndex, sync: false } });
+		},
+		handleClickLabel(event) {
+			this.setData({
+				currentIndex: event.target.dataset.index
+			});
+		},
+		handleClickTip() {
+			this.setData({
+				currentIndex: this.data.currentValue.length
+			});
+		},
+		handleChange(event) {
+			const { value, rowIndex, colIndex } = event.detail;
+			const { currentValue, loadData, rebuildData, hasChildren, currentIndex, dataSource, label } = this.data;
+			let currentValueBak = [...currentValue];
+			let rebuildDataBak = [...rebuildData];
+			try {
+				const len = currentValueBak.slice(colIndex).length;
+				currentValueBak.splice(colIndex, len, value);
+				/**
+				 * TODO: 提前缓存index
+				 */
+				let children = currentValueBak.reduce((pre, cur) => {
+					let target = pre.find(i => i.value == cur) || {};
+
+					return target.children ? target.children : undefined;
+				}, dataSource);
+
+				/**
+				 * 异步加载数据
+				 */
+				// if (loadData && children && children.length === 0) {
+				// 	rebuildData[colIndex][rowIndex].loading = true;
+
+				// 	let res = await loadData();
+				// 	/**
+				// 	 * TODO: 优化，dataSource -> cloneData?
+				// 	 */
+				// 	children.splice(0, 0, ...res);
+				// }
+				
+				children && rebuildDataBak.splice(colIndex + 1, len, this.makeData(children));
+				this.setData({
+					currentValue: currentValueBak,
+					rebuildData: rebuildDataBak,
+				});
+				
+				if ((!children || children.length === 0) && colIndex < rebuildDataBak.length) {
+					currentValueBak.splice(colIndex + 1, len);
+					rebuildDataBak.splice(colIndex + 1, len);
+
+					this.setData({
+						currentValue: currentValueBak,
+						rebuildData: rebuildDataBak,
+						hasChildren: false,
+						currentIndex: currentValueBak.length - 1,
+					});
+					// 不使用nextTick的话，拿到的value和label不是最新的
+					wx.nextTick(() => {
+						this.$emit('complete', {
+							value: this.data.currentValue,
+							label: this.data.currentLabel
+						});
+					});
+				} else {
+					this.setData({
+						hasChildren: true,
+						currentIndex: currentValueBak.length,
+					});
+				}
+				this.$emit('change', currentValueBak);
+			} catch (e) {
+				throw new VcError('vc-cascader', e);
+			} finally {
+				// this.data.rebuildData[colIndex][rowIndex].loading 
+				// && this.setData({
+				// 	[`rebuildData[${colIndex}][${rowIndex}].loading`]: false,
+				// });
+			}
+		},
+		reset(val) {
+			this.setData({
+				currentValue: val,
+				rebuildData: this.makeRebuildData()
+			});	
+			this.resetIndex();
+		},
+	}
+});
+</script>
+
+<style lang="scss">
+.mc-cascader-view {
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	.mc-cascader-view__header {
+		margin-top: 60rpx;
+		padding: 0 24rpx;
+		border-bottom: 1rpx solid #eee;
+		.mc-cascader-view__label {
+			display: inline-block;
+			padding-bottom: 24rpx;
+			font-size: 28rpx;
+			color: #000;
+			
+			&:not(:first-child) {
+				margin-left: 60rpx;
+			}
+			&.is-active {
+				color: #5495f6;
+				border-bottom: 4rpx solid #5495f6;
+			}
+		}
+	}
+}
+.mc-cascader-col {
+	flex: 1;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+}
+</style>
+
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-cascader-col": "./col"
+	}
+}
+</config>

@@ -1,0 +1,87 @@
+<template>
+	<view class="mc-cascader-col mc-class">
+		<view 
+			wx:for="{{dataSource}}"
+			wx:key="value"
+			class="mc-cascader-col__item {{value === item.value ? 'is-select' : ''}}"
+			data-value="{{item.value}}"
+			data-index="{{index}}"
+			bindtap="handleClick"
+		>
+			<text class="mc-cascader-col__label">{{ item.label }}</text>
+			<!-- TODO 异步请求 -->
+			<!-- <vcm-spin v-if="value === item.value && item.loading" :size="16" /> -->
+			<mc-icon 
+				wx:if="{{value === item.value}}" 
+				mc-class="mc-cascader-col__select" 
+				type="select-checked" 
+			/>
+		</view>
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	props: {
+		dataSource: {
+			type: Array,
+			value: []
+		},
+		value: {
+			type: String,
+			optionalTypes: [Number]
+		},
+		loading: {
+			type: Boolean,
+			value: false
+		},
+		index: {
+			type: Number
+		}
+	},
+	data: {
+	},
+	methods: {
+		handleClick(event) {
+			const { value, index } = event.currentTarget.dataset;
+			this.$emit('change', { value, rowIndex: index, colIndex: this.data.index });
+		}
+	}
+});
+
+</script>
+
+<style lang="scss">
+.mc-cascader-col {
+	background-color: #fff;
+	.mc-cascader-col__item {
+		padding: 20rpx 24rpx;
+		display: flex;
+		justify-content: space-between;
+		.mc-cascader-col__label {
+			flex: 1;
+			font-size: 28rpx;
+			line-height: 40rpx;
+			color: #000;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		.mc-cascader-col__select {
+			flex-shrink: 0;
+			color: #5495f6;
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>
