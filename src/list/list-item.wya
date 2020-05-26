@@ -88,6 +88,9 @@ McComponent({
 			value: true
 		}
 	},
+	data: {
+		showRightIcon: true
+	},
 	observers: {
 		'labelWidth': function (labelWidth) {
 			if (!labelWidth || labelWidth === 'auto') {
