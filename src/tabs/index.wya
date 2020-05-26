@@ -11,39 +11,39 @@
 			bind:scroll="onTouchScroll"
 		>
 			<view class="{{ utils.bem('tabs__wrap', { scrollable }) }} {{ type === 'line' && border ? 'mc-hairline__top-bottom' : '' }}">
-			<slot name="nav-left" />
+				<slot name="nav-left" />
 
-			<scroll-view
-				scroll-x="{{ scrollable }}"
-				scroll-with-animation
-				scroll-left="{{ scrollLeft }}"
-				class="{{ utils.bem('tabs__scroll', [type]) }}"
-				style="{{ color ? 'border-color: ' + color : '' }}"
-			>
-				<view class="{{ utils.bem('tabs__nav', [type]) }} nav-class">
-				<view wx:if="{{ type === 'line' }}" class="mc-tabs__line" style="{{ lineStyle }}" />
-				<view
-					wx:for="{{ tabs }}"
-					wx:key="index"
-					data-index="{{ index }}"
-					class="{{ getters.tabClass(index === currentIndex, ellipsis) }} {{ utils.bem('tab', { active: index === currentIndex, disabled: item.disabled, complete: !ellipsis }) }}"
-					style="{{ getters.tabStyle(index === currentIndex, ellipsis, color, type, item.disabled, titleActiveColor, titleInactiveColor, swipeThreshold, scrollable) }}"
-					bind:tap="onTap"
+				<scroll-view
+					scroll-x="{{ scrollable }}"
+					scroll-with-animation
+					scroll-left="{{ scrollLeft }}"
+					class="{{ utils.bem('tabs__scroll', [type]) }}"
+					style="{{ color ? 'border-color: ' + color : '' }}"
 				>
-					<view class="{{ ellipsis ? 'mc-ellipsis' : '' }}" style="{{ item.titleStyle }}">
-						{{ item.title }}
-						<mc-info
-							wx:if="{{ item.info !== null || item.dot }}"
-							info="{{ item.info }}"
-							dot="{{ item.dot }}"
-							custom-class="mc-tab__title__info"
-						/>
+					<view class="{{ utils.bem('tabs__nav', [type]) }} nav-class">
+						<view wx:if="{{ type === 'line' }}" class="mc-tabs__line" style="{{ lineStyle }}" />
+						<view
+							wx:for="{{ tabs }}"
+							wx:key="index"
+							data-index="{{ index }}"
+							class="{{ getters.tabClass(index === currentIndex, ellipsis) }} {{ utils.bem('tab', { active: index === currentIndex, disabled: item.disabled, complete: !ellipsis }) }}"
+							style="{{ getters.tabStyle(index === currentIndex, ellipsis, color, type, item.disabled, titleActiveColor, titleInactiveColor, swipeThreshold, scrollable) }}"
+							bind:tap="onTap"
+						>
+							<view class="{{ ellipsis ? 'mc-ellipsis' : '' }}" style="{{ item.titleStyle }}">
+								{{ item.title }}
+								<mc-info
+									wx:if="{{ item.info !== null || item.dot }}"
+									info="{{ item.info }}"
+									dot="{{ item.dot }}"
+									custom-class="mc-tab__title__info"
+								/>
+							</view>
+						</view>
 					</view>
-				</view>
-				</view>
-			</scroll-view>
+				</scroll-view>
 
-			<slot name="nav-right" />
+				<slot name="nav-right" />
 			</view>
 		</mc-sticky>
 
