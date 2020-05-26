@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/switch/index",
+		"pages/slider/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
 		"pages/cascader/index",
@@ -16,6 +16,7 @@
 		"pages/popup/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
+		"pages/switch/index",
 		"pages/tabs/index",
 		"pages/transition/index"
 	],

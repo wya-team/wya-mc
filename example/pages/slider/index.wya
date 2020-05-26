@@ -1,0 +1,92 @@
+<template>
+	<view class="g-m-t-40">
+		{{value}}
+		<mc-slider value="{{value}}" bind:change="handleChange" />
+	</view>
+	<view class="g-m-t-40">
+		{{value3}}
+		<mc-slider disabled="{{true}}" value="{{value3}}" bind:change="handleChange3" />
+	</view>
+	<view class="g-m-t-40">
+		{{value1}}
+		<mc-slider min="{{-50}}" max="{{50}}" value="{{value1}}" bind:change="handleChange1" />
+	</view>
+	<view class="g-m-t-40">
+		{{value4}}
+		<mc-slider value="{{value4}}" step="{{10}}" bind:change="handleChange4" />
+	</view>
+	<view class="g-m-t-40" style="padding: 0 90rpx;">
+		<mc-slider 
+			useButtonSlot="{{true}}" 
+			value="{{value2}}" 
+			bar-height="{{6}}"
+			activeColor="#4A4A4A" 
+			bind:change="handleChange2"
+		>
+			<view class="v-button">{{value2}}</view>
+		</mc-slider>
+	</view>
+</template>
+
+<script>
+Page({
+	data: {
+		value: 0,
+		value1: 0,
+		value2: 0,
+		value3: 50,
+		value4: 0,
+	},
+	handleChange(event) {
+		// this.setData({
+		// 	value: event.detail
+		// });
+	},
+	handleChange1(event) {
+		this.setData({
+			value1: event.detail
+		});
+	},
+	handleChange2(event) {
+		this.setData({
+			value2: event.detail
+		});
+	},
+	handleChange3(event) {
+		this.setData({
+			value3: event.detail
+		});
+	},
+	handleChange4(event) {
+		this.setData({
+			value4: event.detail
+		});
+	},
+});
+</script>
+<style lang="scss">
+.g-m-t-40 {
+	margin-top: 40rpx;
+	padding: 0 50rpx;
+}
+.v-button {
+	width:120rpx;
+	height:30rpx;
+	line-height:30rpx;
+	background:rgba(74,74,74,1);
+	border-radius:15rpx;
+	font-size: 16rpx;
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-slider": "../components/slider"
+	}
+}
+</config>

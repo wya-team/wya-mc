@@ -19,4 +19,24 @@ export const formComponents = {
 			this.children = (this.children || []).filter((it) => it !== child);
 		}
 	},
+	'../switch/index': {
+		type: 'descendant',
+		linked(child) {
+			this.children = this.children || [];
+			this.children.push(child);
+		},
+		unlinked(child) {
+			this.children = (this.children || []).filter((it) => it !== child);
+		}
+	},
+	'../slider/index': {
+		type: 'descendant',
+		linked(child) {
+			this.children = this.children || [];
+			this.children.push(child);
+		},
+		unlinked(child) {
+			this.children = (this.children || []).filter((it) => it !== child);
+		}
+	},
 };

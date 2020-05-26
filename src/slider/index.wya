@@ -1,0 +1,208 @@
+<template>
+	<view
+		class="mc-slider {{disabled ? 'is-disabled' : ''}} mc-class"
+		style="{{ inactiveColor ? 'background:' + inactiveColor : '' }}"
+		bind:tap="handleClick"
+	>
+		<view
+			class="mc-slider__bar"
+			style="{{ barStyle }}; height: {{barHeight}}rpx; background: {{activeColor}}"
+		>
+			<view
+				class="mc-slider__button-wrapper"
+				bind:touchstart="handleTouchStart"
+				catch:touchmove="handleTouchMove"
+				bind:touchend="handleTouchEnd"
+				bind:touchcancel="handleTouchEnd"
+			>
+				<slot
+					wx:if="{{ useButtonSlot }}"
+				/>
+				<view
+					wx:else
+					class="mc-slider__button"
+				/>
+			</view>
+		</view>
+		</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { touch } from '../mixins/touch';
+
+McComponent({
+	mixins: [touch],
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked(child) {
+				this.parent = null;
+			}
+		}
+	},
+	props: {
+		value: {
+			type: Number,
+			value: 0,
+			observer: 'updateValue',
+		},
+		disabled: Boolean,
+		useButtonSlot: Boolean,
+		activeColor: String,
+		inactiveColor: String,
+		max: {
+			type: Number,
+			value: 100,
+		},
+		min: {
+			type: Number,
+			value: 0,
+		},
+		step: {
+			type: Number,
+			value: 1,
+		},
+		barHeight: {
+			type: Number,
+			value: 4,
+		},
+	},
+	lifetimes: {
+		attached() {
+			this.updateValue(this.data.value);
+		}
+	},
+	methods: {
+		handleTouchStart(event) {
+			if (this.data.disabled) return;
+
+			this.touchStart(event);
+			this.startValue = this.format(this.data.value);
+			this.dragStatus = 'start';
+		},
+		handleTouchMove(event) {
+			if (this.data.disabled) return;
+
+			if (this.dragStatus === 'start') {
+				this.$emit('drag-start');
+			}
+
+			this.touchMove(event);
+			this.dragStatus = 'draging';
+
+			this.getRect('.mc-slider').then(
+				(rect) => {
+					const diff = (this.deltaX / rect.width) * 100;
+					this.newValue = this.startValue + diff;
+					this.updateValue(this.newValue, false, true);
+				}
+			);
+		},
+		handleTouchEnd(event) {
+			if (this.data.disabled) return;
+
+			if (this.dragStatus === 'draging') {
+				this.updateValue(this.newValue, true);
+				this.$emit('drag-end');
+			}
+		},
+		handleClick() {
+			if (this.data.disabled) return;
+
+			const { min } = this.data;
+
+			this.getRect('.mc-slider').then(
+				(rect) => {
+					const value = ((event.detail.x - rect.left) / rect.width) * this.getRange() + min;
+					this.updateValue(value, true);
+				}
+			);
+		},
+		updateValue(value, end, drag) {
+			value = this.format(value);
+			const { min } = this.data;
+			const width = `${((value - min) * 100) / this.getRange()}%`;
+
+			this.setData({
+				value,
+				barStyle: `width: ${width};${drag ? 'transition: none;' : ''}`,
+			});
+
+			if (drag) {
+				this.$emit('drag', { value });
+			}
+
+			if (end) {
+				this.$emit('change', value);
+				this.parent && this.parent.fieldChange();
+			}
+
+			if ((drag || end)) {
+				this.setData({ value });
+			}
+		},
+
+		getRange() {
+			const { max, min } = this.data;
+			return max - min;
+		},
+
+		format(value) {
+			const { max, min, step } = this.data;
+			return Math.round(Math.max(min, Math.min(value, max)) / step) * step;
+		},
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-slider {
+	position: relative;
+	border-radius: 999rpx;
+	background-color: #ECECEC;
+	&::before {
+		position: absolute;
+		right: 0;
+		left: 0;
+		content: '';
+		top: 8rpx;
+		bottom: 8rpx;
+	}
+
+	&__bar {
+		position: relative;
+		border-radius: inherit;
+		background-color: #57a3f3;
+		transition: width .2s;
+	}
+
+	&__button {
+		width: 48rpx;
+		height: 48rpx;
+		border-radius: 50%;
+		box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.5);
+		background-color: #ffffff;
+
+		&-wrapper {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translate3d(50%, -50%, 0);
+		}
+	}
+
+	&.is-disabled {
+		opacity: 0.5;
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

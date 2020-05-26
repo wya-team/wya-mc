@@ -15,7 +15,7 @@
 import McComponent from '../common/component';
 
 McComponent({
-	addGlobalClass: ['node-class'],
+	addGlobalClass: ['content-class', 'inner-class'],
 	relations: {
 		'../form/form-item': {
 			type: 'ancestor',
