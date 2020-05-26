@@ -1,0 +1,163 @@
+<template>
+	<mc-popup 
+		mc-class="mc-modal mc-class" 
+		visible="{{visible}}" 
+		mask="{{mask}}" 
+		mask-closable="{{maskClosable}}" 
+		placement="center"
+		bind:close="handleCancel"
+	>
+		<view class="mc-modal__wrapper wrapper-class">
+			<block wx:if="{{mode === 'alert'}}">
+				<view class="mc-modal__title" wx:if="{{title}}">{{title}}</view>
+				<view wx:if="{{content}}" class="mc-modal__content {{!title ? 'is-no-title' : ''}}">{{content}}</view>
+				<slot wx:else></slot>
+				<view wx:if="{{footer}}" class="mc-modal__footer mc-hairline__top">
+					<view class="mc-modal__button mc-hairline__right" wx:if="{{cancelText}}" bindtap="handleCancel">{{cancelText}}</view>
+					<view class="mc-modal__button" wx:if="{{okText}}" bindtap="handleOK">{{okText}}</view>
+				</view>
+			</block>
+			<!-- TODO opeartion -->
+		</view>
+	</mc-popup>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	externalClasses: ['wrapper-class'],
+	props: {
+		visible: {
+			type: Boolean,
+			value: false
+		},
+		mode: {
+			type: String,
+			value: 'alert', // alert、operation
+		},
+		mask: {
+			type: Boolean,
+			value: true,
+		},
+		maskClosable: {
+			type: Boolean,
+			value: true
+		},
+		title: {
+			type: String,
+			optionalTypes: [Boolean],
+		},
+		content: String,
+		okText: {
+			type: String,
+			optionalTypes: [Boolean],
+			value: '确定'
+		},
+		cancelText: {
+			type: String,
+			optionalTypes: [Boolean],
+			value: '取消'
+		},
+		footer: {
+			type: Boolean,
+			value: true
+		},
+		actions: Array, // TODO 暂时没有，外部传入的事件怎么执行
+	},
+	methods: {
+		handleBefore(hook) {
+			if (!this.data.visible) return;
+			let callback = () => {
+				this.handleClose();
+			};
+
+			let fn = hook && hook(callback);
+
+			if (fn && fn.then) {
+				return fn.then((res) => {
+					return res;
+				}).catch((res) => {
+					return Promise.reject(res);
+				});
+			} else if (!fn) {
+				callback();
+			}
+		},
+		handleClose() {
+			this.$emit('close');
+		},
+		handleCancel() {
+			this.$emit('cancel');
+			this.handleBefore(this.data.onCancel);
+		},
+		handleOK() {
+			this.$emit('ok');
+			this.handleBefore(this.data.onOk);
+		},
+		onPortalUpdate(options) {
+			this.setData({
+				...options
+			});
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-modal {
+	&__wrapper {
+		width: 540rpx;
+		min-height: 270rpx;
+		border-radius: 20rpx;
+		background: #ffffff;
+	}
+	&__title {
+		font-size: 34rpx;
+		font-weight: 400;
+		color:#000000;
+		text-align: center;
+		padding-top: 46rpx;
+	}
+	&__content {
+		font-size: 30rpx;
+		color: #666666;
+		padding: 12rpx 56rpx 48rpx 56rpx;
+		text-align: center;
+		&.is-no-title {
+			padding-top: 52rpx;
+			padding-bottom: 45rpx; 
+			color: #000000;
+			font-size: 36rpx;
+			font-weight: normal;
+		}
+	}
+	&__footer {
+		position: relative;
+		display: flex;
+	}
+	&__button {
+		position: relative;
+		flex: 1;
+		text-align: center;
+		color: #108DE7;
+		font-size: 34rpx;
+		height: 100rpx;
+		line-height: 100rpx;
+		word-wrap: break-word;
+		z-index: 1; // android不添加时可能不显示1px描边
+		&:first-child {
+			color: #000;
+		}
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-popup": "../popup/index"
+	}
+}
+</config>

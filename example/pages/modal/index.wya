@@ -1,0 +1,73 @@
+<template>
+	<mc-list>
+		<mc-list-item label="弹框" bind:click="handleOpenModal1" />
+	</mc-list>
+	<mc-list>
+		<mc-list-item label="弹框" bind:click="handleOpenModal2" />
+	</mc-list>
+
+	<mc-modal id="modal1" />
+	<mc-modal id="modal2">
+		<view style="height: 200rpx">sd阿斯顿发斯蒂芬</view>
+	</mc-modal>
+</template>
+<script>
+import Modal from '../../components/modal/modal-manager';
+
+Page({
+	handleOpenModal1() {
+		Modal.alert({
+			el: '#modal1',
+			title: '提示',
+			content: '阿斯顿发斯蒂按',
+			onOk: (callback) => {
+				return new Promise((r, j) => {
+					setTimeout(() => {
+						console.log('点击确定这个按钮时回调');
+						r();
+					}, 1000);
+				}).then(() => {
+					callback();
+				});
+			},
+			onCancel: (e, done) => {
+				console.log('点击取消这个按钮时回调');
+			},
+			onClose: () => {
+				console.log('关闭后都会触发');
+			}
+		});
+	},
+	handleOpenModal2() {
+		Modal.alert({
+			el: '#modal2',
+			title: '提示',
+			onOk: () => {
+				console.log('点击确定这个按钮时回调');
+			},
+			onCancel: (e, done) => {
+				console.log('点击取消这个按钮时回调');
+			},
+			onClose: () => {
+				console.log('关闭后都会触发');
+			}
+		});
+	},
+	data: {
+		
+	},
+	handleClose() {
+		Modal.destroy();
+	},
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-list": "../../../components/list/index",
+		"mc-list-item": "../../../components/list/list-item",
+		"mc-modal": "../../../components/modal/index"
+	}
+}
+</config>
