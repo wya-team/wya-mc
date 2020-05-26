@@ -25,8 +25,8 @@
 			</view>
 
 			<mc-icon
-				wx:if="{{!useRightIconSlot}}"
-				type="{{rightIcon}}"
+				wx:if="{{arrow}}"
+				type="{{arrow}}"
 				mc-class="mc-list-item__right-icon"
 			/>
 			<slot wx:else name="right-icon" />
@@ -60,12 +60,12 @@ McComponent({
 		content: String,
 		url: String,
 		leftIcon: String,
-		rightIcon: {
+		arrow: {
 			type: String,
+			optionalTypes: [Boolean],
 			value: 'right'
 		},
 		useLeftIconSlot: Boolean,
-		useRightIconSlot: Boolean,
 		indent: {
 			type: Number,
 			value: 32
