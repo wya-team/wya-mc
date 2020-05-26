@@ -10,8 +10,9 @@ function McComponent(mcOptions) {
 	let opts = {
 		...restOpts,
 		options: {
+			addGlobalClass: true,
+			multipleSlots: true,
 			...options,
-			multipleSlots: true
 		},
 		externalClasses,
 		behaviors: mixins,
