@@ -1,0 +1,156 @@
+<template>
+	<view
+		class="mc-switch mc-class {{checked ? 'is-checked' : ''}} {{disabled ? 'is-disabled' : ''}}"
+		style="background-color: {{checked ? activeColor : inactiveColor}}; border-color: {{checked ? activeColor : inactiveColor}}"
+		bindtap="handdleToggle"
+	>
+		<view class="mc-switch__content">
+		<!-- TODO text -->
+		</view>
+		<view class="mc-switch__inner" />
+		<!-- TODO loading -->
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	addGlobalClass: ['node-class'],
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked(child) {
+				this.parent = null;
+			}
+		}
+	},
+	props: {
+		value: {
+			type: Boolean,
+			optionalTypes: [String, Number],
+			value: false
+		},
+		disabled: Boolean,
+		loading: Boolean, // TODO
+		activeColor: String,
+		inactiveColor: String,
+		trueValue: {
+			type: Boolean,
+			optionalTypes: [String, Number],
+			value: true
+		},
+		falseValue: {
+			type: Boolean,
+			optionalTypes: [String, Number],
+			value: false
+		},
+		openText: {
+			type: String,
+			value: ''
+		},
+		closeText: {
+			type: String,
+			value: ''
+		},
+		async: Boolean
+	},
+	observers: {
+		'value': function (value) {
+			if (value !== this.data.currentValue) {
+				this.setData({ currentValue: value });
+			}
+		},
+		'currentValue, trueValue': function (currentValue, trueValue) {
+			this.setData({
+				checked: currentValue === trueValue
+			});
+		}
+	},
+	methods: {
+		handdleToggle() {
+			 const { trueValue, falseValue, disabled, loading, async } = this.data;
+			 if (disabled || loading) {
+				return false;
+			}
+			const checked = this.data.currentValue === trueValue;
+			const value = checked ? falseValue : trueValue; // 跟当前选中的值反下
+			if (async) {
+				this.$emit('click', {
+					value,
+					done: (val) => {
+						this.sync(val);
+					}
+				});
+			} else {
+				this.sync(value);
+			}
+		},
+		sync(value) {
+			this.setData({ currentValue: value });
+			this.$emit('change', value);
+			this.parent && this.parent.fieldChange();
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-switch {
+	display: inline-block;
+	width: 102rpx;
+	height: 62rpx;
+	line-height: 62rpx;
+	border-radius: 62rpx;
+	vertical-align: middle;
+	box-sizing: border-box;
+	border: 2rpx solid #e5e5e5;
+	background-color: #fff;
+	position: relative;
+	transition: all .2s ease-in-out;
+	.mc-switch__content {
+		color: #53d769;
+		font-size: 28rpx;
+		position: absolute;
+		left: 60rpx;
+		line-height: 56rpx;
+	}
+	.mc-switch__inner {
+		content: '';
+		width: 56rpx;
+		height: 56rpx;
+		border-radius: 56rpx;
+		background-color: #fff;
+		box-sizing: border-box;
+		position: absolute;
+		left: 1rpx;
+		top: 0rpx;
+		border: 1rpx solid rgba($color: #000000, $alpha: .13);
+		box-shadow: 0rpx 0rpx 16rpx 0rpx rgba(0, 0, 0, 0.11), 0rpx 12rpx 14rpx 1rpx rgba(0, 0, 0, 0.15);
+		transition: left .2s ease-in-out,width .2s ease-in-out;
+	}
+	&.is-checked {
+		border-color: #53d769;
+		background-color: #53d769;
+		.mc-switch__content {
+			left: 6rpx;
+			color: #fff;
+		}
+		.mc-switch__inner {
+			left: 42rpx;
+		}
+	}
+	&.is-disabled {
+		opacity: 0.5;
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

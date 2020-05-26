@@ -25,7 +25,7 @@
 			</view>
 
 			<mc-icon
-				wx:if="{{arrow}}"
+				wx:if="{{showRightIcon}}"
 				type="{{arrow}}"
 				mc-class="mc-list-item__right-icon"
 			/>
@@ -63,7 +63,12 @@ McComponent({
 		arrow: {
 			type: String,
 			optionalTypes: [Boolean],
-			value: 'right'
+			value: 'right',
+			observer(val) {
+				this.setData({
+					showRightIcon: !!val
+				});
+			}
 		},
 		useLeftIconSlot: Boolean,
 		indent: {
