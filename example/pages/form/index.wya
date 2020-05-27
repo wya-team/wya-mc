@@ -14,6 +14,13 @@
 		<mc-form-item label="选择器" prop="array">
 			<mc-picker dataSource="{{dataSource1}}" value="{{formValidate.array}}" bind:change="handleSelect"/>
 		</mc-form-item>
+		<mc-form-item label="联级器" prop="area">
+			<mc-cascader 
+				dataSource="{{areaData}}" 
+				value="{{formValidate.area}}" 
+				bind:change="handleAreaChange"
+			/>
+		</mc-form-item>
 		<mc-form-item label="输入" prop="input2">
 			<mc-input value="{{formValidate.input2}}" right bind:change="handleChange2" />
 		</mc-form-item>
@@ -26,9 +33,11 @@
 
 <script>
 import { RegEx } from '../../components/common/regex';
+import { areaData } from '../cascader/mock';
 
 Page({
 	data: {
+		areaData,
 		dataSource1: [
 			{ 
 				label: '男',
@@ -63,6 +72,7 @@ Page({
 			input: '',
 			input2: '',
 			array: [],
+			area: ["140000", "140500", "140525"]
 		},
 		ruleValidate: {
 			input: [
@@ -109,6 +119,12 @@ Page({
 		}).catch((res) => {
 			console.log(res);
 		});
+	},
+	handleAreaChange(event) {
+		const { value, label } = event.detail;
+		this.setData({
+			'formValidate.area': value
+		});
 	}
 });
 </script>
@@ -128,7 +144,8 @@ Page({
 		"mc-form": "../components/form",
 		"mc-form-item": "../components/form/form-item",
 		"mc-input": "../components/input",
-		"mc-picker": "../components/picker"
+		"mc-picker": "../components/picker",
+		"mc-cascader": "../components/cascader"
 	}
 }
 </config>

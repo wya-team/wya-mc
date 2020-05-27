@@ -150,7 +150,6 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-picker {
-	line-height: 48rpx; // form-item中content的line-height设置不进来
 	.mc-picker__padding-none {
 		padding: 0
 	}

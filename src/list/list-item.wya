@@ -161,6 +161,7 @@ McComponent({
 	justify-content: flex-end;
 	font-size: 32rpx;
 	color: #8C8C8C;
+	line-height: 48rpx;
 }
 .mc-list-item__right-icon {
 	color: #8E8E8E;

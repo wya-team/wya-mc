@@ -122,7 +122,7 @@ McComponent({
 	}
 	&__content {
 		font-size: 30rpx;
-		color: #666666;
+		color: #868686;
 		padding: 12rpx 56rpx 48rpx 56rpx;
 		text-align: center;
 		&.is-no-title {
@@ -141,7 +141,7 @@ McComponent({
 		position: relative;
 		flex: 1;
 		text-align: center;
-		color: #108DE7;
+		color: #3F64E7;
 		font-size: 34rpx;
 		height: 100rpx;
 		line-height: 100rpx;
