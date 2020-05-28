@@ -12,8 +12,8 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
-    "test": "jest --config=config.jest.js --coverage",
-    "test:watch": "jest --config=config.jest.js --coverage --watch",
+    "test": "jest --config=jest.config.js --coverage",
+    "test:watch": "jest --config=jest.config.js --coverage --watch",
     "add": "node ./config/add.prompt.js"
   },
   "repository": {

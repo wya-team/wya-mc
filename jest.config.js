@@ -1,9 +1,9 @@
 module.exports = {
 	testPathIgnorePatterns: [
-		'/node_modules/',
+		'/node_modules/'
 	],
 	collectCoverage: true,
 	collectCoverageFrom: [
-		'lib/**/*.{js, wxss, wxml, json}',
+		'lib/**/*.{js, wxss, wxml, json}'
 	],
-}
+};
