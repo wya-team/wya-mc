@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/uploader/index",
+		"pages/upload-picker/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
 		"pages/cascader/index",

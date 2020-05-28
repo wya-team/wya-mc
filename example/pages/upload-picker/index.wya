@@ -1,5 +1,5 @@
 <template>
-	<mc-uploader />
+	<mc-upload-picker />
 </template>
 
 <script>
@@ -16,7 +16,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-uploader": "../components/uploader"
+		"mc-upload-picker": "../components/upload-picker"
 	}
 }
 </config>
