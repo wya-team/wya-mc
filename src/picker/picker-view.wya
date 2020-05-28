@@ -22,28 +22,30 @@ McComponent({
 		...pickerViewProps,
 		value: {
 			type: Array,
-			value: [],
-			observer(val) {
-				let value = this.formatValue(val, true);
-				if (!isEqualWith(value, this.data.currentValue)) {
-					this.setData({ currentValue: value });
-					this.formatData();
-				}
-			}
+			value: []
 		},
 	},
 	data: {
-		currentValue: [0, 0]
+		currentValue: [],
+		currentLabel: []
+	},
+	observers: {
+		'dataSource, value': function (dataSource, value) {
+			let currentValue = this.formatValue(value, true);
+			if (!isEqualWith(currentValue, this.data.currentValue)) {
+				this.setData({ currentValue });
+			}
+			this.formatData(dataSource, this.data.currentValue);
+		}
 	},
 	lifetimes: {
 		attached() {
-			this.formatData();
 			this.$emit('ready', this);
 		},
 	},
 	methods: {
-		formatData() {
-			const { cols, dataSource, currentValue } = this.data || {};
+		formatData(dataSource, currentValue) {
+			const { cols } = this.data || {};
 			let currentData = [];
 			// 校验格式是否正确
 			this.checkMetaData(dataSource);
@@ -56,8 +58,13 @@ McComponent({
 			if (currentData.length > this.cols) {
 				currentData = currentData.slice(0, this.cols);
 			}
-			this.setData({
-				currentData
+			
+			const currentLabel = currentValue.map((it, index) => {
+				return currentData[index] && currentData[index][it] ? currentData[index][it].label : '';
+			}).filter((it) => it);
+			this.setData({ currentData, currentLabel });
+			wx.nextTick(() => {
+				this.$emit('label-change', currentLabel);
 			});
 		},
 		checkMetaData(dataSource) {
@@ -125,7 +132,7 @@ McComponent({
 			value = value.map((it, index) => {
 				return (this.data.currentData[index] || []).findIndex((i) => i.value === it);
 			});
-			return this.initValue(value);
+			return value;
 		},
 		parserValue(value) {
 			const { currentData } = this.data;
@@ -179,11 +186,6 @@ McComponent({
 			const value = this.formatValue(val, true);
 			this.setData({ currentValue: value });
 		},
-		// value为空，或者内部出现-1，都换成0
-		initValue(value) {
-			if (value.length === 0) value = [0, 0];
-			return value.map((it) => (it < 0 ? 0 : it));
-		}
 	}
 });
 

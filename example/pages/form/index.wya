@@ -37,42 +37,13 @@ import { areaData } from '../cascader/mock';
 
 Page({
 	data: {
-		areaData,
-		dataSource1: [
-			{ 
-				label: '男',
-				value: 1,
-				children: [
-					{
-						label: '爱好女',
-						value: '2'
-					},
-					{
-						label: '花花',
-						value: '3'
-					}
-				]
-			},
-			{ 
-				label: '女',
-				value: 2,
-				children: [
-					{
-						label: '爱好男',
-						value: '5'
-					},
-					{
-						label: '安抚',
-						value: '4'
-					}
-				] 
-			}
-		],
+		areaData: [],
+		dataSource1: [],
 		formValidate: {
 			input: '',
 			input2: '',
 			array: [],
-			area: ["140000", "140500", "140525"]
+			area: []
 		},
 		ruleValidate: {
 			input: [
@@ -94,6 +65,49 @@ Page({
 				}
 			],
 		}
+	},
+	onLoad() {
+		setTimeout(() => {
+			this.setData({
+				areaData,
+				dataSource1: [
+					{ 
+						label: '男',
+						value: 1,
+						children: [
+							{
+								label: '爱好女',
+								value: '2'
+							},
+							{
+								label: '花花',
+								value: '3'
+							}
+						]
+					},
+					{ 
+						label: '女',
+						value: 2,
+						children: [
+							{
+								label: '爱好男',
+								value: '5'
+							},
+							{
+								label: '安抚',
+								value: '4'
+							}
+						] 
+					}
+				]
+			});
+		}, 1000);
+		setTimeout(() => {
+			this.setData({
+				'formValidate.area': ["140000", "140500", "140525"],
+				'formValidate.array': [1, '3']
+			});
+		}, 2000);
 	},
 	handleReady(event) {
 		this.form = event.detail;

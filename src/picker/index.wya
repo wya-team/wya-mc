@@ -28,6 +28,7 @@
 			indicator-class="{{indicatorClass}}"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
+			bind:label-change="handleLabelChange"
 		/>
 	</mc-picker-popup>
 </template>
@@ -89,13 +90,10 @@ McComponent({
 		},
 	},
 	data: {
-		
+		currentValue: []
 	},
 	lifetimes: {
 		attached() {
-			this.setData({
-				currentValue: this.data.value
-			});
 			this.Func = new Portal({ 
 				el: `#${this.data.tag}` 
 			});
@@ -118,6 +116,11 @@ McComponent({
 					console.log('close', err);
 				});
 			}
+		},
+		handleLabelChange(event) {
+			event.detail.length > 0 && this.setData({
+				extra: event.detail.join(',')
+			});
 		},
 		handleChange(event) {
 			this.setData({
