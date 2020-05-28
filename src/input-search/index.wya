@@ -82,7 +82,6 @@ McComponent({
 		},
 		handleCancel() {
 			if (this.data.readonly) return;
-			this.sync('');
 			this.$emit('cancel');
 		},
 		sync(v) {

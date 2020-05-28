@@ -3,6 +3,8 @@
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
 			wrapper-class="{{paddingNone ? 'mc-picker__padding-none' : ''}}"
+			content-class="content-class"
+			indent="{{0}}"
 			content="{{extra}}"
 			label="{{label}}"
 			label-width="{{labelWidth}}"
@@ -39,6 +41,7 @@ import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
 
 McComponent({
+	externalClasses: ['content-class'],
 	relations: {
 		'../form/form-item': {
 			type: 'ancestor',

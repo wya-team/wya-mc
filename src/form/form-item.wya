@@ -219,6 +219,7 @@ McComponent({
 
 .mc-form-item {
 	position: relative;
+	background-color: #ffffff;
 	.mc-form-item__wrapper {
 		padding-top: 24rpx;
 		padding-bottom: 24rpx;

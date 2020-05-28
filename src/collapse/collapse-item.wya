@@ -1,6 +1,6 @@
 <template>
-	<view class="mc-collapse-item mc-class" bindtap="handleToggle">
-		<slot></slot>
+	<view class="mc-collapse-item mc-class">
+		<slot bindtap="handleToggle"></slot>
 		<view 
 			class="mc-collapse-item__wrapper is-transition"
 			style="height: {{ contentHeight }};"

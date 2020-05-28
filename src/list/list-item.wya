@@ -19,7 +19,7 @@
 				<slot wx:else name="label" />
 			</view>
 
-			<view class="mc-list-item__content content-class">
+			<view class="content-class mc-list-item__content">
 				<block wx:if="{{ content || content === 0 }}">{{ content }}</block>
 				<slot wx:else />
 			</view>

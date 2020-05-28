@@ -123,7 +123,6 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-form {
-	background-color: #ffffff;
 	display: block;
 }
 </style>

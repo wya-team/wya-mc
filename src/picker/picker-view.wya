@@ -102,7 +102,7 @@ McComponent({
 				}
 			}
 			// 如果当前列没有选中的值，默认拿第一个
-			if (currentValue[col] === undefined || currentValue[col] === null) {
+			if ((currentValue[col] === undefined || currentValue[col] === null) && (dataSource[0] || {}).children instanceof Array) {
 				data[col + 1] = (dataSource[0] || {}).children || [];
 			}
 			return data;
@@ -118,7 +118,7 @@ McComponent({
 				}
 			}
 			// 如果当前列没有选中的值，默认拿第一个
-			if (value[col] === undefined || value[col] === null) {
+			if ((value[col] === undefined || value[col] === null) && (dataSource[0] || {}).children instanceof Array) {
 				data[col + 1] = (dataSource[0] || {}).children || [];
 			}
 			return data;

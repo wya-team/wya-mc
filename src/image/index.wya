@@ -3,7 +3,7 @@
 
 	<view
 		style="{{ viewStyle }}"
-		class="custom-class {{ utils.bem('image', { round })}}"
+		class="mc-class {{ utils.bem('image', { round })}}"
 		bind:tap="onClick"
 	>
 		<image
@@ -35,6 +35,8 @@
 
 </template>
 <script>
+import McComponent from '../common/component';
+
 let utils = require("../common/utils");
 
 let FIT_MODE_MAP = {
@@ -43,11 +45,8 @@ let FIT_MODE_MAP = {
 	cover: 'aspectFill',
 	contain: 'aspectFit'
 };
-Component({
-	options: {
-		multipleSlots: true
-	},
-	properties: {
+McComponent({
+	props: {
 		 src: {
 			type: String,
 			observer() {
@@ -92,9 +91,11 @@ Component({
 		loading: true,
 		viewStyle: '',
 	},
-	ready() {
-		this.setMode();
-		this.setStyle();
+	lifetimes: {
+		ready() {
+			this.setMode();
+			this.setStyle();
+		},
 	},
 	methods: {
 		setMode() {
