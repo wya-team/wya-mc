@@ -86,7 +86,7 @@ McComponent({
 				onComplete() {}
 			};
 			this.$emit('ready', {
-				done: fns => this.$fns = fns
+				done: (fns = {}) => this.$fns = { ...this.$fns, ...fns }
 			});
 		},
 		detached() {
