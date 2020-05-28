@@ -10,7 +10,7 @@ const EXAMPLE_DIR = resolve(__dirname, '../example');
 const exclude = ['common', '__tpl__', 'utils', 'wxs', 'styles', 'mixins', 'template', '.DS_Store'];
 
 const getComponentsList = () => {
-	const lists = readdirSync(SRC_DIR);
+	const lists = [...new Set(readdirSync(SRC_DIR).concat(readdirSync(resolve(EXAMPLE_DIR, './pages'))))];
 	return lists.reduce((pre, components) => {
 		if (exclude.includes(components)) return pre;
 		
@@ -34,6 +34,7 @@ const setPageJSON = (components) => {
 };
 
 const choices = getComponentsList();
+
 const questions = [
 	{
 		type: 'input',
