@@ -42,7 +42,7 @@
 					type="close"
 					mc-class="mc-upload-picker__preview-delete"
 					data-index="{{ index }}"
-					bind:tap="deleteItem"
+					bind:tap="handleDeleteItem"
 				/>
 			</view>
 
@@ -129,7 +129,7 @@ McComponent({
 			};
 		},
 
-		deleteItem(event) {
+		handleDeleteItem(event) {
 			const { index } = event.currentTarget.dataset;
 
 			this.$emit('delete', {
