@@ -63,7 +63,7 @@ Page({
 <config>
 {
   "usingComponents": {
-  	"mc-recycle-list": "../components/recycle-list"
+  	"mc-recycle-list": "../../components/recycle-list"
   }
 }
 </config>

@@ -1,22 +1,49 @@
 <template>
-	<mc-upload-picker />
+	<mc-upload-picker
+		dataSource="{{ dataSource1 }}"
+	/>
+	<mc-upload-picker
+		dataSource="{{ dataSource2 }}"
+	/>
+	<mc-upload-picker
+		dataSource="{{ dataSource3 }}"
+	/>
 </template>
 
 <script>
+
 Page({
 	data: {
+		dataSource1: [],
+		dataSource2: [
+			{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
+			{ url: 'https://img.yzcdn.cn/vant/tree.jpg' }
+		],
+		dataSource3: [
+			{
+				url: 'https://img.yzcdn.cn/vant/leaf.jpg',
+				status: 'uploading',
+				msg: '上传中'
+			},
+			{
+				url: 'https://img.yzcdn.cn/vant/tree.jpg',
+				status: 'failed',
+				msg: '上传失败'
+			}
+		]
 	},
 });
+
 </script>
 <style lang="scss">
-.g-m-b-40 {
+page {
+	background-color: #fff;
 }
-
 </style>
 <config>
 {
 	"usingComponents": {
-		"mc-upload-picker": "../components/upload-picker"
+		"mc-upload-picker": "../../components/upload-picker"
 	}
 }
 </config>

@@ -31,8 +31,8 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-list": "../components/list",
-		"mc-list-item": "../components/list/list-item"
+		"mc-list": "../../components/list",
+		"mc-list-item": "../../components/list/list-item"
 	}
 }
 </config>

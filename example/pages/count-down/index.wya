@@ -82,7 +82,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-count-down": "../components/count-down"
+		"mc-count-down": "../../components/count-down"
 	}
 }
 </config>

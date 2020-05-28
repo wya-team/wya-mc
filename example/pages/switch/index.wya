@@ -46,8 +46,8 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-switch": "../components/switch",
-		"mc-list-item": "../components/list/list-item"
+		"mc-switch": "../../components/switch",
+		"mc-list-item": "../../components/list/list-item"
 	}
 }
 </config>

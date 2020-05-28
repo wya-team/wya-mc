@@ -131,8 +131,8 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-tabs": "../components/tabs",
-		"mc-tabs-pane": "../components/tabs/tabs-pane"
+		"mc-tabs": "../../components/tabs",
+		"mc-tabs-pane": "../../components/tabs/tabs-pane"
 	}
 }
 </config>

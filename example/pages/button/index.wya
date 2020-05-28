@@ -96,7 +96,7 @@ page{
 <config>
 {
 	"usingComponents": {
-		"mc-button": "../components/button"
+		"mc-button": "../../components/button"
 	}
 }
 </config>

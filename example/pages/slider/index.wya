@@ -86,7 +86,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-slider": "../components/slider"
+		"mc-slider": "../../components/slider"
 	}
 }
 </config>

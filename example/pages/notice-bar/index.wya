@@ -38,7 +38,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-notice-bar": "../components/notice-bar"
+		"mc-notice-bar": "../../components/notice-bar"
 	}
 }
 </config>

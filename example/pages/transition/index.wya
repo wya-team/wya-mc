@@ -84,9 +84,9 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-transition": "../components/transition",
-		"mc-list": "../components/list",
-		"mc-list-item": "../components/list/list-item"
+		"mc-transition": "../../components/transition",
+		"mc-list": "../../components/list",
+		"mc-list-item": "../../components/list/list-item"
 	}
 }
 </config>

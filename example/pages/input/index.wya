@@ -27,8 +27,8 @@ page {
 <config>
 {
 	"usingComponents": {
-		"mc-input": "../components/input",
-		"mc-input-search": "../components/input-search"
+		"mc-input": "../../components/input",
+		"mc-input-search": "../../components/input-search"
 	}
 }
 </config>

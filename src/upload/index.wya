@@ -1,0 +1,451 @@
+<template>
+	<view class="mc-upload" bind:tap="handleClick">
+		<slot />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+let uid = 0;
+let app = getApp();
+app.$mc = app.$mc || { config: {} };
+
+McComponent({
+	props: {
+		disabled: Boolean,
+		multiple: Boolean,
+		url: String,
+		headers: Object,
+		name: {
+			type: [Number, String],
+			value: '',
+		},
+		mode: {
+			type: String,
+			value: 'images', // images | viedo | medium | files
+		},
+		accept: String, // 格式要求
+		size: {
+			type: Number,
+			value: Number.MAX_VALUE,
+		},
+		max: {
+			type: Number,
+			value: 100,
+		},
+		// image viedo media file
+		sizeType: {
+			type: Array,
+			value: ['original', 'compressed'],
+		},
+		sourceType: {
+			type: Array,
+			value: ['album', 'camera'],
+		},
+		compressed: {
+			type: Boolean,
+			value: true,
+		},
+		maxDuration: {
+			type: Number,
+			value: 60,
+		},
+		camera: {
+			type: String,
+			value: 'back',
+		},
+		parallel: {
+			type: Boolean,
+			value: true,
+		}
+	},
+	data: {
+	},
+
+	lifetimes: {
+		attached() {
+			this.reqs = {};
+			this.__isMounted = false;
+			this.setDefaultCycle();
+		},
+		ready() {
+			this.__isMounted = true;
+
+			this.$fns = {
+				enhancer: null,
+				onError(res) {
+					console.log(res);
+				},
+				onBegin() {},
+				onFileBefore() {},
+				onFileStart() {},
+				onFileSuccess() {},
+				onFileError(res) {
+					console.log(res);
+				},
+				onComplete() {}
+			};
+			this.$emit('ready', {
+				done: fns => this.$fns = fns
+			});
+		},
+		detached() {
+			this.__isMounted = false;
+			this.cancel();
+		},
+	},
+	methods: {
+		/**
+		 * 状态管理
+		 */
+		setDefaultCycle() {
+			this.cycle = {
+				error: 0,
+				success: 0,
+				total: 0,
+				imgs: [],
+				fns: []
+			};
+		},
+		handleClick(e) {
+			/**
+			 * 渐进增强
+			 */
+			let { enhancer } = app.$mc.config.Upload || {};
+
+			enhancer = this.$fns.enhancer || enhancer || (() => false);
+			let allow = enhancer(this);
+			if (allow && allow.then) {
+				allow.catch(() => {
+					this.uploadStart();
+				});
+				return;
+			}
+			allow || this.uploadStart();
+		},
+
+		/**
+		 * 模拟web端的点击input change事件
+		 */
+		handleChange(e) {
+			this.uploadFiles(e.target.files);
+		},
+
+		uploadStart() {
+			const { 
+				max,
+				multiple,
+				sourceType,
+				sizeType,
+				maxDuration,
+				camera,
+				compressed,
+				mode,
+				disabled 
+			} = this.data;
+
+			if (disabled || max === 0) return;
+
+			let chooseFile = {
+				images: () => {
+					return new Promise((resolve, reject) => {
+						wx.chooseImage({
+							count: multiple ? Math.min(max, 9) : 1,
+							sourceType,
+							sizeType,
+							success: resolve,
+							fail: reject,
+						});
+					});
+				},
+				medium: () => {
+					return new Promise((resolve, reject) => {
+						wx.chooseMedia({
+							count: multiple ? Math.min(max, 9) : 1,
+							sourceType,
+							sizeType,
+							maxDuration,
+							camera,
+							success: resolve,
+							fail: reject,
+						});
+					});
+				},
+				video: () => {
+					return new Promise((resolve, reject) => {
+						wx.chooseVideo({
+							sourceType,
+							compressed,
+							maxDuration,
+							camera,
+							success: (res) => {
+								resolve({
+									tempFiles: [
+										{
+											path: res.tempFilePath,
+											...res,	
+										}
+									]
+								});
+							},
+							fail: reject,
+						});
+					});
+				},
+				files: () => {
+					return new Promise((resolve, reject) => {
+						wx.chooseMessageFile({
+							count: multiple ? Math.min(max, 9) : 1,
+							type: 'file',
+							success: resolve,
+							fail: reject,
+						});
+					});
+				}
+			};
+			chooseFile[mode]()
+				.then((res) => {
+					let files = res.tempFiles instanceof Array 
+						? res.tempFiles 
+						: [res.tempFiles];
+					this.uploadFiles(files);
+				}).catch(e => {
+					console.log(e);
+					this.$fns.onError({ msg: e.message });
+				});
+			
+		},
+
+		uploadFiles(files) {
+			const { max, multiple, parallel, accept } = this.data;
+			
+			// files = files.filter(
+			// 	file => attrAccept(file, accept)
+			// );
+
+			if (files.length > max && multiple) {
+				this.$fns.onError({ msg: `可选文件数量不能超过${max}个` });
+				return;
+			}
+
+			// reset
+			this.setDefaultCycle();
+
+			this.$fns.onBegin(files);
+
+			this.cycle.fns = files.map((file, index) => {
+				file.uid = ++uid;
+				file.current = index + 1;
+				file.total = files.length;
+				file.percent = 0;
+				return () => {
+					this.upload(file, files);
+				};
+			});
+
+			// 是否启用并行操作
+			parallel 
+				? this.cycle.fns.forEach(fn => fn())
+				: (this.cycle.fns.shift())(); 
+		},
+
+		upload(file, fileList, index) {
+			const { onFileBefore } = this.$fns;
+
+			const before = onFileBefore(file, fileList);
+			if (before && before.then) {
+				before.then((processedFile) => {
+					if (processedFile && processedFile.path) {
+
+						const { uid, current, total, percent } = file;
+						processedFile.uid = uid;
+						processedFile.current = current;
+						processedFile.total = total;
+						processedFile.percent = percent;
+
+						this.post(processedFile);
+					} else {
+						this.post(file);
+					}
+				}).catch(e => {
+					this.cycle.error++;
+					this.done(file);
+				});
+			} else if (before !== false) {
+				setTimeout(() => this.post(file), 0);
+			}
+		},
+
+		/**
+		 * TODO 支持async await
+		 * @param  {[type]} file [description]
+		 * @return {[type]}      [description]
+		 */
+		post(file) {
+			if (!this.__isMounted) {
+				return;
+			}
+			const { onPostBefore, onPostAfter } = this.$fns;
+			const { url, mode, name, headers, extra = {}, size } = this.data;
+
+			const { 
+				URL_UPLOAD_FILE_POST, 
+				URL_UPLOAD_IMG_POST, 
+				FORM_NAME, 
+				onPostBefore: $onPostBefore, 
+				onPostAfter: $onPostAfter 
+			} = app.$mc.config.Upload || {};
+
+			const defaultUrl = mode === 'images' 
+				? URL_UPLOAD_IMG_POST 
+				: URL_UPLOAD_FILE_POST;
+
+			// 上传前/后的回调
+			const onBefore = onPostBefore || $onPostBefore || (() => {});
+			const onAfter = onPostAfter || $onPostAfter || (() => {});
+
+			const { uid } = file;
+			
+			// onFileStart, onFileProgress, onFileSuccess, onFileError, onComplete 
+			this.$fns.onFileStart(file);
+
+			let options = {
+				url: url || defaultUrl,
+				formData: { ...extra },
+				header: headers,
+				name: file.name || FORM_NAME || 'file',
+				filePath: file.path || file.filePath
+			};
+			options = onBefore({ options }) || options;
+
+			let response;
+
+			let onError = (res) => {
+				delete this.reqs[uid];
+				this.cycle.error++;
+
+				this.$fns.onFileError(res, file, { ...this.cycle });
+				this.done(file);
+			};
+
+			let onSuccess = ({ data }) => {
+				
+				response = data;
+				response = onAfter({ response, options }) || data;
+
+				let fn = () => {
+					if (!response || (response && response.status !== 1)) {
+						return onError(response || { msg: '无状态返回' });
+					}
+
+					delete this.reqs[uid];
+					this.cycle.success++;
+					this.cycle.imgs = [...this.cycle.imgs, response];
+
+					this.$fns.onFileSuccess(response, file, { ...this.cycle });
+					this.done(file);
+				};
+
+				if (response && response.then) {
+					response
+						.then((res) => {
+							response = res || data;
+							fn();
+						}).catch(fn);
+				} else {
+					fn();
+				}
+
+			};
+
+
+			if (size && file.size > size * 1024 * 1024) {
+				onError({ status: 0, msg: `上传失败，大小限制为${size}MB` });
+			}
+
+			let createRequest = () => {
+				// file: { name: "xx.jpg", filePath: 'wxfile: //....' }
+				let request = wx.uploadFile({
+					...options,
+					success: onSuccess,
+					fail: onError,
+				});
+
+				if (request && this.$fns.onFileProgress) {
+					request.onProgressUpdate = (e) => {
+						// 模拟web端发挥
+						e._percent = e.progress;
+						e.percent = e.progress.toFixed(2);
+
+						this.$fns.onFileProgress(e, file);
+					};
+				}
+				
+				this.reqs[uid] = {
+					cancel: () => request && request.abort()
+				};
+			};
+
+			if (options && options.then) {
+				options.then((res) => {
+					options = res || options;
+					createRequest();
+				}).catch(createRequest);
+			} else {
+				createRequest();
+			} 
+			
+		},
+
+		done(file) {
+			this.cycle.total++;
+
+			// 顺序上传
+			if (
+				!this.data.parallel 
+				&& this.cycle.fns 
+				&& this.cycle.fns.length > 0
+			) {
+				(this.cycle.fns.shift())();
+			}
+
+			// 上传完毕
+			if (this.cycle.total === file.total) {
+
+				this.$fns.onComplete({ ...this.cycle });
+				this.setDefaultCycle();
+			}
+		},
+
+		cancel(file) {
+			const { reqs } = this;
+			if (file) {
+				let uid = file;
+				if (file && file.uid) {
+					uid = file.uid;
+				}
+				if (this.reqs[uid]) {
+					this.reqs[uid].cancel();
+					this.done(file);
+					delete this.reqs[uid];
+				}
+			} else {
+				Object.keys(reqs).forEach((uid) => {
+					if (this.reqs[uid]) {
+						this.reqs[uid].cancel();
+						this.done(file);
+					}
+					delete reqs[uid];
+				});
+			}
+		}
+	}
+});
+
+</script>
+
+<config>
+{
+	"component": true
+}
+</config>

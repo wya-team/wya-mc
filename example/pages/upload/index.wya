@@ -1,0 +1,50 @@
+<template>
+	<mc-upload url="https://gateway-pre-mobile.weiyianmd.com" bind:ready="handleReady" multiple="true">
+		上传
+	</mc-upload>
+</template>
+
+<script>
+Page({
+	data: {
+	},
+	handleReady(e) {
+		e.detail.done({
+			enhancer: null,
+			onError() {
+				console.log('onError', ...arguments);
+			},
+			onBegin() {
+				console.log('onBegin', ...arguments);
+			},
+			onFileBefore() {
+				console.log('onFileBefore', ...arguments);
+			},
+			onFileStart() {
+				console.log('onFileStart', ...arguments);
+			},
+			onFileSuccess() {
+				console.log('onFileSuccess', ...arguments);
+			},
+			onFileError() {
+				console.log('onFileError', ...arguments);
+			},
+			onComplete() {
+				console.log('onComplete', ...arguments);
+			}
+		});
+	}
+});
+</script>
+<style lang="scss">
+.g-m-b-40 {
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-upload": "../../components/upload"
+	}
+}
+</config>
