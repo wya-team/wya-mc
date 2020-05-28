@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"pages/modal/index",
+		"pages/uploader/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
 		"pages/cascader/index",
@@ -11,6 +11,7 @@
 		"pages/imgs-crop/index",
 		"pages/input/index",
 		"pages/list/index",
+		"pages/modal/index",
 		"pages/notice-bar/index",
 		"pages/picker/index",
 		"pages/popup/index",

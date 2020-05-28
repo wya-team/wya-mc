@@ -1,0 +1,26 @@
+<template>
+	<view class="mc-uploader">
+		template
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	props: {
+		
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-uploader {
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>
