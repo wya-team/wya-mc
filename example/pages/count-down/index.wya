@@ -1,0 +1,88 @@
+<template>
+	<mc-count-down
+		target-time="{{ targetTime }}"
+	/>
+
+	<mc-count-down
+		target-time="{{ targetTime }}"
+		format="DD 天 HH 时 mm 分 ss 秒"
+	/>
+	<mc-count-down
+		target-time="{{ targetTime }}"
+		format="HH:mm:ss:ms"
+	/>
+	<mc-count-down
+		use-slot
+		target-time="{{ targetTime }}"
+		bind:change="onChange"
+	>
+		<text class="item">{{ timeData.hours }}</text>
+		<text class="item">{{ timeData.minutes }}</text>
+		<text class="item">{{ timeData.seconds }}</text>
+	</mc-count-down>
+	<mc-count-down
+		class="control-count-down"
+		target-time="{{ targetTime }}"
+		auto="{{ false }}"
+		format="ss:ms"
+		bind:finish="finished"
+	/>
+	<view bindtap="start" >开始</view>
+	<view bindtap="pause" >暂停</view>
+	<view bindtap="reset" >重置</view>
+</template>
+
+<script>
+Page({
+	data: {
+		time: 30 * 60 * 60 * 1000,
+		targetTime: '2020-06-21 12:40:00',
+		timeData: {}
+	},
+
+	onChange(e) {
+		this.setData({
+			timeData: e.detail
+		});
+	},
+
+	start() {
+		const countDown = this.selectComponent('.control-count-down');
+		countDown.start();
+	},
+
+	pause() {
+		const countDown = this.selectComponent('.control-count-down');
+		countDown.pause();
+	},
+
+	reset() {
+		const countDown = this.selectComponent('.control-count-down');
+		countDown.reset();
+	},
+
+	finished() {
+		wx.showToast({ title: '倒计时结束', icon: 'none' });
+	}
+});
+</script>
+<style lang="scss">
+.item {
+  display: inline-block;
+  width: 22px;
+  margin-right: 5px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background-color: #1989fa;
+  border-radius: 2px;
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-count-down": "../components/count-down"
+	}
+}
+</config>
