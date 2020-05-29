@@ -1,0 +1,85 @@
+<template>
+	<view class="mc-spin">
+		<!-- <view style="fontSize: {{size}}rpx;">
+			<view wx:if="{{!useLoadingSlot}}" class="mc-spin__loading">
+				<mc-icon type="loading"/>
+			</view>
+			<slot wx:else name="loading"/>
+		</view>
+		<slot /> -->
+		loading
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	name: "vc-spin",
+	components: {
+	},
+	props: {
+		size: {
+			type: Number,
+			value: 28
+		},
+		foreground: {
+			type: String,
+			value: '#ccc'
+		},
+		background: {
+			type: String,
+			value: '#108ee9'
+		},
+		useLoadingSlot: {
+			type: Boolean,
+			value: false
+		},
+		/**
+		 * 带开发
+		 */
+		fixed: {
+			type: Boolean,
+			value: false
+		},
+	},
+	data() {
+		return {
+		};
+	},
+	computed: {
+	},
+	methods: {
+	}
+});
+</script>
+
+<style lang="scss">
+.mc-spin {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 0;
+	&__loading {
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.15em;
+		fill: currentColor;
+		overflow: hidden;
+		animation: mc-spin-circle 1s linear infinite;
+	}
+}
+@keyframes mc-spin-circle {
+	to {
+		transform: rotate(1turn);
+	}
+}
+</style>
+
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>

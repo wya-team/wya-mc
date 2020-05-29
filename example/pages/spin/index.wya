@@ -1,0 +1,22 @@
+<template>
+	<mc-spin />
+</template>
+
+<script>
+Page({
+	data: {
+	},
+});
+</script>
+<style lang="scss">
+.g-m-b-40 {
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-spin": "../../components/spin"
+	}
+}
+</config>

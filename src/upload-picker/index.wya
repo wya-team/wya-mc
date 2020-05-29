@@ -1,6 +1,4 @@
 <template>
-	<wxs src="../wxs/utils.wxs" module="utils" />
-
 	<view class="mc-upload-picker">
 		<view class="mc-upload-picker__wrapper">
 			<!-- 预览样式 -->
@@ -18,14 +16,16 @@
 					src="{{ item.url || item.path }}"
 					alt="{{ item.name || ('图片' + index) }}"
 					class="mc-upload-picker__preview-image"
-					style="width: {{ utils.addUnit(previewSize) }}; height: {{ utils.addUnit(previewSize) }};"
+					style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
 					data-index="{{ index }}"
 					bind:tap="handlePreviewImage"
 				/>
+				<!-- TODO video -->
+				<!-- TODO file -->
 				<view
 					wx:else
 					class="mc-upload-picker__file"
-					style="width: {{ utils.addUnit(previewSize) }}; height: {{ utils.addUnit(previewSize) }};"
+					style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
 				>
 					<mc-icon type="description" class="mc-upload-picker__file-icon" />
 					<view class="mc-upload-picker__file-name mc-ellipsis">{{ item.name || item.url || item.path }}</view>
@@ -34,9 +34,9 @@
 					wx:if="{{ item.status === 'uploading' || item.status === 'failed' }}"
 					class="mc-upload-picker__mask"
 				>
-				 <mc-icon wx:if="{{ item.status === 'failed' }}" name="warning-o" class="mc-upload-picker__mask-icon" />
-				 <mc-loading wx:else class="mc-upload-picker__loading" />
-				 <text wx:if="{{ item.message }}" class="mc-upload-picker__upload-text">{{ item.message }}</text>
+					<mc-icon wx:if="{{ item.status === 'failed' }}" type="o-warning" class="mc-upload-picker__mask-icon" />
+					<mc-spin wx:else class="mc-upload-picker__loading" />
+					<text class="mc-upload-picker__upload-text">上传失败</text>
 				</view>
 				<mc-icon
 					type="close"
@@ -48,12 +48,31 @@
 
 			<!-- 上传样式 -->
 			<block wx:if="{{ isInCount }}">
-				<mc-upload class="mc-upload-picker__slot" bind:ready="handleReady">
+					<!-- url="{{uploadOpts.url}}"  -->
+					<!-- max="{{uploadOpts.max}}"  -->
+					<!-- mode="{{uploadOpts.mode}}"  -->
+				<mc-upload 
+					class="mc-upload-picker__slot"
+					disabled="{{disabled}}" 
+					multiple="{{uploadOpts.multiple}}" 
+					url="https://gateway-mobile.wyawds.com/base/upload/file.json" 
+					headers="{{uploadOpts.headers}}" 
+					name="{{uploadOpts.name}}" 
+					accept="{{uploadOpts.accept}}" 
+					size="{{uploadOpts.size}}" 
+					sizeType="{{uploadOpts.sizeType}}" 
+					sourceType="{{uploadOpts.sourceType}}" 
+					compressed="{{uploadOpts.compressed}}" 
+					maxDuration="{{uploadOpts.maxDuration}}" 
+					camera="{{uploadOpts.camera}}" 
+					parallel="{{uploadOpts.parallel}}" 
+					bind:ready="handleReady"
+				>
 					<view
 						class="mc-upload-picker__upload {{ disabled ? 'mc-upload-picker__upload--disabled': ''}}"
-						style="width: {{ utils.addUnit(previewSize) }}; height: {{ utils.addUnit(previewSize) }};"
+						style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
 					>
-						<mc-icon type="plus" class="mc-upload-picker__upload-icon" />
+						<mc-icon type="plus" mc-class="mc-upload-picker__upload-icon" />
 						<text wx:if="{{ uploadText }}" class="mc-upload-picker__upload-text">{{ uploadText }}</text>
 					</view>
 				</mc-upload>
@@ -67,6 +86,17 @@ import McComponent from '../common/component';
 import { isImageFile } from './utils';
 
 McComponent({
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked(child) {
+				this.parent = null;
+			}
+		}
+	},
 	props: {
 		disabled: Boolean,
 		max: {
@@ -76,10 +106,11 @@ McComponent({
 		uploadText: String,
 		previewSize: {
 			type: null,
-			value: 90,
+			value: 150,
 		},
 		name: {
-			type: [Number, String],
+			type: Number,
+			optionalTypes: [String],
 			value: '',
 		},
 		dataSource: {
@@ -98,6 +129,11 @@ McComponent({
 		imageFit: {
 			type: String,
 			value: 'scaleToFill',
+		},
+		uploadOpts: {
+			type: Object,
+			value: {
+			}
 		}
 	},
 	lifetimes: {
@@ -191,7 +227,13 @@ McComponent({
 					console.log('onComplete', ...arguments);
 				}
 			});
-		}
+		},
+		sync(v) {
+			wx.nextTick(() => {
+				this.$emit('change', v);
+				this.parent && this.parent.fieldChange();
+			});
+		},
 	}
 });
 
@@ -230,11 +272,11 @@ McComponent({
 	-webkit-justify-content: center;
 	justify-content: center;
 	box-sizing: border-box;
-	width: 160rpx;
-	height: 160px;
-	margin: 0 16rpx 16rpx 0;
-	background-color: #f7f8fa;
-	border-radius: 16rpx
+	width: 150rpx;
+	height: 150rpx;
+	margin: 0 22rpx 22rpx 0;
+	background-color: rgba(242,242,242,1);
+	border-radius: 4rpx
 }
 
 .mc-upload-picker__upload:active {
@@ -242,12 +284,12 @@ McComponent({
 }
 
 .mc-upload-picker__upload-icon {
-	color: #dcdee0;
-	font-size: 48rpx
+	color: #999999;
+	font-size: 50rpx;
 }
 
 .mc-upload-picker__upload-text {
-	margin-top: 16rpx;
+	margin-top: 4rpx;
 	color: #969799;
 	font-size: 24rpx
 }
@@ -259,22 +301,22 @@ McComponent({
 
 .mc-upload-picker__preview {
 	position: relative;
-	margin: 0 16rpx 16rpx 0;
+	margin: 0 22rpx 22rpx 0;
 	cursor: pointer
 }
 
 .mc-upload-picker__preview-image {
 	display: block;
-	width: 160px;
-	height: 160px;
+	width: 150rpx;
+	height: 150rpx;
 	overflow: hidden;
-	border-radius: 16rpx
+	border-radius: 4rpx
 }
 
 .mc-upload-picker__preview-delete {
 	position: absolute;
-	top: -16rpx;
-	right: -16rpx;
+	top: -12rpx;
+	right: -12rpx;
 	width: 32rpx;
 	height: 32rpx;
 	font-size: 16rpx;
@@ -294,8 +336,8 @@ McComponent({
 	align-items: center;
 	-webkit-justify-content: center;
 	justify-content: center;
-	width: 160rpx;
-	height: 160rpx;
+	width: 150rpx;
+	height: 150rpx;
 	background-color: #f7f8fa;
 	border-radius: 16rpx
 }
@@ -331,7 +373,7 @@ McComponent({
 	justify-content: center;
 	color: #fff;
 	background-color: rgba(50, 50, 51, .88);
-	border-radius: 16rpx
+	border-radius: 4rpx
 }
 
 .mc-upload-picker__mask-icon {
@@ -357,7 +399,8 @@ McComponent({
 	"component": true,
 	"usingComponents": {
 		"mc-icon": "../icon/index",
-		"mc-upload": "../upload/index"
+		"mc-upload": "../upload/index",
+		"mc-spin": "../spin/index"
 	}
 }
 </config>
