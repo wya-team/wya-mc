@@ -73,6 +73,8 @@ McComponent({
 
 			this.$fns = {
 				enhancer: null,
+				onPostBefore: null,
+				onPostAfter: null,
 				onError(res) {
 					console.log(res);
 				},
@@ -311,7 +313,6 @@ McComponent({
 
 			let options = {
 				url: url || defaultUrl,
-				formData: { ...extra },
 				header: headers,
 				name: file.name || FORM_NAME || 'file',
 				filePath: file.path || file.filePath
@@ -328,21 +329,25 @@ McComponent({
 				this.done(file);
 			};
 
-			let onSuccess = ({ data }) => {
-				
-				response = data;
-				response = onAfter({ response, options }) || data;
+			let onSuccess = (res) => {
+				response = onAfter({ response: res, options }) || res.data;
 
 				let fn = () => {
-					if (!response || (response && response.status !== 1)) {
-						return onError(response || { msg: '无状态返回' });
+					if (res.errMsg !== 'uploadFile:ok') {
+						return onError(res);
 					}
 
 					delete this.reqs[uid];
 					this.cycle.success++;
 					this.cycle.imgs = [...this.cycle.imgs, response];
 
-					this.$fns.onFileSuccess(response, file, { ...this.cycle });
+					this.$fns.onFileSuccess(
+						response 
+							? response.data || response
+							: res, 
+						file, 
+						{ ...this.cycle }
+					);
 					this.done(file);
 				};
 
@@ -351,7 +356,9 @@ McComponent({
 						.then((res) => {
 							response = res || data;
 							fn();
-						}).catch(fn);
+						}).catch(() => {
+							onError(e || { msg: 'post-after reject' });
+						});
 				} else {
 					fn();
 				}
@@ -364,7 +371,6 @@ McComponent({
 			}
 
 			let createRequest = () => {
-				// file: { name: "xx.jpg", filePath: 'wxfile: //....' }
 				let request = wx.uploadFile({
 					...options,
 					success: onSuccess,
@@ -390,7 +396,9 @@ McComponent({
 				options.then((res) => {
 					options = res || options;
 					createRequest();
-				}).catch(createRequest);
+				}).catch((e) => {
+					onError(e || { msg: 'post-before reject' });
+				});
 			} else {
 				createRequest();
 			} 

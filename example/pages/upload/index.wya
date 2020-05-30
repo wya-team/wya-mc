@@ -1,5 +1,9 @@
 <template>
-	<mc-upload url="https://gateway-pre-mobile.weiyianmd.com" bind:ready="handleReady" multiple="true">
+	<mc-upload 
+		url="{{ url }}" 
+		bind:ready="handleReady" 
+		multiple="true"
+	>
 		上传
 	</mc-upload>
 </template>
@@ -7,6 +11,7 @@
 <script>
 Page({
 	data: {
+		url: 'https://wyatest.oss-cn-hangzhou.aliyuncs.com'
 	},
 	handleReady(e) {
 		e.detail.done({
@@ -16,6 +21,47 @@ Page({
 			},
 			onBegin() {
 				console.log('onBegin', ...arguments);
+			},
+			onPostBefore({ options }) {
+				return new Promise((resolve, reject) => {
+					wx.request({
+						url: 'https://zdds-wap.ruishan666.com/base/oss/get-sign.json',
+						method: 'POST',
+						header: {
+							token: '5cd4a6d8bc51ea52ca1c3b5ddd585dd2'
+						},
+						success(res) {
+							const { data, status } = res.data || {};
+							if (data && status === 1) {
+								resolve({
+									...options,
+									formData: {
+										...options.formData,
+										OSSAccessKeyId: data.accessKeyId,
+										key: data.dir,
+										success_action_status: 200,
+										...data,
+									}
+								});
+							} else {
+								reject(data);
+							}
+						},
+						fail(e) {
+							reject();
+						}
+					});
+				});
+			},
+			onPostAfter({ response, options }) {
+				if (response.statusCode === 200) {
+					response.data = {
+						status: 1,
+						data: {
+							url: `${options.url}/${options.formData.key}`
+						}
+					};
+				}
 			},
 			onFileBefore() {
 				console.log('onFileBefore', ...arguments);
