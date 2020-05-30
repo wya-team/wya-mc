@@ -3,8 +3,13 @@ var bem = require('./bem.wxs').bem;
 var memoize = require('./memoize.wxs').memoize;
 var addUnit = require('./add-unit.wxs').addUnit;
 
+var assertTypeof = function(obj, target) {
+	return typeof obj === target;
+}
+
 module.exports = {
 	bem: memoize(bem),
+	assertTypeof: assertTypeof,
 	memoize: memoize,
 	addUnit: addUnit
 };

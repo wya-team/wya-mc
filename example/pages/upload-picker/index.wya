@@ -1,8 +1,11 @@
 <template>
-	<mc-upload-picker
-		dataSource="{{ dataSource1 }}"
-		bind:ready="handleReady"
-	/>
+	<view style="padding: 50rpx">
+		<mc-upload-picker
+			max="{{3}}"
+			dataSource="{{ dataSource1 }}"
+			bind:ready="handleReady"
+		/>
+	</view>
 	<!-- <mc-upload-picker
 		dataSource="{{ dataSource2 }}"
 	/>
@@ -55,7 +58,7 @@ Page({
 									formData: {
 										...options.formData,
 										OSSAccessKeyId: data.accessKeyId,
-										key: data.dir,
+										key: data.dir + new Date().getTime() + '.' + options.filePath.split('.').pop(),
 										success_action_status: 200,
 										...data,
 									}

@@ -1,7 +1,10 @@
 <template>
+		<wxs src="../wxs/utils.wxs" module="utils" />
 	<view class="mc-upload-picker">
 		<view class="mc-upload-picker__wrapper">
 			<!-- 预览样式 -->
+			<!-- TODO video -->
+			<!-- TODO file -->
 			<view
 				wx:if="{{ previewImage }}"
 				wx:for="{{ currentValue.image }}"
@@ -11,45 +14,41 @@
 				bind:tap="handleClickPreview"
 			>
 				<mc-image
-					wx:if="{{ type === 'image' }}"
+					wx:if="{{ utils.assertTypeof(item, 'string') }}"
 					fit="{{ imageFit }}"
-					src="{{ item.url || item.path }}"
-					alt="{{ item.name || ('图片' + index) }}"
+					src="{{ item }}"
+					alt="{{ '图片' + index }}"
 					mc-class="mc-upload-picker__preview-image"
-					width="{{previewSize}}"
-					height="{{previewSize}}"
+					width="{{previewSize}}rpx"
+					height="{{previewSize}}rpx"
 					data-index="{{ index }}"
 					bind:tap="handlePreviewImage"
 				/>
-				<!-- TODO video -->
-				<!-- TODO file -->
 				<view
-					wx:else
-					class="mc-upload-picker__file"
-					style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
-				>
-					<mc-icon type="description" class="mc-upload-picker__file-icon" />
-					<view class="mc-upload-picker__file-name mc-ellipsis">{{ item.name || item.url || item.path }}</view>
-				</view>
-				<view
-					wx:if="{{ item.status === 'uploading' || item.status === 'failed' }}"
+					wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
 					class="mc-upload-picker__mask"
 				>
-					<mc-icon wx:if="{{ item.status === 'failed' }}" type="o-warning" class="mc-upload-picker__mask-icon" />
+					<block wx:if="{{ item.status === 'failed' }}">
+						<mc-icon type="o-warning" class="mc-upload-picker__mask-icon" />
+						<text class="mc-upload-picker__upload-text">上传失败</text>
+					</block>
 					<mc-spin wx:else class="mc-upload-picker__loading" />
-					<text class="mc-upload-picker__upload-text">上传失败</text>
 				</view>
 				<mc-icon
+					wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
 					type="close"
 					mc-class="mc-upload-picker__preview-delete"
 					data-index="{{ index }}"
+					data-type="image"
 					bind:tap="handleDeleteItem"
 				/>
 			</view>
 
 			<!-- 上传样式 -->
-			<block>
+			<block wx:if="{{!disabled && currentMultiple.image}}">
 				<mc-upload 
+					max="{{currentMax.image}}"
+					multiple="{{currentMultiple.image}}"
 					class="mc-upload-picker__slot"
 					bind:ready="handleReady"
 				>
@@ -120,7 +119,7 @@ McComponent({
 		},
 		imageFit: {
 			type: String,
-			value: 'scaleToFill',
+			value: 'center',
 		},
 		uploadOpts: {
 			type: Object,
@@ -161,7 +160,6 @@ McComponent({
 			
 			computedValue = dynamicValue;
 
-			console.log(computedValue);
 			// 如果过滤出上传成功的文件，在上传中时，currentValue占位，达到max，upload控件仍不会隐藏，用户可以再次上传，导致会超出max
 			let imageC = image.length || 0;
 			let videoC = video.length || 0;
@@ -227,6 +225,23 @@ McComponent({
 			return this.data.formatter ? this.data.formatter(res) : res[this.data.urlKey || 'url'];
 		},
 
+		handleDeleteItem(event) {
+			const { currentValue } = this.data;
+			const { index, type } = event.target.dataset;
+			const item = currentValue[type][index];
+			if (!item) {
+				console.error('【vc-upload-picker】: 没有找到要删除的元素');
+				return;
+			}
+			if (item.errorFlag) {
+				currentValue[type] = currentValue[type].filter(it => it.uid != item.uid);
+				this.setData(this.computed(currentValue));
+				return;
+			}
+			currentValue[type].splice(index, 1);
+			this.setData(this.computed(currentValue));
+			this.sync(currentValue, type);
+		},
 		handleReady(e) {
 			let done = (fns = {}) => {
 				let override = {};
@@ -248,13 +263,14 @@ McComponent({
 							if (file.uid === item.uid) {
 								return {
 									...item,
-									percent: e.percent
+									status: 'uploading'
 								};
 							}
 							return item;
 						});
-
-						this.setData({ currentValue });
+						wx.nextTick(() => {
+							this.setData({ currentValue });
+						});
 					}
 
 					fns.onFileProgress && fns.onFileProgress(e, file, type);
@@ -291,7 +307,8 @@ McComponent({
 								type: file.type,
 								...item,
 								...res,
-								errorFlag: new Date().getTime()
+								errorFlag: new Date().getTime(),
+								status: 'failed'
 							};
 						}
 						return item;
@@ -397,13 +414,13 @@ McComponent({
 .mc-upload-picker__preview {
 	position: relative;
 	margin: 0 22rpx 22rpx 0;
-	cursor: pointer
+	cursor: pointer;
+	width: 150rpx;
+	height: 150rpx;
 }
 
 .mc-upload-picker__preview-image {
 	display: block;
-	width: 150rpx;
-	height: 150rpx;
 	overflow: hidden;
 	border-radius: 4rpx
 }
@@ -431,8 +448,6 @@ McComponent({
 	align-items: center;
 	-webkit-justify-content: center;
 	justify-content: center;
-	width: 150rpx;
-	height: 150rpx;
 	background-color: #f7f8fa;
 	border-radius: 16rpx
 }
@@ -495,7 +510,8 @@ McComponent({
 	"usingComponents": {
 		"mc-icon": "../icon/index",
 		"mc-upload": "../upload/index",
-		"mc-spin": "../spin/index"
+		"mc-spin": "../spin/index",
+		"mc-image": "../image/index"
 	}
 }
 </config>
