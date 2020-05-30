@@ -55,7 +55,7 @@
 					class="mc-upload-picker__slot"
 					disabled="{{disabled}}" 
 					multiple="{{uploadOpts.multiple}}" 
-					url="https://gateway-mobile.wyawds.com/base/upload/file.json" 
+					url="{{uploadOpts.url}}" 
 					headers="{{uploadOpts.headers}}" 
 					name="{{uploadOpts.name}}" 
 					accept="{{uploadOpts.accept}}" 
@@ -203,28 +203,18 @@ McComponent({
 		},
 
 		handleReady(e) {
-			e.detail.done({
-				enhancer: null,
-				onError() {
-					console.log('onError', ...arguments);
-				},
-				onBegin() {
-					console.log('onBegin', ...arguments);
-				},
-				onFileBefore() {
-					console.log('onFileBefore', ...arguments);
-				},
-				onFileStart() {
-					console.log('onFileStart', ...arguments);
-				},
-				onFileSuccess() {
-					console.log('onFileSuccess', ...arguments);
-				},
-				onFileError() {
-					console.log('onFileError', ...arguments);
-				},
-				onComplete() {
-					console.log('onComplete', ...arguments);
+			this.$emit('ready', {
+				done: (fns) => {
+					let override = {};
+
+					// override.onFileSuccess = () => {
+					// 	fns.onFileSuccess && fns.onFileSuccess();
+					// };
+
+					e.detail.done({ 
+						...fns, 
+						...override 
+					});
 				}
 			});
 		},
