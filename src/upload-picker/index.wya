@@ -4,7 +4,7 @@
 			<!-- 预览样式 -->
 			<view
 				wx:if="{{ previewImage }}"
-				wx:for="{{ lists }}"
+				wx:for="{{ currentValue.image }}"
 				wx:key="index"
 				class="mc-upload-picker__preview"
 				data-index="{{ index }}"
@@ -48,23 +48,7 @@
 			</view>
 
 			<!-- 上传样式 -->
-			<block wx:if="{{ isInCount }}">
-					<!-- url="{{uploadOpts.url}}"  -->
-					<!-- max="{{uploadOpts.max}}"  -->
-					<!-- mode="{{uploadOpts.mode}}"  -->
-					<!-- disabled="{{disabled}}" 
-					multiple="{{uploadOpts.multiple}}" 
-					url="{{uploadOpts.url}}" 
-					headers="{{uploadOpts.headers}}" 
-					name="{{uploadOpts.name}}" 
-					accept="{{uploadOpts.accept}}" 
-					size="{{uploadOpts.size}}" 
-					sizeType="{{uploadOpts.sizeType}}" 
-					sourceType="{{uploadOpts.sourceType}}" 
-					compressed="{{uploadOpts.compressed}}" 
-					maxDuration="{{uploadOpts.maxDuration}}" 
-					camera="{{uploadOpts.camera}}" 
-					parallel="{{uploadOpts.parallel}}"  -->
+			<block>
 				<mc-upload 
 					class="mc-upload-picker__slot"
 					bind:ready="handleReady"
@@ -120,7 +104,11 @@ McComponent({
 		dataSource: {
 			type: Array,
 			value: [],
-			observer: 'rebuildDataSource',
+			observer: 'rebuild',
+		},
+		picker: {
+			type: Array,
+			value: ['image']
 		},
 		previewImage: {
 			type: Boolean,
@@ -143,81 +131,174 @@ McComponent({
 	},
 	lifetimes: {
 		ready() {
-			this.rebuildDataSource();
+			this.rebuild();
 		}
 	},
 	data: {
-		lists: [], // TOOD 暂时是个数组，后面加入video和file需要将其换成对象
+
+		currentValue: {
+			image: [],
+			video: [],
+			file: []
+		},
+
+		currentMax: {},
+		currentMultiple: {},
+
 		isInCount: true,
 	},
 	methods: {
-		rebuildDataSource() {
-			const { dataSource = [], max } = this.data;
-			const lists = dataSource.map((item) => ({
-				url: item,
-				type: this.recognizer(item)
-			}));
-			this.setData({ lists, isInCount: lists.length < max });
+		rebuild() {
+			this.setData(this.computed());
 		},
-		getDetail(index) {
+		computed(value) {
+			const { max, dataSource, currentValue } = this.data;
+			const { image = [], video = [], file = [] } = currentValue;
+
+			let dynamicValue = value || currentValue;
+			let computedValue = {};
+			let computedMax = {};
+			
+			computedValue = dynamicValue;
+
+			console.log(computedValue);
+			// 如果过滤出上传成功的文件，在上传中时，currentValue占位，达到max，upload控件仍不会隐藏，用户可以再次上传，导致会超出max
+			let imageC = image.length || 0;
+			let videoC = video.length || 0;
+			let fileC = file.length || 0;
+			
+			
+			if (typeof max === 'number') {
+				let curNum = imageC + videoC + fileC;
+				const leftNum = max - curNum;
+				computedMax = {
+					image: leftNum,
+					video: leftNum,
+					file: leftNum,
+				};
+			} else if (typeof max === 'object') {
+				const { image, video, file } = max;
+				const $ = {};
+				image && ($.image = image - imageC);
+				video && ($.video = video - videoC);
+				file && ($.file = file - fileC);
+
+				computedMax = max;
+			}
+
 			return {
-				name: this.data.name,
-				index: index == null ? this.data.dataSource.length : index,
+				currentMax: computedMax,
+				currentValue: computedValue,
+				currentMultiple: {
+					image: computedMax.image >= 1,
+					video: computedMax.video >= 1,
+					file: computedMax.file >= 1,
+				}
 			};
 		},
-		recognizer(url) {
+
+		isEmpty(v) {
+			const [image, video, file] = Object.values(v);
+			if (image.length || video.length || file.length) return false;
+			return true;
+		},
+
+		parseDataSource(dataSource) {
+			const initialData = { image: [], video: [], file: [] };
 			const fn = (app.$mc.config.UploadPicker || {}).recognizer || recognizer;
-			return fn(url, recognizer);
+			return dataSource.reduce((pre, cur) => {
+				switch (recognizer(cur)) {
+					case 'image':
+						pre.image.push(cur);
+						return pre;
+					case 'video':
+						pre.video.push(cur);
+						return pre;
+					case 'file':
+						pre.file.push(cur);
+						return pre;
+					default:
+						return pre;
+				}
+			}, initialData);
 		},
 
-		handleDeleteItem(event) {
-			const { index } = event.currentTarget.dataset;
-
-			this.$emit('delete', {
-				...this.getDetail(index),
-				file: this.data.dataSource[index],
-			});
-		},
-
-		handlePreviewImage(event) {
-			if (!this.data.previewFullImage) return;
-
-			const { index } = event.currentTarget.dataset;
-			const { lists } = this.data;
-			const item = lists[index];
-
-			wx.previewImage({
-				urls: lists
-					.filter((item) => item.isImage)
-					.map((item) => item.url || item.path),
-				current: item.url || item.path,
-				fail() {
-					wx.showToast({ title: '预览图片失败', icon: 'none' });
-				},
-			});
-		},
-
-		handleClickPreview(event) {
-			const { index } = event.currentTarget.dataset;
-			const item = this.data.lists[index];
-
-			this.$emit('click-preview', {
-				...item,
-				...this.getDetail(index),
-			});
+		getUrl(res) {
+			return this.data.formatter ? this.data.formatter(res) : res[this.data.urlKey || 'url'];
 		},
 
 		handleReady(e) {
 			let done = (fns = {}) => {
 				let override = {};
 
-				override.onFileProgress = (res, ...args) => {
-					console.log('onFileProgress', res, args);
-					fns.onFileProgress && fns.onFileProgress(res, ...args);
+				override.onFileStart = (res, type = 'image') => {
+					const { currentValue } = this.data;
+					res.title = res.name;
+
+					currentValue[type].push(res);
+					this.setData(this.computed());
+					fns.onFileStart && fns.onFileStart(res, type);
 				};
-				override.onFileSuccess = (res, ...args) => {
-					console.log('onFileSuccess', res, args);
-					fns.onFileSuccess && fns.onFileSuccess(res, ...args);
+
+				override.onFileProgress = (e, file, type = 'image') => {
+					const { currentValue } = this.data;
+
+					if (parseInt(e.percent, 10) <= 100) {
+						currentValue[type] = currentValue[type].map((item) => {
+							if (file.uid === item.uid) {
+								return {
+									...item,
+									percent: e.percent
+								};
+							}
+							return item;
+						});
+
+						this.setData({ currentValue });
+					}
+
+					fns.onFileProgress && fns.onFileProgress(e, file, type);
+				};
+
+				override.onFileSuccess = (res, file, cycle, type = 'image') => {
+					const { currentValue, formatter } = this.data;
+
+					let dataSource;
+					currentValue[type] = currentValue[type].map((item) => {
+						if (item.uid === file.uid) {
+							return this.getUrl(res);
+						}
+						return item;
+					});
+
+					// 将已经上传成功的文件传递给外部
+					currentValue[type] = currentValue[type].filter((it) => !it.errorFlag && this.getUrl(res));
+					
+
+					this.setData(this.computed(currentValue));
+
+					fns.onFileSuccess && fns.onFileSuccess(res, type);
+					this.sync(currentValue[type], type);
+				};
+
+				override.onFileError = (res, file, cycle, type = 'image') => {
+					const { currentValue } = this.data;
+					// 内部保存上传失败的文件，不传递给外层
+					currentValue[type] = currentValue[type].map((item) => {
+						if (item.uid === file.uid) {
+							return {
+								name: file.name,
+								type: file.type,
+								...item,
+								...res,
+								errorFlag: new Date().getTime()
+							};
+						}
+						return item;
+					});
+
+					this.setData({ currentValue });
+					fns.onFileError && fns.onFileError(res, ...args);
 				};
 
 				e.detail.done({ 
@@ -231,7 +312,18 @@ McComponent({
 				done();
 			}
 		},
-		sync(v) {
+
+		sync(v, type = 'image') {
+			const { currentValue, picker } = this.data;
+			v = {
+				...currentValue,
+				[type]: v
+			};
+
+			v = picker.reduce((pre, cur) => {
+				return pre.concat(v[cur] || []);
+			}, []);
+
 			wx.nextTick(() => {
 				this.$emit('change', v);
 				this.parent && this.parent.fieldChange();

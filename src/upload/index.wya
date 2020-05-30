@@ -342,9 +342,7 @@ McComponent({
 					this.cycle.imgs = [...this.cycle.imgs, response];
 
 					this.$fns.onFileSuccess(
-						response 
-							? response.data || response
-							: res, 
+						response.data || res, 
 						file, 
 						{ ...this.cycle }
 					);
@@ -378,13 +376,13 @@ McComponent({
 				});
 
 				if (request && this.$fns.onFileProgress) {
-					request.onProgressUpdate = (e) => {
-						// 模拟web端发挥
-						e._percent = e.progress;
-						e.percent = e.progress.toFixed(2);
+					request.onProgressUpdate((e) => {
+						// 模拟web端触发效果
+						e._percent = e.totalBytesSent / e.totalBytesExpectedToSend * 100;
+						e.percent = e._percent.toFixed(2);
 
 						this.$fns.onFileProgress(e, file);
-					};
+					});
 				}
 				
 				this.reqs[uid] = {
