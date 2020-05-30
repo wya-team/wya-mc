@@ -10,6 +10,7 @@
 			wx:if="{{ !error }}"
 			src="{{ src }}"
 			mode="{{ mode }}"
+			alt="{{alt}}"
 			lazy-load="{{ lazyLoad }}"
 			class="image-class mc-image__img"
 			show-menu-by-longpress="{{ showMenuByLongpress }}"
@@ -84,7 +85,8 @@ McComponent({
 		showLoading: {
 			type: Boolean,
 			value: true
-		}
+		},
+		alt: String
 	},
 	data: {
 		error: false,

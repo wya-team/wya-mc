@@ -1,13 +1,14 @@
 <template>
 	<mc-upload-picker
 		dataSource="{{ dataSource1 }}"
+		bind:ready="handleReady"
 	/>
-	<mc-upload-picker
+	<!-- <mc-upload-picker
 		dataSource="{{ dataSource2 }}"
 	/>
 	<mc-upload-picker
 		dataSource="{{ dataSource3 }}"
-	/>
+	/> -->
 </template>
 
 <script>
@@ -80,6 +81,9 @@ Page({
 				}
 			},
 		};
+	},
+	handleReady(e) {
+		e.detail.done();
 	}
 });
 

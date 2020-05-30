@@ -10,13 +10,14 @@
 				data-index="{{ index }}"
 				bind:tap="handleClickPreview"
 			>
-				<image
-					wx:if="{{ item.isImage }}"
-					mode="{{ imageFit }}"
+				<mc-image
+					wx:if="{{ type === 'image' }}"
+					fit="{{ imageFit }}"
 					src="{{ item.url || item.path }}"
 					alt="{{ item.name || ('图片' + index) }}"
-					class="mc-upload-picker__preview-image"
-					style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
+					mc-class="mc-upload-picker__preview-image"
+					width="{{previewSize}}"
+					height="{{previewSize}}"
 					data-index="{{ index }}"
 					bind:tap="handlePreviewImage"
 				/>
@@ -51,9 +52,7 @@
 					<!-- url="{{uploadOpts.url}}"  -->
 					<!-- max="{{uploadOpts.max}}"  -->
 					<!-- mode="{{uploadOpts.mode}}"  -->
-				<mc-upload 
-					class="mc-upload-picker__slot"
-					disabled="{{disabled}}" 
+					<!-- disabled="{{disabled}}" 
 					multiple="{{uploadOpts.multiple}}" 
 					url="{{uploadOpts.url}}" 
 					headers="{{uploadOpts.headers}}" 
@@ -65,7 +64,9 @@
 					compressed="{{uploadOpts.compressed}}" 
 					maxDuration="{{uploadOpts.maxDuration}}" 
 					camera="{{uploadOpts.camera}}" 
-					parallel="{{uploadOpts.parallel}}" 
+					parallel="{{uploadOpts.parallel}}"  -->
+				<mc-upload 
+					class="mc-upload-picker__slot"
 					bind:ready="handleReady"
 				>
 					<view
@@ -83,7 +84,10 @@
 </template>
 <script>
 import McComponent from '../common/component';
-import { isImageFile } from './utils';
+import { isImageFile, recognizer } from './utils';
+
+let app = getApp();
+app.$mc = app.$mc || { config: {} };
 
 McComponent({
 	relations: {
@@ -134,7 +138,8 @@ McComponent({
 			type: Object,
 			value: {
 			}
-		}
+		},
+		useReady: Boolean
 	},
 	lifetimes: {
 		ready() {
@@ -142,27 +147,27 @@ McComponent({
 		}
 	},
 	data: {
-		lists: [],
+		lists: [], // TOOD 暂时是个数组，后面加入video和file需要将其换成对象
 		isInCount: true,
 	},
 	methods: {
 		rebuildDataSource() {
 			const { dataSource = [], max } = this.data;
 			const lists = dataSource.map((item) => ({
-				...item,
-				isImage:
-					typeof item.isImage === 'undefined'
-						? isImageFile(item)
-						: item.isImage,
+				url: item,
+				type: this.recognizer(item)
 			}));
 			this.setData({ lists, isInCount: lists.length < max });
 		},
-
 		getDetail(index) {
 			return {
 				name: this.data.name,
 				index: index == null ? this.data.dataSource.length : index,
 			};
+		},
+		recognizer(url) {
+			const fn = (app.$mc.config.UploadPicker || {}).recognizer || recognizer;
+			return fn(url, recognizer);
 		},
 
 		handleDeleteItem(event) {
@@ -203,20 +208,28 @@ McComponent({
 		},
 
 		handleReady(e) {
-			this.$emit('ready', {
-				done: (fns) => {
-					let override = {};
+			let done = (fns = {}) => {
+				let override = {};
 
-					// override.onFileSuccess = () => {
-					// 	fns.onFileSuccess && fns.onFileSuccess();
-					// };
+				override.onFileProgress = (res, ...args) => {
+					console.log('onFileProgress', res, args);
+					fns.onFileProgress && fns.onFileProgress(res, ...args);
+				};
+				override.onFileSuccess = (res, ...args) => {
+					console.log('onFileSuccess', res, args);
+					fns.onFileSuccess && fns.onFileSuccess(res, ...args);
+				};
 
-					e.detail.done({ 
-						...fns, 
-						...override 
-					});
-				}
-			});
+				e.detail.done({ 
+					...fns, 
+					...override 
+				});
+			};
+			if (this.data.useReady) {
+				this.$emit('ready', { done });
+			} else {
+				done();
+			}
 		},
 		sync(v) {
 			wx.nextTick(() => {
