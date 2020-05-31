@@ -10,8 +10,6 @@
 				wx:for="{{ currentValue.image }}"
 				wx:key="index"
 				class="mc-upload-picker__preview"
-				data-index="{{ index }}"
-				bind:tap="handleClickPreview"
 			>
 				<mc-image
 					wx:if="{{ utils.assertTypeof(item, 'string') }}"
@@ -22,6 +20,7 @@
 					width="{{previewSize}}rpx"
 					height="{{previewSize}}rpx"
 					data-index="{{ index }}"
+					data-src="{{ item }}"
 					bind:tap="handlePreviewImage"
 				/>
 				<view
@@ -119,7 +118,7 @@ McComponent({
 		},
 		imageFit: {
 			type: String,
-			value: 'center',
+			value: 'cover',
 		},
 		uploadOpts: {
 			type: Object,
@@ -224,7 +223,16 @@ McComponent({
 		getUrl(res) {
 			return this.data.formatter ? this.data.formatter(res) : res[this.data.urlKey || 'url'];
 		},
-
+		handlePreviewImage(event) {
+			const { index, src } = event.target.dataset;
+			wx.previewImage({
+				urls: this.data.currentValue.image,
+				current: src,
+				fail: (err) => {
+					console.log('[mc-upload-picker] error：', err);
+				}
+			});
+		},
 		handleDeleteItem(event) {
 			const { currentValue } = this.data;
 			const { index, type } = event.target.dataset;
@@ -397,7 +405,7 @@ McComponent({
 
 .mc-upload-picker__upload-icon {
 	color: #999999;
-	font-size: 50rpx;
+	font-size: 50rpx !important;
 }
 
 .mc-upload-picker__upload-text {
@@ -431,7 +439,7 @@ McComponent({
 	right: -12rpx;
 	width: 32rpx;
 	height: 32rpx;
-	font-size: 16rpx;
+	font-size: 16rpx !important;
 	line-height: 32rpx;
 	text-align: center;
 	color: #fff;
