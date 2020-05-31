@@ -1,13 +1,12 @@
 <template>
-	<view class="mc-spin">
-		<!-- <view style="fontSize: {{size}}rpx;">
+	<view class="mc-spin mc-class">
+		<view>
 			<view wx:if="{{!useLoadingSlot}}" class="mc-spin__loading">
-				<mc-icon type="loading"/>
+				<mc-icon type="loading" mc-style="font-size: {{size}}rpx; color: {{color}}"/>
 			</view>
 			<slot wx:else name="loading"/>
 		</view>
-		<slot /> -->
-		loading
+		<slot />
 	</view>
 </template>
 
@@ -15,21 +14,14 @@
 import McComponent from '../common/component';
 
 McComponent({
-	name: "vc-spin",
-	components: {
-	},
 	props: {
 		size: {
 			type: Number,
 			value: 28
 		},
-		foreground: {
+		color: {
 			type: String,
-			value: '#ccc'
-		},
-		background: {
-			type: String,
-			value: '#108ee9'
+			value: '#4787F2'
 		},
 		useLoadingSlot: {
 			type: Boolean,
@@ -58,13 +50,7 @@ McComponent({
 .mc-spin {
 	display: inline-block;
 	vertical-align: middle;
-	line-height: 0;
 	&__loading {
-		width: 1em;
-		height: 1em;
-		vertical-align: -0.15em;
-		fill: currentColor;
-		overflow: hidden;
 		animation: mc-spin-circle 1s linear infinite;
 	}
 }

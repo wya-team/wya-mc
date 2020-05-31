@@ -31,7 +31,7 @@
 						<mc-icon type="o-warning" class="mc-upload-picker__mask-icon" />
 						<text class="mc-upload-picker__upload-text">上传失败</text>
 					</block>
-					<mc-spin wx:else class="mc-upload-picker__loading" />
+					<mc-spin wx:else size="{{50}}" color="#ffffff" class="mc-upload-picker__loading" />
 				</view>
 				<mc-icon
 					wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
@@ -481,13 +481,9 @@ McComponent({
 	right: 0;
 	bottom: 0;
 	left: 0;
-	display: -webkit-flex;
 	display: flex;
-	-webkit-flex-direction: column;
 	flex-direction: column;
-	-webkit-align-items: center;
 	align-items: center;
-	-webkit-justify-content: center;
 	justify-content: center;
 	color: #fff;
 	background-color: rgba(50, 50, 51, .88);
