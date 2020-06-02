@@ -16,6 +16,7 @@
 			wx:for="{{ tabsWithName }}"
 			wx:key="index"
 			name="{{ item.name }}"
+			info="{{ index + 10 }}"
 			title="{{ '标签 ' + item.index }}"
 		>
 			<view class="content">

@@ -28,7 +28,9 @@ McComponent({
 			observer: 'update'
 		},
 		info: {
-			type: null,
+			type: String,
+			optionalTypes: [Number],
+			value: null,
 			observer: 'update'
 		},
 		title: {

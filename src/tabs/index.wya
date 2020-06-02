@@ -32,12 +32,8 @@
 						>
 							<view class="{{ ellipsis ? 'mc-ellipsis' : '' }}" style="{{ item.titleStyle }}">
 								{{ item.title }}
-								<mc-info
-									wx:if="{{ item.info !== null || item.dot }}"
-									info="{{ item.info }}"
-									dot="{{ item.dot }}"
-									custom-class="mc-tab__title__info"
-								/>
+								<view wx:if="{{ item.info !== undefined && item.info !== null }}" class="mc-tabs__info">{{ item.info }}</view>
+								<view wx:elif="{{ item.dot }}" class="mc-tabs__dot"></view>
 							</view>
 						</view>
 					</view>
@@ -511,12 +507,31 @@ McComponent({
 	flex: 1 0 auto !important
 }
 
-.mc-tab__title__info {
+.mc-tabs__info {
 	position: relative !important;
-	top: -1rpx !important;
+	top: -14rpx !important;
+	padding: 0 8rpx;
 	display: inline-block;
+	height: 32rpx;;
+	min-width: 32rpx;;
+	line-height: 32rpx;;
 	-webkit-transform: translateX(0) !important;
-	transform: translateX(0) !important
+	transform: translateX(0) !important;
+	font-size: 24rpx;
+	color: #ffffff;
+	background-color: #ff3c4a;
+	border-radius: 32rpx;;
+	box-sizing: border-box;
+}
+.mc-tabs__dot {
+	position: relative !important;
+	top: -20rpx !important;
+	right: 0;
+	display: inline-block;
+	width: 10rpx;
+	height: 10rpx;
+	border-radius: 10rpx;
+	background-color: #ff3c4a;
 }
 </style>
 <config>
