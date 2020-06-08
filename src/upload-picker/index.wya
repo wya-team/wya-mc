@@ -146,8 +146,9 @@ McComponent({
 		isInCount: true,
 	},
 	methods: {
-		rebuild() {
-			this.setData(this.computed());
+		rebuild(val) {
+			const parsedValue = this.parseDataSource(val);
+			this.setData(this.computed(parsedValue));
 		},
 		computed(value) {
 			const { max, dataSource, currentValue } = this.data;
