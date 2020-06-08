@@ -217,10 +217,8 @@ McComponent({
 			}
 		},
 		reset(val) {
-			this.setData({
-				currentValue: val,
-				rebuildData: this.makeRebuildData()
-			});	
+			this.setData({ currentValue: val });
+			this.setData({ rebuildData: this.makeRebuildData() });	
 			this.resetIndex();
 		},
 	}
