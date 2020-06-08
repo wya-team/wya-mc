@@ -58,7 +58,7 @@ McComponent({
 			this.resetIndex();
 		},
 		'value': function (value) {
-			if (value && value.length !== 0 && !isEqualWith(value, this.data.currentValue)) {
+			if (!isEqualWith(value, this.data.currentValue)) {
 				this.setData({
 					currentValue: value
 				});
