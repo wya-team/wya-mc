@@ -55,6 +55,7 @@ McComponent({
 
 <style lang="scss">
 .mc-cascader-col {
+	overflow-y: auto;
 	background-color: #fff;
 	.mc-cascader-col__item {
 		padding: 20rpx 24rpx;

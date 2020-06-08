@@ -26,6 +26,7 @@
 			value="{{currentValue}}"
 			dataSource="{{dataSource}}"
 			cols="{{cols}}"
+			style="overflow: hidden;flex: 1;"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
 		/>

@@ -61,6 +61,7 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-cascader-popup {
+	overflow: hidden;
 	height: 75%; 
 	display: flex; 
 	flex-direction: column;

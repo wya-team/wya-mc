@@ -23,6 +23,7 @@
 			dataSource="{{colData}}"
 			index="{{currentIndex}}"
 			mc-class="mc-cascader-col"
+			style="overflow: hidden;flex: 1;display:flex;"
 			bind:change="handleChange"
 		/>
 	</view>
@@ -232,6 +233,7 @@ McComponent({
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	flex-grow: 1;
 	.mc-cascader-view__header {
 		margin-top: 60rpx;
 		padding: 0 24rpx;
