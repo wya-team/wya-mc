@@ -1,9 +1,38 @@
 <template>
-	<view class="mc-input mc-class">
+	<view class="mc-input mc-class is-{{ type }}">
 		<view wx:if="{{usePrependSlot}}" class="mc-input__prepend">
 			<slot name="prepend"></slot>
 		</view>
+		<textarea 
+			wx:if="{{ type === 'textarea' }}"
+			class="mc-input__textarea"
+			value="{{ currentValue }}"
+			focus="{{ focus }}"
+			cursor="{{ cursor }}"
+			auto-focus="{{ autoFocus }}"
+			fixed="{{ fixed }}"
+			disabled="{{ disabled || readonly }}"
+			maxlength="{{ maxlength }}"
+			auto-height="{{ autoHeight }}"
+			placeholder="{{ placeholder }}"
+			placeholder-style="{{ placeholderStyle }}"
+			placeholder-class="{{ placeholderClass }}"
+			hold-keyboard="{{ holdKeyboard }}"
+			cursor-spacing="{{ cursorSpacing }}"
+			adjust-position="{{ adjustPosition }}"
+			selection-end="{{ selectionEnd }}"
+			selection-start="{{ selectionStart }}"
+			show-confirm-bar="{{ showConfirmBar }}"
+			style="{{ textareaStyle }}"
+			disable-default-padding
+			bindinput="handleInput"
+			bindblur="handleBlur"
+			bindfocus="handleFocus"
+			bindconfirm="handleConfirm"
+			bindkeyboardheightchange="handleKeyboardHeightChange"
+		/>
 		<input 
+			wx:else
 			class="mc-input__input {{right ? 'is-right' : ''}} mc-input-class"
 			type="{{ type }}"
 			focus="{{ focus }}"
@@ -73,6 +102,10 @@ McComponent({
 		right: Boolean,
 		usePrependSlot: Boolean,
 		useAppendlot: Boolean,
+		autoHeight: Boolean,
+		fixed: Boolean,
+		showConfirmBar: Boolean,
+		textareaStyle: String
 	},
 	data: {
 		currentValue: ''
@@ -133,6 +166,15 @@ McComponent({
 	display: flex;
 	align-items: center;
 	box-sizing: border-box;
+	&.is-textarea {
+		min-height: 48rpx;
+		height: auto;
+	}
+	.mc-input__textarea {
+		padding: 7rpx;
+		width: 100%;
+		min-height: 120rpx;
+	}
 	.mc-input__prepend {
 		padding-right: 13rpx; 
 	}
