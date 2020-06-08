@@ -249,7 +249,7 @@ McComponent({
 			}
 			currentValue[type].splice(index, 1);
 			this.setData(this.computed(currentValue));
-			this.sync(currentValue, type);
+			this.sync(currentValue[type], type);
 		},
 		handleReady(e) {
 			let done = (fns = {}) => {
