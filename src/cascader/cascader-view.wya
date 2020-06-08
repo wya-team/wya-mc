@@ -59,6 +59,10 @@ McComponent({
 		},
 		'value': function (value) {
 			if (!isEqualWith(value, this.data.currentValue)) {
+				// 外面赋值空数组时，重置掉hasChildren
+				if (value && value.length === 0) {
+					this.setData({ hasChildren: true });
+				}
 				this.setData({
 					currentValue: value
 				});

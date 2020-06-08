@@ -95,8 +95,8 @@ McComponent({
 	observers: {
 		'dataSource, value': function (dataSource, value) {
 			let { label, data } = getSelectedData(value, dataSource);
-			label.length > 0 && this.setData({
-				extra: label.join(',')
+			this.setData({
+				extra: label.length > 0 ? label.join(',') : '请选择'
 			});
 		}
 	},
