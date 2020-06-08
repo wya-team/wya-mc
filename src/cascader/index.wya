@@ -14,6 +14,7 @@
 	</view>
 	<mc-cascader-popup 
 		id="{{tag}}"
+		visible="{{ visible }}"
 		title="{{title}}"
 		cancel-text="{{cancelText}}"
 		ok-text="{{okText}}"
@@ -29,6 +30,7 @@
 			style="overflow: hidden;flex: 1;"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
+			bind:complete="handleComplete"
 		/>
 	</mc-cascader-popup>
 </template>
@@ -99,6 +101,7 @@ McComponent({
 		}
 	},
 	data: {
+		visible: false,
 		currentValue: []
 	},
 	lifetimes: {
@@ -148,6 +151,12 @@ McComponent({
 			wx.nextTick(() => {
 				this.viewInstance.reset(this.data.currentValue);
 			});
+		},
+		handleComplete() {
+			this.setData({
+				visible: false
+			});
+			this.handleOK();
 		}
 	}
 });
