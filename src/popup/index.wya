@@ -1,7 +1,7 @@
 <template>
-	<mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}">
-		<view class="mc-popup__mask" catchtap="handleClose" />
-	</mc-transition>
+	<!-- <mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}"> -->
+		<view wx:if="{{mask && visible}}" class="mc-popup__mask" catchtap="handleClose" />
+	<!-- </mc-transition> -->
 	<view 
 		wx:if="{{inited}}" 
 		class="mc-popup {{classes}} mc-popup__{{placement}} mc-popup__round mc-class"
