@@ -48,6 +48,10 @@ McComponent({
 			value: 0,
 			observer(value) {
 				if (value === 0) {
+					this.setData({
+						currentPage: 0,
+						scrollStatus: 0
+					});
 					this.loadDataForScroll({ force: true });
 				}
 			}
@@ -211,10 +215,11 @@ McComponent({
 		},
 
 		canRefresh() {
-			return this.data.show 
-				&& this.data.pull
-				&& this.data.pullDownStatus !== 3 
-				&& this.data.scrollStatus !== 1;
+			return false;
+			// return this.data.show 
+			// 	&& this.data.pull
+			// 	&& this.data.pullDownStatus !== 3 
+			// 	&& this.data.scrollStatus !== 1;
 		}
 	}
 });

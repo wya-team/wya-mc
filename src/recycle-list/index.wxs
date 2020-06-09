@@ -28,10 +28,10 @@ function handleTouchMove(e, instance) {
 	let pulledY = e.touches[0].clientY - startY;
 	instance.callMethod('handleTouchMove', e);
 	if (scrollTop <= 0) {
-		let y = easing(pulledY);
-		pullDownView && pullDownView.setStyle({
-			height: y + 'px'
-		});
+		// let y = easing(pulledY);
+		// pullDownView && pullDownView.setStyle({
+		// 	height: y + 'px'
+		// });
 	}
 }
 
