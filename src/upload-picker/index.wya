@@ -129,7 +129,7 @@ McComponent({
 	},
 	lifetimes: {
 		ready() {
-			this.rebuild();
+			this.rebuild(this.data.dataSource);
 		}
 	},
 	data: {
@@ -152,11 +152,11 @@ McComponent({
 		},
 		computed(value) {
 			const { max, dataSource, currentValue } = this.data;
-			const { image = [], video = [], file = [] } = currentValue;
 
 			let dynamicValue = value || currentValue;
 			let computedValue = {};
 			let computedMax = {};
+			const { image = [], video = [], file = [] } = dynamicValue;
 			
 			computedValue = dynamicValue;
 
@@ -164,7 +164,6 @@ McComponent({
 			let imageC = image.length || 0;
 			let videoC = video.length || 0;
 			let fileC = file.length || 0;
-			
 			
 			if (typeof max === 'number') {
 				let curNum = imageC + videoC + fileC;
