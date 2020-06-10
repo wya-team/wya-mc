@@ -13,6 +13,7 @@
 	</view>
 </template>
 <script>
+import TextareaHack from '../common/hack/textarea';
 import McComponent from '../common/component';
 
 McComponent({
@@ -26,7 +27,17 @@ McComponent({
 			unlinked() {
 				this.parent = null;
 			},
-		}
+		},
+		'../input/index': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+			},
+			unlinked(child) {
+				this.children = (this.children || []).filter((it) => it !== child);
+			}
+		},
 	},
 	props: {
 		name: String,
@@ -53,7 +64,7 @@ McComponent({
 				.then((rect) => rect.height)
 				.then((height) => {
 					if (isActive) {
-						return this.setData({
+						this.setData({
 							contentHeight: height ? `${height}px` : 'auto',
 						});
 					} else {
@@ -62,6 +73,7 @@ McComponent({
 							this.setData({ contentHeight: 0 });
 						}, 20);
 					}
+					this.children && this.children.length && TextareaHack.toggle(!isActive, this.children);
 				}).catch((err) => {
 					console.log(err, 'err');
 				});

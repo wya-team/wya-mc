@@ -15,7 +15,7 @@
 import McComponent from '../common/component';
 import { transition } from '../mixins/transition';
 import { popup } from '../mixins/popup';
-import HackManager from './hack-manager';
+import TextareaHack from '../common/hack/textarea';
 
 McComponent({
 	mixins: [transition(false), popup],
@@ -40,7 +40,7 @@ McComponent({
 	},
 	observers: {
 		visible(val) {
-			HackManager.toggle(val);
+			TextareaHack.toggle(val);
 		}
 	},
 	methods: {

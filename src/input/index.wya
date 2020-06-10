@@ -82,7 +82,7 @@
 	</view>
 </template>
 <script>
-import PopManager from '../popup/hack-manager';
+import TextareaHack from '../common/hack/textarea';
 import McComponent from '../common/component';
 import { props } from './props';
 import { getUid } from '../common/utils';
@@ -98,7 +98,14 @@ McComponent({
 			unlinked(child) {
 				this.parent = null;
 			}
-		}
+		},
+		'../collapse/collapse-item': {
+			type: 'ancestor',
+			linked(parent) {
+			},
+			unlinked(child) {
+			}
+		},
 	},
 	props: {
 		...props,
@@ -133,10 +140,10 @@ McComponent({
 	observers: {
 		type(val) {
 			if (val === 'textarea') {
-				PopManager.on(this);
 				this.setData({
 					uuid: getUid('input-textarea')
 				});
+				TextareaHack.on(this);
 				wx.nextTick(() => {
 					this.getTextareaHeight();
 				});
@@ -149,7 +156,7 @@ McComponent({
 		},
 		detached() {
 			if (this.data.type === 'textarea') {
-				PopManager.off(this);
+				TextareaHack.off(this);
 			}
 		}
 	},
