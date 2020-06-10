@@ -15,6 +15,7 @@
 import McComponent from '../common/component';
 import { transition } from '../mixins/transition';
 import { popup } from '../mixins/popup';
+import HackManager from './hack-manager';
 
 McComponent({
 	mixins: [transition(false), popup],
@@ -36,6 +37,11 @@ McComponent({
 	},
 	attached() {
 		this.setData({ name: this.data.placement });
+	},
+	observers: {
+		visible(val) {
+			HackManager.toggle(val);
+		}
 	},
 	methods: {
 		handleClose() {

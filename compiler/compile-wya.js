@@ -30,7 +30,7 @@ module.exports = (options) => {
 		const config = $('config').html();
 		// 输出的对应文件路径
 		const fn = (ext) => {
-			let regex = /\/src/.test(file.path) ? new RegExp(process.env.SRC_DIR) :  new RegExp(process.env.EXAMPLE_DIR);
+			let regex = /\/src/.test(file.path) ? new RegExp(process.env.SRC_DIR) : new RegExp(process.env.EXAMPLE_DIR);
 			const dist = /\/src/.test(file.path) ? process.env.DIST_COMPONENTS_DIR : process.env.DIST_DIR;
 			let fullpath = upath
 				.normalize(file.path)

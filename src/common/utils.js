@@ -124,3 +124,11 @@ export const isEqualWith = (a = [], b = []) => {
 	}
 	return true;
 };
+
+const now = +(new Date());
+let index = 0;
+export const getUid = (comp, opts = {}) => {
+	const { prefix = 'mc', timestamp = false } = opts;
+
+	return `${prefix}${`${comp ? `-${comp}` : ''}`}${timestamp ? `-${now}` : ''}-${++index}`;
+};

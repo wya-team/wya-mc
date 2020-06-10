@@ -3,34 +3,46 @@
 		<view wx:if="{{usePrependSlot}}" class="mc-input__prepend">
 			<slot name="prepend"></slot>
 		</view>
-		<textarea 
-			wx:if="{{ type === 'textarea' }}"
-			class="mc-input__textarea"
-			value="{{ currentValue }}"
-			focus="{{ focus }}"
-			cursor="{{ cursor }}"
-			auto-focus="{{ autoFocus }}"
-			fixed="{{ fixed }}"
-			disabled="{{ disabled || readonly }}"
-			maxlength="{{ maxlength }}"
-			auto-height="{{ autoHeight }}"
-			placeholder="{{ placeholder }}"
-			placeholder-style="{{ placeholderStyle }}"
-			placeholder-class="{{ placeholderClass }}"
-			hold-keyboard="{{ holdKeyboard }}"
-			cursor-spacing="{{ cursorSpacing }}"
-			adjust-position="{{ adjustPosition }}"
-			selection-end="{{ selectionEnd }}"
-			selection-start="{{ selectionStart }}"
-			show-confirm-bar="{{ showConfirmBar }}"
-			style="{{ textareaStyle }}"
-			disable-default-padding
-			bindinput="handleInput"
-			bindblur="handleBlur"
-			bindfocus="handleFocus"
-			bindconfirm="handleConfirm"
-			bindkeyboardheightchange="handleKeyboardHeightChange"
-		/>
+		<block wx:if="{{ type === 'textarea' }}">
+			<textarea 
+				wx:if="{{!isPopup}}"
+				id="{{uuid}}"
+				class="mc-input__textarea"
+				value="{{ currentValue }}"
+				focus="{{ focus }}"
+				cursor="{{ cursor }}"
+				auto-focus="{{ autoFocus }}"
+				fixed="{{ fixed }}"
+				disabled="{{ disabled || readonly }}"
+				maxlength="{{ maxlength }}"
+				auto-height="{{ autoHeight }}"
+				placeholder="{{ placeholder }}"
+				placeholder-style="{{ placeholderStyle }}"
+				placeholder-class="{{ placeholderClass }}"
+				hold-keyboard="{{ holdKeyboard }}"
+				cursor-spacing="{{ cursorSpacing }}"
+				adjust-position="{{ adjustPosition }}"
+				selection-end="{{ selectionEnd }}"
+				selection-start="{{ selectionStart }}"
+				show-confirm-bar="{{ showConfirmBar }}"
+				style="{{ textareaStyle }}"
+				disable-default-padding
+				bindinput="handleInput"
+				bindblur="handleBlur"
+				bindfocus="handleFocus"
+				bindconfirm="handleConfirm"
+				bindkeyboardheightchange="handleKeyboardHeightChange"
+				bindlinechange="handleLineChange"
+			/>
+			<!-- 将当前的textarea样式copy出来用view展示，需拿到textarea当前的高度 -->
+			<view
+				wx:elif="{{viewPlaceholder}}"
+				class="mc-input__textarea {{!currentValue ? placeholderClass : ''}}"
+				style="{{ textareaStyle }}; height: {{textareaHeight}}px; overflow-y: auto; box-sizing: border-box; word-break: break-all;  {{!currentValue ? placeholderStyle : ''}}"
+			>
+				{{currentValue || placeholder}}
+			</view>
+		</block>
 		<input 
 			wx:else
 			class="mc-input__input {{right ? 'is-right' : ''}} mc-input-class"
@@ -70,8 +82,10 @@
 	</view>
 </template>
 <script>
+import PopManager from '../popup/hack-manager';
 import McComponent from '../common/component';
 import { props } from './props';
+import { getUid } from '../common/utils';
 
 McComponent({
 	addGlobalClass: ['mc-input-class'],
@@ -105,15 +119,50 @@ McComponent({
 		autoHeight: Boolean,
 		fixed: Boolean,
 		showConfirmBar: Boolean,
-		textareaStyle: String
+		textareaStyle: String,
+		viewPlaceholder: {
+			type: Boolean,
+			value: true
+		}
 	},
 	data: {
-		currentValue: ''
+		currentValue: '',
+		isPopup: false,
+		textareaHeight: 150, // 默认150px
 	},
-	attached() {
-		this.setData({ currentValue: this.data.value });
+	observers: {
+		type(val) {
+			if (val === 'textarea') {
+				PopManager.on(this);
+				this.setData({
+					uuid: getUid('input-textarea')
+				});
+				wx.nextTick(() => {
+					this.getTextareaHeight();
+				});
+			}
+		},
+	},
+	lifetimes: {
+		attached() {
+			this.setData({ currentValue: this.data.value });
+		},
+		detached() {
+			if (this.data.type === 'textarea') {
+				PopManager.off(this);
+			}
+		}
 	},
 	methods: {
+		getTextareaHeight() {
+			if (!this.data.viewPlaceholder) return;
+			let query = wx.createSelectorQuery().in(this);
+			query.select(`#${this.data.uuid}`).boundingClientRect((rect) => {
+				this.setData({
+					textareaHeight: rect.height
+				});
+			}).exec();
+		},
 		handleInput(event) {
 			const value = event.detail.value;
 			this.setData({
@@ -134,6 +183,13 @@ McComponent({
 		},
 		handleKeyboardHeightChange(event) {
 			this.$emit('keyboardheightchange', event.detail);
+		},
+		handleLineChange(event) {
+			if (this.data.autoHeight && this.data.textareaHeight < event.detail.height) {
+				// 自动撑开模式需要在此计算
+				const textarea = this.getTextareaHeight();
+			}
+			this.$emit('linechange', event.detail);
 		},
 		handleClear() {
 			this.setData({ currentValue: '' });
