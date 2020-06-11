@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { prompt } = require('inquirer');
+const { prompt, registerPrompt } = require('inquirer');
 const { exec } = require('child_process');
 const { readdirSync, readFileSync, writeFileSync } = require('fs-extra');
 
@@ -11,10 +11,9 @@ const exclude = ['common', '__tpl__', 'utils', 'wxs', 'styles', 'mixins', 'templ
 
 const getComponentsList = () => {
 	const lists = [...new Set(readdirSync(SRC_DIR).concat(readdirSync(resolve(EXAMPLE_DIR, './pages'))))];
-	return lists.reduce((pre, components) => {
-		if (exclude.includes(components)) return pre;
-		
-		pre.push({ name: components });
+	return lists.reduce((pre, component) => {
+		if (exclude.includes(component)) return pre;
+		pre.push({ name: component });
 		return pre;
 	}, []);
 };
@@ -34,6 +33,11 @@ const setPageJSON = (components) => {
 };
 
 const choices = getComponentsList();
+const formatComponents = (components) => {
+	const isAll = components.some((it) => it === 'all');
+	if (isAll) return choices;
+	return components;
+};
 
 const questions = [
 	{
@@ -45,10 +49,10 @@ const questions = [
 		}
 	},
 	{
-		type: 'checkbox',
+		type: 'search-checkbox',
 		message: '请选择要运行的组件，如果组件或者示例中使用了其他组件也请选上',
 		name: 'components',
-		choices,
+		choices: [{ name: 'all' }, ...choices],
 		validate: (answer) => {
 			if (answer.length < 1) {
 				return '至少选中一个组件';
@@ -58,9 +62,12 @@ const questions = [
 	}
 ]; 
 
+registerPrompt('search-checkbox', require('inquirer-search-checkbox'));
+
 prompt(questions).then((res) => {
 	// res: { components: [ 'imgs-crop' ] }
 	let { components, appid } = res;
+	components = formatComponents(components);
 	setProjectAppID(appid);
 	setPageJSON(components);
 	// 获取需要过滤打包的组件

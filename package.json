@@ -66,6 +66,7 @@
     "htmldom": "^4.0.11",
     "husky": "^4.2.3",
     "inquirer": "^7.1.0",
+    "inquirer-search-checkbox": "^1.0.0",
     "jest": "^25.4.0",
     "lint-staged": "^10.0.7",
     "miniprogram-simulate": "^1.2.1",
