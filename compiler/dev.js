@@ -35,8 +35,8 @@ const setPageJSON = (components) => {
 const choices = getComponentsList();
 const formatComponents = (components) => {
 	const isAll = components.some((it) => it === 'all');
-	if (isAll) return choices;
-	return components;
+	if (isAll) return choices.map((it) => it.name);
+	return components.map((it) => it.name);
 };
 
 const questions = [
