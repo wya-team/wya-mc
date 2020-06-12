@@ -68,24 +68,9 @@ module.exports = (options) => {
 		}
 		
 		imports + css && fs.outputFileSync(fn('wxss'), imports + css);
-		// js
-		babel.transform(
-			script,
-			{
-				...babelConfig,
-				filename: file.path
-			}, 
-			(err, result) => {
-				if (err) {
-					throw err;
-				}
-				fs.outputFileSync(
-					fn('js'), 
-					result.code
-				);
-			}
-		);
 
-		cb();
+		file.contents = Buffer.from(script);
+
+		cb(null, file);
 	});
 };

@@ -1,6 +1,5 @@
 <template>
-	<mc-input value="{{value}}" bind:change="handleChange"/>
-	<mc-input type="textarea" style="margin: 24rpx;" textarea-style="height: 120rpx"></mc-input>
+	<mc-input-search bindtap="handleClick" />
 	<text>{{value}}</text>
 </template>
 <script>
@@ -27,7 +26,7 @@ page {
 <config>
 {
 	"usingComponents": {
-		"mc-input": "../../components/input"
+		"mc-input-search": "../../components/input-search"
 	}
 }
 </config>

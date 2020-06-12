@@ -15,6 +15,8 @@ const src = path.resolve(__dirname, '../src');
 const example = path.resolve(__dirname, '../example');
 const dist = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist') : path.resolve(__dirname, '../lib');
 const distComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist/components') : path.resolve(__dirname, '../lib');
+const temp = path.resolve(__dirname, '../temp');
+const tempComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../temp/components') : temp;
 
 /*
  * TODO example打包到dist内
@@ -27,8 +29,11 @@ process.env.SRC_DIR = src;
 process.env.DIST_DIR = dist;
 process.env.EXAMPLE_DIR = example;
 process.env.DIST_COMPONENTS_DIR = distComponents;
+process.env.TEMP_DIR = temp;
+process.env.TEMP_COMPONENTS_DIR = tempComponents;
 
 // 需要编译的文件目录
+const TEMP_SRC = `${temp}/**/*.js`;
 const JS_SRC = `${src}/**/*.js`;
 const JS_EXAMPLE_SRC = `${example}/**/*.js`;
 const JSON_SRC = `${src}/**/*.json`;
@@ -46,21 +51,25 @@ const WYA_EXAMPLE_SRC = `${example}/**/*.wya`;
 const getGulpConfig = () => {
 	// 因为从环境变量内拿到的是string类型，需要转换下
 	return {
-		ignore: (process.env.SELECTED_COMPONENTS || '').split(',')
+		ignore: (process.env.IGNORED_COMPONENTS || '').split(',')
 	}
 }
 
 // 获取gulp的输出路径
 const getGulpOutput = (file) => {
-	const exampleRegex = /\/example/;
 	const srcRegex = /\/src/;
-	if (exampleRegex.test(file.path)) {
-		return dist
-	}
 	if (process.env.NODE_ENV === 'development' && srcRegex.test(file.path)) {
 		return distComponents;
 	}
 	return dist;
+}
+
+const getGulpTempOutput = (file) => {
+	const srcRegex = /\/src/;
+	if (process.env.NODE_ENV === 'development' && srcRegex.test(file.path)) {
+		return tempComponents;
+	}
+	return temp;
 }
 
 class Compiler {
@@ -101,20 +110,25 @@ class Compiler {
 	}
 
 	static cleaner = () => {
-		return del([`${dist}/**`], { force: true });
+		return del([`${dist}/**`, `${temp}/**`], { force: true });
 	}
 
 	static wya = (src) => () => {
 		return gulp
 			.src(src, getGulpConfig())
-			.pipe(complieWya());
+			.pipe(complieWya())
+			.pipe(rename({ extname: '.js' }))
+			.pipe(gulp.dest(getGulpTempOutput))
 	}
 }
 // build task
 exports.build = gulp.series(
 	Compiler.cleaner,
 	gulp.parallel(
-		Compiler.wya(WYA_SRC),
+		gulp.series(
+			Compiler.wya(WYA_SRC),
+			Compiler.js(TEMP_SRC),
+		),
 		Compiler.sass(CSS_SRC),
 		Compiler.js(JS_SRC),
 		Compiler.wxml(WXML_SRC),
@@ -127,7 +141,10 @@ exports.build = gulp.series(
 exports.dev = gulp.series(
 	Compiler.cleaner,
 	gulp.parallel(
-		Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
+		gulp.series(
+			Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
+			Compiler.js(TEMP_SRC),
+		),
 		Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]),
 		Compiler.js([JS_SRC, JS_EXAMPLE_SRC]),
 		Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]),
@@ -135,7 +152,7 @@ exports.dev = gulp.series(
 		Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]),
 		() => {
 			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]));
-			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC]));
+			gulp.watch([JS_SRC, JS_EXAMPLE_SRC, TEMP_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC, TEMP_SRC]));
 			gulp.watch([CSS_SRC, CSS_EXAMPLE_SRC], Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]));
 			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]));
 			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]));

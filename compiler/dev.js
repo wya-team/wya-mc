@@ -7,7 +7,7 @@ const gulpConfig = resolve(__dirname, './compiler.js');
 
 const SRC_DIR = resolve(__dirname, '../src');
 const EXAMPLE_DIR = resolve(__dirname, '../example');
-const exclude = ['common', '__tpl__', 'utils', 'wxs', 'styles', 'mixins', 'template', '.DS_Store'];
+const exclude = ['common', 'utils', 'wxs', 'styles', 'mixins', 'template', '.DS_Store'];
 
 const getComponentsList = () => {
 	const lists = [...new Set(readdirSync(SRC_DIR).concat(readdirSync(resolve(EXAMPLE_DIR, './pages'))))];
@@ -21,7 +21,7 @@ const getComponentsList = () => {
 const setProjectAppID = (appid) => {
 	const projectPath = resolve(EXAMPLE_DIR, './project.config.json');
 	const config = JSON.parse(readFileSync(projectPath));
-	config.appid = appid;
+	config.appid = appid || 'wx852cddebbfcfe58f';
 	writeFileSync(projectPath, JSON.stringify(config, null, '\t'));
 };
 
@@ -36,7 +36,7 @@ const choices = getComponentsList();
 const formatComponents = (components) => {
 	const isAll = components.some((it) => it === 'all');
 	if (isAll) return choices.map((it) => it.name);
-	return components.map((it) => it.name);
+	return components.map((it) => it);
 };
 
 const questions = [
@@ -71,14 +71,14 @@ prompt(questions).then((res) => {
 	setProjectAppID(appid);
 	setPageJSON(components);
 	// 获取需要过滤打包的组件
-	const ignoreComponents = choices.reduce((pre, cur) => {
+	const ignoredComponents = choices.reduce((pre, cur) => {
 		if (components.includes(cur.name)) return pre;
 		pre.push(resolve(SRC_DIR, `${cur.name}/**/**`));
 		pre.push(resolve(EXAMPLE_DIR, `pages/${cur.name}/**/**`));
 		return pre;
 	}, []);
 
-	process.env.SELECTED_COMPONENTS = ignoreComponents;
+	process.env.IGNORED_COMPONENTS = ignoredComponents;
 	// 开始构建
 	const $process = exec(`npx gulp -f ${gulpConfig} dev --color & npm run lint:watch`);
 	$process.stdout.on('data', (stdout) => console.info(stdout));
