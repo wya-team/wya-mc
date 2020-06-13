@@ -6,7 +6,7 @@
 </template>
 <script>
 import McComponent from '../common/component';
-import { isSameSecond, parseFormat, parseTimeData, getTimestamp } from './utils';
+import { isSameSecond, parseFormat, parseTimeData, getTimestamp, parseTimeDataByFormat } from './utils';
 
 function simpleTick(fn) {
 	return setTimeout(fn, 30);
@@ -122,7 +122,7 @@ McComponent({
 			const timeData = parseTimeData(remain);
 
 			if (this.data.useSlot) {
-				this.$emit('change', timeData);
+				this.$emit('change', parseTimeDataByFormat(timeData));
 			}
 
 			this.setData({

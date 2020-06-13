@@ -61,6 +61,36 @@ export const parseFormat = (format, timeData) => {
 	return format.replace('ms', padZero(milliseconds, 3));
 };
 
+export const parseTimeDataByFormat = (format, timeData) => {
+	let { days, hours, minutes, seconds, milliseconds } = timeData;
+	const obj = {};
+	if (format.indexOf('DD') === -1) {
+		hours += days * 24;
+	} else {
+		obj.days = days;
+	}
+	if (format.indexOf('HH') === -1) {
+		minutes += hours * 60;
+	} else {
+		obj.hours = hours;
+	}
+
+	if (format.indexOf('mm') === -1) {
+		seconds += minutes * 60;
+	} else {
+		obj.minutes = minutes;
+	}
+
+	if (format.indexOf('ss') === -1) {
+		milliseconds += seconds * 1000;
+	} else {
+		obj.seconds = seconds;
+	}
+	obj.milliseconds = milliseconds;
+
+	return obj;
+};
+
 export const isSameSecond = (time1, time2) => {
 	return Math.floor(time1 / 1000) === Math.floor(time2 / 1000);
 };
