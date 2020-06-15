@@ -12,7 +12,7 @@
 	</view>
 </template>
 <script>
-import AsyncValidator from '../libs/async-validator';
+import AsyncValidator from 'async-validator';
 import { RegEx } from '../common/regex';
 import McComponent from '../common/component';
 import { formComponents } from './relations';

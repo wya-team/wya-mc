@@ -5,7 +5,7 @@ dist/
 lib/
 coverage/
 tmp
-temp
+.temp
 
 # dependencies
 node_modules

@@ -1,22 +1,20 @@
 const path = require('path');
 const del = require('del');
-const fs = require('fs-extra');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
-const upath = require('upath');
 const complieWya = require('./compile-wya');
-sass.compiler = require('node-sass');
+const complieRuntime = require('./compile-runtime');
 const babelConfig = require('./babel-config');
 
 const src = path.resolve(__dirname, '../src');
 const example = path.resolve(__dirname, '../example');
 const dist = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist') : path.resolve(__dirname, '../lib');
 const distComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../dist/components') : path.resolve(__dirname, '../lib');
-const temp = path.resolve(__dirname, '../temp');
-const tempComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../temp/components') : temp;
+const temp = path.resolve(__dirname, '../.temp');
+const tempComponents = process.env.NODE_ENV === 'development' ? path.resolve(__dirname, '../.temp/components') : temp;
 
 /*
  * TODO example打包到dist内
@@ -50,8 +48,9 @@ const WYA_EXAMPLE_SRC = `${example}/**/*.wya`;
 // 获取gulp的配置
 const getGulpConfig = () => {
 	// 因为从环境变量内拿到的是string类型，需要转换下
+	const ignoreFile = (process.env.IGNORED_COMPONENTS || '').split(',');
 	return {
-		ignore: (process.env.IGNORED_COMPONENTS || '').split(',')
+		ignore: [...ignoreFile, path.resolve(temp, './libs/**/**')]
 	}
 }
 
@@ -120,6 +119,12 @@ class Compiler {
 			.pipe(rename({ extname: '.js' }))
 			.pipe(gulp.dest(getGulpTempOutput))
 	}
+
+	static runtime = () => {
+		return gulp
+			.src(`${temp}/libs/*.js`)
+			.pipe(complieRuntime())
+	}
 }
 // build task
 exports.build = gulp.series(
@@ -134,7 +139,8 @@ exports.build = gulp.series(
 		Compiler.wxml(WXML_SRC),
 		Compiler.wxs(WXS_SRC),
 		Compiler.json(JSON_SRC),
-	)
+	),
+	Compiler.runtime
 );
 
 // dev task
@@ -157,6 +163,8 @@ exports.dev = gulp.series(
 			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]));
 			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]));
 			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]));
+			gulp.watch([`${temp}/libs/*.js`], Compiler.runtime);
 		}
-	)
+	),
+	Compiler.runtime
 );

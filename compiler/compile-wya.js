@@ -4,8 +4,6 @@ const fs = require('fs-extra');
 const upath = require('upath');
 const { resolve, dirname } = require('path');
 const sass = require('node-sass');
-const babel = require('@babel/core');
-const babelConfig = require('./babel-config');
 
 module.exports = (options) => {
 	return through.obj(function (file, enc, cb) {

@@ -7,7 +7,7 @@ const gulpConfig = resolve(__dirname, './compiler.js');
 
 const SRC_DIR = resolve(__dirname, '../src');
 const EXAMPLE_DIR = resolve(__dirname, '../example');
-const exclude = ['common', 'utils', 'wxs', 'styles', 'mixins', 'template', '.DS_Store'];
+const exclude = ['common', 'utils', 'wxs', 'styles', 'mixins', '.DS_Store'];
 
 const getComponentsList = () => {
 	const lists = [...new Set(readdirSync(SRC_DIR).concat(readdirSync(resolve(EXAMPLE_DIR, './pages'))))];

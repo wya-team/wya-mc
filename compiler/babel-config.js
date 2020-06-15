@@ -1,3 +1,19 @@
+const { resolve, relative, dirname } = require('path');
+const fs = require('fs-extra');
+const upath = require('upath');
+
+// 收集在js内引用的第三方库，再用runtime打包出来
+const collectLibs = (libraryName) => {
+	const filePath = upath.normalize(resolve(process.env.TEMP_DIR, `./libs/${libraryName}.js`));
+	if (!fs.pathExistsSync(filePath)) {
+		fs.outputFileSync(
+			filePath,
+			`import A from '${libraryName}'; export default A;`
+		);
+	}
+	return filePath;
+};
+
 const babelConfig = {
 	presets: ['@babel/preset-env'],
 	plugins: [
@@ -21,17 +37,21 @@ const babelConfig = {
 			({ types: t }) => {
 				return {
 					visitor: {
-						MemberExpression(path) {
-							if (path.matchesPattern("process.env.NODE_ENV")) {
-								path.replaceWith(t.valueToNode(process.env.NODE_ENV));
+						ImportDeclaration(path, opts) {
+							const { filename } = opts;
+							const specifiers = path.node.specifiers;
+							const source = path.node.source;
+							const libraryName = source.value;
+							// 非第三方库的引入不做处理
+							if (libraryName.includes('./') || libraryName.includes('../')) return;
 
-								if (path.parentPath.isBinaryExpression()) {
-									const evaluated = path.parentPath.evaluate();
-									if (evaluated.confident) {
-										path.parentPath.replaceWith(t.valueToNode(evaluated.value));
-									}
-								}
-							}
+							const output = collectLibs(libraryName);
+
+							// dev - /dist/components/libs; product - /lib/libs
+							const relativePath = upath.normalize(relative(dirname(filename), output));
+
+							const func = t.importDeclaration(specifiers, t.stringLiteral(relativePath));
+							path.replaceWith(func);
 						}
 					}
 				};
