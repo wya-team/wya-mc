@@ -1,6 +1,7 @@
-let startY = 0;
-let scrollTop = 0;
-let pullDownView;
+/* eslint-disable */
+var startY = 0;
+var scrollTop = 0;
+var pullDownView;
 
 function handleScroll(e, instance) {
 	instance.callMethod('handleScroll', e);
@@ -16,19 +17,19 @@ function handleTouchStart(e, instance) {
 
 function easing(pulledY) {
 	// 从顶部开始
-	let startY = 0;
+	var startY = 0;
 	// 允许拖拽的最大距离
-	let maxY = 500;
+	var maxY = 500;
 	// 提示标签最大有效拖拽距离
-	let duration = 2.5;
+	var duration = 2.5;
 	return maxY / duration * Math.sin(pulledY / maxY * (Math.PI / 2)) + startY;
 }
 
 function handleTouchMove(e, instance) {
-	let pulledY = e.touches[0].clientY - startY;
+	var pulledY = e.touches[0].clientY - startY;
 	instance.callMethod('handleTouchMove', e);
 	if (scrollTop <= 0) {
-		// let y = easing(pulledY);
+		// var y = easing(pulledY);
 		// pullDownView && pullDownView.setStyle({
 		// 	height: y + 'px'
 		// });
@@ -48,10 +49,10 @@ function setPullDownHeight(newValue, oldValue, ownerInstance, instance) {
 }
 
 module.exports = {
-	startY,
-	scrollTop,
-	handleTouchStart,
-	handleTouchMove,
-	setPullDownHeight,
-	handleScroll
+	startY: startY,
+	scrollTop: scrollTop,
+	handleTouchStart: handleTouchStart,
+	handleTouchMove: handleTouchMove,
+	setPullDownHeight: setPullDownHeight,
+	handleScroll: handleScroll
 };

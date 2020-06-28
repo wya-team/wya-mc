@@ -97,8 +97,8 @@ class Compiler {
 	static wxs = (src) => () => {
 		return gulp
 			.src(src, getGulpConfig())
-			.pipe(babel(babelConfig))
-			.pipe(rename({ extname: '.wxs' }))
+			// .pipe(babel(babelConfig))
+			// .pipe(rename({ extname: '.wxs' }))
 			.pipe(gulp.dest(getGulpOutput));
 	}
 
@@ -117,12 +117,13 @@ class Compiler {
 			.src(src, getGulpConfig())
 			.pipe(complieWya())
 			.pipe(rename({ extname: '.js' }))
-			.pipe(gulp.dest(getGulpTempOutput))
+			.pipe(babel(babelConfig))
+			.pipe(gulp.dest(getGulpOutput));
 	}
 
-	static runtime = () => {
+	static runtime = (src) => () => {
 		return gulp
-			.src(`${temp}/libs/*.js`)
+			.src(src)
 			.pipe(complieRuntime())
 	}
 }
@@ -130,27 +131,21 @@ class Compiler {
 exports.build = gulp.series(
 	Compiler.cleaner,
 	gulp.parallel(
-		gulp.series(
-			Compiler.wya(WYA_SRC),
-			Compiler.js(TEMP_SRC),
-		),
+		Compiler.wya(WYA_SRC),
 		Compiler.sass(CSS_SRC),
 		Compiler.js(JS_SRC),
 		Compiler.wxml(WXML_SRC),
 		Compiler.wxs(WXS_SRC),
 		Compiler.json(JSON_SRC),
 	),
-	Compiler.runtime
+	Compiler.runtime(TEMP_SRC)
 );
 
 // dev task
 exports.dev = gulp.series(
 	Compiler.cleaner,
 	gulp.parallel(
-		gulp.series(
-			Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
-			Compiler.js(TEMP_SRC),
-		),
+		Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
 		Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]),
 		Compiler.js([JS_SRC, JS_EXAMPLE_SRC]),
 		Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]),
@@ -158,13 +153,12 @@ exports.dev = gulp.series(
 		Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]),
 		() => {
 			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]));
-			gulp.watch([JS_SRC, JS_EXAMPLE_SRC, TEMP_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC, TEMP_SRC]));
+			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC]));
 			gulp.watch([CSS_SRC, CSS_EXAMPLE_SRC], Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]));
 			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]));
 			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]));
 			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]));
-			gulp.watch([`${temp}/libs/*.js`], Compiler.runtime);
+			gulp.watch(TEMP_SRC, Compiler.runtime(TEMP_SRC));
 		}
 	),
-	Compiler.runtime
 );

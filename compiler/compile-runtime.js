@@ -16,25 +16,18 @@ module.exports = (options) => {
 			this.push(file);
 			return cb();
 		}
-
+		
 		// 插件不支持对 Stream 对直接操作，跑出异常
 		if (file.isStream()) {
 			this.emit('error', 'wya-mc/js: Streaming not supported');
 			return cb();
 		}
-
+		
 		const { base } = parse(file.path);
 
 		rollup({
 			input: file.path,
 			plugins: [
-				// // 是否存在
-				// fs.pathExistsSync(resolve('../node_modules/regenerator-runtime')) && alias({
-				// 	entries: [{
-				// 		find: /^@babel\/runtime\/regenerator$/, 
-				// 		replacement: 'regenerator-runtime'
-				// 	}]
-				// }),
 				nodeResolve.default(),
 				commonjs({}),
 				replace({
@@ -43,9 +36,13 @@ module.exports = (options) => {
 				process.env.NODE_ENV === 'production' && uglify()
 			]
 		}).then((res) => {
+			const regex = new RegExp(process.env.TEMP_DIR);
+			let fullpath = upath
+				.normalize(file.path)
+				.replace(regex, resolve(process.env.DIST_DIR, './libs'));
 			res.write({
 				output: {
-					file: resolve(process.env.DIST_DIR, `./libs/${base}`),
+					file: resolve(fullpath),
 					format: 'cjs',
 					exports: 'named'
 				}
