@@ -132,3 +132,9 @@ export const getUid = (comp, opts = {}) => {
 
 	return `${prefix}${`${comp ? `-${comp}` : ''}`}${timestamp ? `-${now}` : ''}-${++index}`;
 };
+
+// 精度计算
+export const add = (num1, num2) => {
+	const cardinal = 10 ** 10;
+	return Math.round((num1 + num2) * cardinal) / cardinal;
+};

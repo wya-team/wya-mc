@@ -1,0 +1,362 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+	<view class="mc-stepper mc-class">
+		<view
+			wx:if="{{ showMinus }}"
+			data-type="minus"
+			style="{{ buttonStyle }}"
+			class="minus-class {{ utils.bem('stepper__minus', { disabled: disabled || disableMinus || value <= min }) }}"
+			hover-class="mc-stepper__minus--hover"
+			hover-stay-time="70"
+			bind:tap="handleClick"
+		/>
+		<input
+			type="{{ integer ? 'number' : 'digit' }}"
+			class="input-class {{ utils.bem('stepper__input', { disabled: disabled || disableInput }) }}"
+			style="{{ inputStyle }}"
+			value="{{ value }}"
+			focus="{{ focus }}"
+			disabled="{{ disabled || disableInput }}"
+			bindinput="handleInput"
+			bind:focus="handleFocus"
+			bind:blur="handleBlur"
+		/>
+		<view
+			wx:if="{{ showPlus }}"
+			data-type="plus"
+			style="{{ buttonStyle }}"
+			class="plus-class {{ utils.bem('stepper__plus', { disabled: disabled || disablePlus || value >= max }) }}"
+			hover-class="mc-stepper__plus--hover"
+			hover-stay-time="70"
+			bind:tap="handleClick"
+		/>
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+import { addUnit, isDef, add } from '../common/utils';
+
+McComponent({
+	externalClasses: ['input-class', 'plus-class', 'minus-class'],
+	relations: {
+		'../form/form-item': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked(child) {
+				this.parent = null;
+			}
+		}
+	},
+	props: {
+		value: {
+			type: null,
+			observer(value) {
+				if (value === '') {
+					return;
+				}
+				const newValue = this.range(value);
+
+				if (typeof newValue === 'number' && +this.data.value !== newValue) {
+					this.setData({ value: newValue });
+				}
+			},
+		},
+		integer: Boolean,
+		disabled: Boolean,
+		inputWidth: {
+			type: null,
+			observer() {
+				this.setData({
+					inputStyle: this.computeInputStyle()
+				});
+			},
+		},
+		buttonSize: {
+			type: null,
+			observer() {
+				this.setData({
+					inputStyle: this.computeInputStyle(),
+					buttonStyle: this.computeButtonStyle()
+				});
+			}
+		},
+		async: Boolean,
+		disableInput: Boolean,
+		decimalLength: {
+			type: Number,
+			value: null
+		},
+		min: {
+			type: null,
+			value: 0
+		},
+		max: {
+			type: null,
+			value: Number.MAX_SAFE_INTEGER
+		},
+		step: {
+			type: null,
+			value: 1
+		},
+		// 强制step, 即输入的内容也必须是step的倍数
+		forceStep: {
+			type: Boolean,
+			value: true
+		},
+		showPlus: {
+			type: Boolean,
+			value: true
+		},
+		showMinus: {
+			type: Boolean,
+			value: true
+		},
+		disablePlus: Boolean,
+		disableMinus: Boolean,
+	},
+	 data: {
+		focus: false,
+		inputStyle: '',
+		buttonStyle: '',
+		asyncValue: ''
+	},
+	lifetimes: {
+		attached() {
+			this.setData({
+				value: this.range(this.data.value)
+			});
+		}
+	},
+	methods: {
+		isDisabled(type) {
+			if (type === 'plus') {
+				this.data.value;
+				return this.data.disabled || this.data.disablePlus || this.data.value >= this.data.max;
+			}
+
+			return this.data.disabled || this.data.disableMinus || this.data.value <= this.data.min;
+		},
+		handleFocus(event) {
+			this.$emit('focus', event.detail);
+		},
+		handleBlur(event) {
+			let value = this.range(this.data.value);
+			if (this.data.forceStep) {
+				const remainder = value % this.data.step;
+				value -= remainder;
+			}
+			this.sync(value);
+			this.$emit('blur', event.detail);
+		},
+		handleInput(event) {
+			const { value = '' } = event.detail || {};
+			this.sync(value);
+		},
+		async handleClick(event) {
+			const { type } = event.currentTarget.dataset;
+			this.type = type;
+			try {
+				await this.tip(this.data.value, type);
+				this.onChange();
+			} catch (error) {
+				console.log('error', error);
+			}
+		},
+
+		// limit value range
+		range(value) {
+			value = String(value).replace(/[^0-9.-]/g, '');
+			if (this.data.integer) {
+				value = value.replace(/\.+\d*/g, '');
+			}
+
+			// format range
+			value = value === '' ? 0 : +value;
+			value = Math.max(Math.min(this.data.max, value), this.data.min);
+
+			// format decimal
+			if (isDef(this.data.decimalLength)) {
+				value = value.toFixed(this.data.decimalLength);
+			}
+
+			return value;
+		},
+
+		tip(value, tag) {
+			const { step } = this.data;
+			return new Promise((resolve, reject) => {
+				if (tag === 'plus' && (value + step) > this.data.max) {
+					this.$emit('tip', {
+						type: 'max',
+						msg: '不能再多了',
+						tag
+					});
+					reject();
+				} else if (tag === 'minus' && (value - step) < this.data.min) {
+					this.$emit('tip', {
+						type: 'min',
+						msg: '不能再少了',
+						tag
+					});
+					reject();
+				}
+				resolve();
+			});
+		},
+
+		onChange() {
+			const { type } = this;
+			if (this.isDisabled(type)) {
+				this.$emit('overlimit', type);
+				return;
+			}
+
+			const diff = type === 'minus' ? -this.data.step : +this.data.step;
+			const value = add(+this.data.value, diff);
+
+			this.sync(this.range(value));
+			this.$emit(type);
+		},
+
+		triggerInput(value, type) {
+			this.setData({
+				value: this.data.async ? this.data.value : value,
+			});
+			this.$emit('change', value);
+			this.parent && this.parent.fieldChange();
+			
+		},
+		sync(v) {
+			this.setData({
+				value: v,
+			});
+			this.$emit('change', v);
+			this.parent && this.parent.fieldChange();
+		},
+
+		computeInputStyle() {
+			let style = '';
+
+			if (this.data.inputWidth) {
+				style = `width: ${addUnit(this.data.inputWidth)};`;
+			}
+
+			if (this.data.buttonSize) {
+				style += `height: ${addUnit(this.data.buttonSize)};`;
+			}
+
+			return style;
+		},
+
+		computeButtonStyle() {
+			let style = '';
+			const size = addUnit(this.data.buttonSize);
+
+			if (this.data.buttonSize) {
+				style = `width: ${size};height: ${size};`;
+			}
+
+			return style;
+		},
+	}
+});
+</script>
+
+<style lang="scss">
+.mc-stepper {
+	font-size: 0;
+
+	&__minus,
+	&__plus {
+		position: relative;
+		display: inline-block;
+		box-sizing: border-box;
+		margin: 1px;
+		vertical-align: middle;
+		border: 0;
+		background-color: #f5f5f5 ;
+		color: '#333333';
+		width: 56rpx;
+		height: 56rpx;
+		padding: 8rpx;
+		&::before {
+			width: 22rpx;
+			height: 4rpx;
+		}
+
+		&::after {
+			width: 4rpx;
+			height: 22rpx;
+		}
+
+		&::before,
+		&::after {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			margin: auto;
+			background-color: #999;
+			content: '';
+		}
+	}
+	&__plus--hover,
+	&__minus--hover {
+		background-color: #e8e8e8;
+	}
+	&__plus--disabled,
+	&__minus--disabled {
+		color: #cbcbcb;
+		background-color: #fbfbfb;
+	}
+	&__plus--disabled,
+	&__minus--disabled {
+		&::before {
+			background-color: #cbcbcb;
+		}
+	}
+
+	&__minus {
+		border-radius: 8rpx 0 0 8rpx;
+		&::after {
+			display: none;
+		}
+	}
+
+	&__plus {
+		border-radius: 0 8rpx 8rpx 0;
+	}
+
+	&__input {
+		display: inline-block;
+		box-sizing: border-box;
+		min-height: 0;
+		margin: 0 1px;
+		padding: 0 6rpx;
+		font-size: 26rpx;
+		text-align: center;
+		vertical-align: middle;
+		border-radius: 0;
+		-webkit-appearance: none;
+		color: #000;
+		background-color: #f5f5f5;
+		width: 98rpx;
+		height: 56rpx;
+
+		&--disabled {
+			color: #c8c9cc;
+			background-color: #f2f3f5;
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"component": true
+}
+</config>

@@ -1,0 +1,35 @@
+<template>
+	<mc-stepper 
+		value="{{value}}" 
+		bind:tip="handleTip"
+	/>
+</template>
+
+<script>
+Page({
+	data: {
+		value: 0
+	},
+	handleTip(event) {
+		const tip = event.detail;
+		if (tip.type === 'min') {
+			wx.showToast({ title: '不能再少了', icon: 'none' }, 1500);
+		}
+	}
+});
+</script>
+<style lang="scss">
+page {
+	background: #fff
+}
+.g-m-b-40 {
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-stepper": "../../components/stepper"
+	}
+}
+</config>
