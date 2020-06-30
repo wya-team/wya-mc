@@ -13,7 +13,7 @@
 			<slot wx:else name="right-icon" />
 			<view
 				style="{{ labelStyle }}"
-				class="mc-list-item__label"
+				class="mc-list-item__label label-class"
 			>
 				<blcok wx:if="{{label}}">{{label}}</blcok>
 				<slot wx:else name="label" />
