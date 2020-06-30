@@ -1,6 +1,6 @@
 <template>
 	<!-- <mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}"> -->
-		<view wx:if="{{mask && visible}}" class="mc-popup__mask" catchtap="handleClose" />
+		<view wx:if="{{mask && visible}}" class="mc-popup__mask" catchtap="handleClose" catch:touchmove="preventToucheMove" />
 	<!-- </mc-transition> -->
 	<view 
 		wx:if="{{inited}}" 
@@ -52,7 +52,8 @@ McComponent({
 				});
 			}
 			this.$emit('close');
-		}
+		},
+		preventToucheMove() {}
 	}
 });
 
