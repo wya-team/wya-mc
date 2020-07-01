@@ -9,6 +9,15 @@
 		catch:transitionend="onTransitionEnd"
 	>
 		<slot></slot>
+		<view class="mc-popup__close is-{{closeIconPosition}}">
+			<mc-icon 
+				wx:if="{{closeable}}" 
+				type="o-error" 
+				mc-class="mc-popup__close-icon"
+				bind:click="handleClose"
+			/>
+			<slot wx:else name="close-icon"></slot>
+		</view>
 	</view>
 </template>
 <script>
@@ -31,6 +40,14 @@ McComponent({
 		placement: {
 			type: String,
 			value: 'bottom',
+		},
+		closeable: {
+			type: Boolean,
+			value: false
+		},
+		closeIconPosition: {
+			type: String,
+			value: 'top-right'
 		}
 	},
 	data: {
@@ -84,7 +101,28 @@ McComponent({
 	background-color: #fff;
 	z-index: 1001; 
 }
-
+.mc-popup__close {
+	position: absolute;
+	&-icon {
+		color: #666;
+	}
+	&.is-top-right {
+		top: 20rpx;
+		right: 20rpx;
+	}
+	&.is-top-left {
+		top: 20rpx;
+		left: 20rpx;
+	}
+	&.is-bottom-right {
+		bottom: 20rpx;
+		right: 20rpx;
+	}
+	&.is-bottom-left {
+		bottom: 20rpx;
+		left: 20rpx;
+	}
+}
 .mc-popup__center {
 	top: 50%;
 	left: 50%;
@@ -213,7 +251,8 @@ McComponent({
 {
 	"component": true,
 	"usingComponents": {
-		"mc-transition": "../transition/index"
+		"mc-transition": "../transition/index",
+		"mc-icon": "../icon/index"
 	}
 }
 </config>

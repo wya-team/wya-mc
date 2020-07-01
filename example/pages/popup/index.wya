@@ -7,7 +7,7 @@
 		<mc-list-item label="中间弹窗" bind:click="handleOpenCenter" />
 	</mc-list>
 
-	<mc-popup id="popup-top" mc-style="height: 30%" placement="top">
+	<mc-popup id="popup-top" mc-style="height: 30%" placement="top" closeable close-icon-position="bottom-right">
 		<view>顶部弹窗</view>
 	</mc-popup>
 	<mc-popup id="popup-bottom" mc-style="height: 30%" placement="bottom">

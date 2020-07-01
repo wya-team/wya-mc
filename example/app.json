@@ -1,6 +1,11 @@
 {
 	"pages": [
-		"pages/recycle-list/index"
+		"pages/popup/index",
+		"pages/icon/index",
+		"pages/list/index",
+		"pages/portal/index",
+		"pages/transition/index",
+		"pages/list-item/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",
