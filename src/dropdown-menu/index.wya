@@ -1,0 +1,228 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+	<wxs src="./index.wxs" module="computed" />
+
+	<view class="mc-dropdown-menu mc-dropdown-menu--top-bottom mc-class" style="{{mcStyle}}">
+		<view
+			wx:for="{{ itemListData }}"
+			wx:key="index"
+			data-index="{{ index }}"
+			class="{{ utils.bem('dropdown-menu__item', { disabled: item.disabled }) }}"
+			bind:tap="handleClick"
+		>
+			<view
+				class="{{ item.titleClass }} {{ utils.bem('dropdown-menu__title', { active: item.showPopup, down: item.showPopup === (direction === 'down') }) }}"
+				style="{{ item.showPopup ? 'color:' + activeColor : '' }}"
+			>
+			<view class="mc-ellipsis">
+				{{ computed.displayTitle(item) }}
+			</view>
+			</view>
+		</view>
+
+		<slot />
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+import Portal from '../portal/index';
+import { addUnit } from '../common/utils';
+
+let ARRAY = [];
+McComponent({
+	relations: {
+		'./dropdown-item': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+				this.updateItemListData();
+			},
+			unlinked(child) {
+				this.children = (this.children || []).filter((it) => it !== child);
+				this.updateItemListData();
+			}
+		}
+	},
+	props: {
+		activeColor: {
+			type: String,
+			observer: 'updateChildrenData'
+		},
+		mask: {
+			type: Boolean,
+			value: true,
+			observer: 'updateChildrenData'
+		},
+		zIndex: {
+			type: Number,
+			value: 10
+		},
+		duration: {
+			type: Number,
+			value: 200,
+			observer: 'updateChildrenData'
+		},
+		direction: {
+			type: String,
+			value: 'down',
+			observer: 'updateChildrenData'
+		},
+		maskCloseable: {
+			type: Boolean,
+			value: true,
+			observer: 'updateChildrenData'
+		},
+		closeOnClickOutside: {
+			type: Boolean,
+			value: true
+		}
+	},
+	data: {
+		itemListData: []
+	},
+	lifetimes: {
+		attached() {
+			const { windowHeight } = wx.getSystemInfoSync();
+			this.windowHeight = windowHeight;
+			ARRAY.push(this);
+		},
+		detached() {
+			ARRAY = ARRAY.filter(item => item !== this);
+		}
+	},
+	methods: {
+		updateItemListData() {
+			this.setData({
+				itemListData: this.children.map((child) => child.data)
+			});
+		},
+		updateChildrenData() {
+			if (this.children) {
+				this.children.forEach((child) => {
+					child.updateDataFromParent();
+				});	
+			}
+		},
+		 toggleItem(active) {
+			this.children.forEach((item, index) => {
+				const { showPopup } = item.data;
+				if (index === active) {
+					item.toggle();
+				} else if (showPopup) {
+					item.toggle(false, { immediate: true });
+				}
+			});
+		},
+
+		close() {
+			this.children.forEach((child) => {
+				child.toggle(false, { immediate: true });
+			});
+		},
+
+		getChildWrapperStyle() {
+			const { zIndex, direction } = this.data;
+
+			return this.getRect('.mc-dropdown-menu').then((rect) => {
+				const { top = 0, bottom = 0 } = rect;
+				const offset = direction === 'down' ? bottom : this.windowHeight - top;
+
+				let wrapperStyle = `z-index: ${zIndex};`;
+
+				if (direction === 'down') {
+					wrapperStyle += `top: ${addUnit(offset)};`;
+				} else {
+					wrapperStyle += `bottom: ${addUnit(offset)};`;
+				}
+
+				return wrapperStyle;
+			});
+		},
+
+		handleClick(event) {
+			const { index } = event.currentTarget.dataset;
+			const child = this.children[index];
+
+			if (!child.data.disabled) {
+				ARRAY.forEach(menuItem => {
+					if (menuItem && menuItem.data.closeOnClickOutside && menuItem !== this) {
+						menuItem.close();
+					}
+				});
+
+				this.toggleItem(index);
+			}
+		}
+	}
+});
+</script>
+
+<style lang="scss">
+.mc-dropdown-menu {
+	display: flex;
+	user-select: none;
+	height: 100rpx;
+	background-color: #fff;
+	&__item {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+		min-width: 0; // hack for flex ellipsis
+		&:active {
+			opacity: .7;
+		}
+
+		&--disabled {
+			&:active {
+				opacity: 1;
+			}
+
+			.mc-dropdown-menu__title {
+				color: #969799;
+			}
+		}
+	}
+
+	&__title {
+		position: relative;
+		box-sizing: border-box;
+		max-width: 100%;
+		padding: 0 16rpx;
+		color: #333;
+		font-size: 30rpx;
+		line-height: 36rpx;
+
+		&::after {
+			position: absolute;
+			top: 50%;
+			right: -8rpx;
+			margin-top: -10rpx;
+			border: 6rpx solid;
+			border-color: transparent transparent currentColor currentColor;
+			transform: rotate(-45deg);
+			opacity: .8;
+			content: '';
+		}
+
+		&--active {
+			color: #1989fa;
+		}
+
+		&--down {
+			&::after {
+				margin-top: -2rpx;
+				transform: rotate(135deg);
+			}
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"component": true
+}
+</config>

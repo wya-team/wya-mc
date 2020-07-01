@@ -1,0 +1,224 @@
+<template>
+	<wxs src="../wxs/utils.wxs" module="utils" />
+
+	<view
+		wx:if="{{ showWrapper }}"
+		class="{{ utils.bem('dropdown-item', direction) }}"
+		style="{{ wrapperStyle }}"
+	>
+		<mc-popup
+			visible="{{ showPopup }}"
+			mc-style="position: absolute; border-radius: 0"
+			mask-style="position: absolute;"
+			mask="{{ mask }}"
+			placement="{{ direction === 'down' ? 'top' : 'bottom' }}"
+			duration="{{ transition ? duration : 0 }}"
+			mask-closeable="{{ maskCloseable }}"
+			bind:close="handleClickMask"
+		>
+			<mc-list-item
+				wx:for="{{ options }}"
+				wx:key="value"
+				data-option="{{ item }}"
+				wrapper-class="mc-dropdown-item__list-item"
+				label-class="mc-dropdown-item__item-label"
+				class="{{ utils.bem('dropdown-item__option', { active: item.value === value } ) }}"
+				clickable
+				arrow="{{false}}"
+				bind:tap="handlClick"
+			>
+				<view
+					slot="label"
+					class="mc-dropdown-item__title"
+					style="{{ item.value === value  ? 'color:' + activeColor : '' }}"
+				>
+					{{ item.text }}
+				</view>
+			</mc-list-item>
+
+			<slot />
+		</mc-popup>
+	</view>
+</template>
+
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'./index': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+				this.updateDataFromParent();
+			},
+			unlinked() {
+				this.parent = null;
+			},
+		},
+	},
+	props: {
+		value: {
+			type: null,
+			observer: 'rerender'
+		},
+		title: {
+			type: String,
+			observer: 'rerender'
+		},
+		disabled: Boolean,
+		titleClass: {
+			type: String,
+			observer: 'rerender'
+		},
+		options: {
+			type: Array,
+			value: [],
+			observer: 'rerender'
+		}
+	},
+	data: {
+		transition: true,
+		showPopup: false,
+		showWrapper: false,
+		displayTitle: ''
+	},
+	lifetimes: {
+		
+	},
+	methods: {
+		rerender() {
+			wx.nextTick(() => {
+				this.parent && this.parent.updateItemListData();
+			});
+		},
+
+		updateDataFromParent() {
+			if (this.parent) {
+				const {
+					mask,
+					duration,
+					activeColor,
+					maskCloseable,
+					direction
+				} = this.parent.data;
+				this.setData({
+					mask,
+					duration,
+					activeColor,
+					maskCloseable,
+					direction
+				});
+			}
+		},
+
+		handleClickMask() {
+			this.toggle();
+			this.$emit('close');
+		},
+
+		handlClick(event) {
+			const { option } = event.currentTarget.dataset;
+			const { value } = option;
+
+			const shouldEmitChange = this.data.value !== value;
+			this.setData({ showPopup: false, value });
+			this.$emit('close');
+
+			setTimeout(() => {
+				this.setData({ showWrapper: false });
+			}, this.data.duration || 0);
+
+			this.rerender();
+
+			if (shouldEmitChange) {
+				this.$emit('change', value);
+			}
+		},
+
+		toggle(show, options = {}) {
+			const { showPopup, duration } = this.data;
+
+			if (show == null) {
+				show = !showPopup;
+			}
+
+			if (show === showPopup) {
+				return;
+			}
+
+			if (!show) {
+				const time = options.immediate ? 0 : duration;
+				this.setData({ transition: !options.immediate, showPopup: show });
+
+				setTimeout(() => {
+					this.setData({ showWrapper: false });
+				}, time);
+
+				this.rerender();
+				return;
+			}
+
+			this.parent.getChildWrapperStyle().then((wrapperStyle) => {
+				this.setData({
+					transition: !options.immediate,
+					showPopup: show,
+					wrapperStyle,
+					showWrapper: true
+				});
+				this.rerender();
+			});
+		}
+	}
+});
+</script>
+
+<style lang="scss">
+.mc-dropdown-item {
+	position: fixed;
+	right: 0;
+	left: 0;
+	overflow: hidden;
+	&__option {
+		text-align: left;
+
+		&--active {
+			.mc-dropdown-item__title,
+			.mc-dropdown-item__icon {
+				color: #1989fa;
+			}
+		}
+	}
+
+	&--up {
+		top: 0;
+	}
+
+	&--down {
+		bottom: 0;
+	}
+
+	&__icon {
+		display: block;
+		line-height: inherit;
+	}
+	&__list-item {
+		line-height: 40px !important;
+		padding: 0 !important;
+	}
+	&__item-label {
+		font-size: 30rpx !important;
+		color: #333 !important;
+	}
+}
+</style>
+
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-popup": "../popup/index",
+		"mc-list-item": "../list/list-item"
+	}
+}
+</config>
