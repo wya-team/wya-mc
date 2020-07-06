@@ -29,7 +29,6 @@ const babelConfig = {
 		'@babel/plugin-proposal-export-namespace-from',
 		'@babel/plugin-proposal-export-default-from',
 		'@babel/plugin-proposal-function-bind',
-		'@babel/plugin-syntax-dynamic-import',
 		[
 			'@babel/plugin-proposal-decorators',
 			{
