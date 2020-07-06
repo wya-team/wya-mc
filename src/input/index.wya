@@ -70,7 +70,7 @@
 			bindconfirm="handleConfirm"
 			bindkeyboardheightchange="handleKeyboardHeightChange"
 		/>
-		<view wx:if="{{useAppendlot || clearable}}" class="mc-input__append">
+		<view wx:if="{{useAppendslot || clearable}}" class="mc-input__append">
 			<mc-icon 
 				wx:if="{{!disabled && !useClearSlot && currentValue && clearable}}" 
 				type="clear" 
@@ -122,7 +122,7 @@ McComponent({
 		},
 		right: Boolean,
 		usePrependSlot: Boolean,
-		useAppendlot: Boolean,
+		useAppendslot: Boolean,
 		autoHeight: Boolean,
 		fixed: Boolean,
 		showConfirmBar: Boolean,
