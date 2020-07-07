@@ -10,7 +10,7 @@
 				type="{{leftIcon}}"
 				mc-class="mc-list-item__left-icon"
 			/>
-			<slot wx:else name="right-icon" />
+			<slot wx:else name="left-icon" />
 			<view
 				style="{{ labelStyle }}"
 				class="mc-list-item__label label-class"
