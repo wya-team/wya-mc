@@ -1,0 +1,129 @@
+<template>
+	<view class="mc-checkbox" bindtap="handleChange">
+		<view class="mc-checkbox-icon">
+			<mc-icon
+				type="{{ currentValue ? activeIcon : icon }}"
+				style="color: {{ disabled ? '#999' : color}}"
+			>
+			</mc-icon>
+		</view>
+		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e'}}">{{ label }}</text>
+		<slot wx:else />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+function emit(target, value) {
+	target.setData({
+		value
+	});
+	target.$emit('change', value);
+}
+
+McComponent({
+	relations: {
+		'./checkbox-group': {
+			type: 'ancestor',
+			linked(target) {
+				this.parent = target;
+			},
+			unlinked(target) {
+				this.parent = null;
+			}
+		}
+	},
+	props: {
+		disabled: {
+			type: Boolean,
+			value: false
+		},
+		value: {
+			type: [String, Number, Boolean],
+			value: false,
+			observer(val) {
+				this.setData({
+					currentValue: !!val
+				});
+			}
+		},
+		shape: {
+			type: String,
+			value: 'round', // round, square,
+		},
+		color: {
+			type: String,
+			value: '#26be76'
+		},
+		label: {
+			type: [String, Number, Boolean],
+		},
+		indeterminate: {
+			type: Boolean,
+			value: false
+		},
+		name: {
+			type: String
+		},
+	},
+	data: {
+		currentValue: false,
+		activeIcon: 'select-checked',
+		icon: 'select'
+	},
+	observers: {
+		'shape': function (val) {
+			this.setData({
+				activeIcon: val === 'square' ? 'xuanzhong' : 'select-checked',
+				icon: val === 'square' ? 'xuanze' : 'select'
+			});
+		}
+	},
+	methods: {
+		handleChange() {
+			let { currentValue, disabled } = this.data;
+			if (disabled) return;
+			if (this.parent) {
+				this.setParentValue(this.parent, !currentValue);
+			} else {
+				emit(this, !currentValue);
+			}
+		},
+		setParentValue(parent, value) {
+			const parentValue = parent.data.value.slice();
+			const { name } = this.data;
+			if (value) {
+				if (parentValue.indexOf(name) === -1) {
+					parentValue.push(name);
+					emit(parent, parentValue);
+				}
+			} else {
+				const index = parentValue.indexOf(name);
+				if (index !== -1) {
+					parentValue.splice(index, 1);
+					emit(parent, parentValue);
+				}
+			}
+		},
+	}
+});
+</script>
+<style lang="scss">
+.mc-checkbox {
+	display: flex;
+	align-items: center;
+	font-size: 28rpx;
+	padding: 4rpx 10rpx;
+	.mc-checkbox-icon {
+		margin-right: 10rpx;
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>

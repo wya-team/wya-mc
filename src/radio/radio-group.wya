@@ -1,0 +1,51 @@
+<template>
+	<slot></slot>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'./radio': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+				this.updateChild(child);
+			},
+			unlinked(child) {
+				this.children = (this.children || []).filter((it) => it !== child);
+			}
+		}
+	},
+	props: {
+		value: {
+			type: null,
+			observer: 'updateChildren'
+		},
+		disabled: {
+			type: Boolean,
+			observer: 'updateChildren'
+		}
+	},
+	methods: {
+		updateChildren() {
+			(this.children || []).forEach((child) => this.updateChild(child));
+		},
+		updateChild(child) {
+			const { value, disabled } = this.data;
+			child.setData({
+				value,
+				disabled: disabled || child.data.disabled
+			});
+		}
+	}
+});
+</script>
+<style lang="scss">
+</style>
+<config>
+{
+	"component": true
+}
+</config>

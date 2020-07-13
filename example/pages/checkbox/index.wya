@@ -1,0 +1,83 @@
+<template>
+
+	<view class="g-pd-30" >基础用法 </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-checkbox
+			value="{{checked}}"
+			label="苹果"
+			disabled="{{disabled}}"
+			bind:change="onChange"
+		/>
+		<mc-checkbox
+			value="{{false}}"
+			disabled="{{disabled}}"
+			color="red"
+			bind:change="onChange"
+		>香蕉</mc-checkbox>
+		<mc-checkbox
+			value="{{checked}}"
+			label="菠萝"
+			disabled
+			bind:change="onChange"
+		/>
+
+		<mc-checkbox
+			value="{{false}}"
+			label="西瓜"
+			disabled
+			bind:change="onChange"
+		/>
+	</view>
+
+	<view class="g-pd-30" >方形图标 </view>
+	<view class="g-pd-lr-30">
+		<mc-checkbox-group value="{{ result }}" bind:change="onChange" class="g-flex">
+			<mc-checkbox shape="square" name="a" label="钢铁侠"></mc-checkbox>
+			<mc-checkbox shape="square" name="b" label="美队"></mc-checkbox>
+			<mc-checkbox shape="square" name="c" label="绿巨人"></mc-checkbox>
+		</mc-checkbox-group>
+	</view>
+
+
+
+	<view class="g-pd-30" >组合用法 </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-checkbox-group value="{{ result }}" bind:change="onChange" class="g-flex">
+			<mc-checkbox name="a" label="钢铁侠"></mc-checkbox>
+			<mc-checkbox name="b" label="美队"></mc-checkbox>
+			<mc-checkbox name="c" label="绿巨人"></mc-checkbox>
+		</mc-checkbox-group>
+	</view>
+
+	<view class="g-pd-30" >组合用法(禁用) </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-checkbox-group disabled value="{{ result }}" bind:change="onChange" class="g-flex">
+			<mc-checkbox name="a" label="钢铁侠"></mc-checkbox>
+			<mc-checkbox name="b" label="美队"></mc-checkbox>
+			<mc-checkbox name="c" label="绿巨人"></mc-checkbox>
+		</mc-checkbox-group>
+	</view>
+</template>
+
+<script>
+Page({
+	data: {
+		disabled: false,
+		checked: true,
+		result: ['a', 'b'],
+	},
+	onChange(val) {
+		console.log(val, 'val');
+	}
+});
+</script>
+<style lang="scss">
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-checkbox": "../../components/checkbox/checkbox",
+		"mc-checkbox-group": "../../components/checkbox/checkbox-group"
+	}
+}
+</config>
