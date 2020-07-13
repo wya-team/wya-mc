@@ -5,7 +5,7 @@ export const pickerViewProps = {
 	},
 	cols: {
 		type: Number,
-		value: 1
+		value: 0
 	},
 	indicatorStyle: {
 		type: String,

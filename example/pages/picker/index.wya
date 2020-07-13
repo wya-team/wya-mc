@@ -29,11 +29,43 @@ Page({
 				children: [
 					{
 						label: '爱好女',
-						value: '2'
+						value: '2',
+						// children: [
+						// 	{
+						// 		label: '第三例第一行',
+						// 		value: '2-1'
+						// 	},
+						// 	{
+						// 		label: '第三例第二行',
+						// 		value: '2-2'
+						// 	}
+						// ]
 					},
 					{
 						label: '花花',
-						value: '3'
+						value: '3',
+						// children: [
+						// 	{
+						// 		label: '第三例第一行',
+						// 		value: '3-1'
+						// 	},
+						// 	{
+						// 		label: '第三例第二行',
+						// 		value: '3-2'
+						// 	}
+						// ]
+					},
+					{
+						label: '篮球',
+						value: '7'
+					},
+					{
+						label: '足球',
+						value: '8'
+					},
+					{
+						label: '排球',
+						value: '79'
 					}
 				]
 			},

@@ -8,7 +8,9 @@
 		bindchange="handleChange" 
 	>
 		<picker-view-column wx:for="{{currentData}}" wx:for-item="column" wx:key="index">
-			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">{{item.label}}</view>
+			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
+				<view class="mc-picker-view__item-text">{{item.label}}</view>
+			</view>
 		</picker-view-column>
 	</picker-view>
 </template>
@@ -55,8 +57,8 @@ McComponent({
 			} else if (this.isTwoDimensional) {
 				currentData = [...dataSource];
 			}
-			if (currentData.length > this.cols) {
-				currentData = currentData.slice(0, this.cols);
+			if (cols > 0 && currentData.length > cols) {
+				currentData = currentData.slice(0, cols);
 			}
 			
 			const currentLabel = currentValue.map((it, index) => {
@@ -90,20 +92,21 @@ McComponent({
 			if (!this.isOneDimensional && !this.isTwoDimensional) {
 				throw Error('【mc-pciker】dataSource数据格式错误，请检查');
 			}
-		},
+		}, 
 		// value为picker-view-column 当前选择的是第几项
 		parseData(dataSource, opts) {
 			const { currentValue, data = [], col = 0 } = opts || {};
 			data[col] = [];
+			if (!dataSource) { console.trace(); }
 			for (let i = 0, length = dataSource.length; i < length; i++) {
 				data[col].push(dataSource[i]);
-				if (i === currentValue[col] && dataSource[i].children instanceof Array) {
+				/* eslint-disable */
+				if ((i === currentValue[col] && dataSource[i].children instanceof Array 
+					|| (i === 0 && (currentValue[col] === undefined || currentValue[col] === null) && (dataSource[0] || {}).children instanceof Array)) // 如果当前列没有选中的值，默认拿第一个
+					&& (col < this.data.cols - 1 || !this.data.cols)) {
 					this.parseData(dataSource[i].children, { currentValue, data, col: col + 1 });
 				}
-			}
-			// 如果当前列没有选中的值，默认拿第一个
-			if ((currentValue[col] === undefined || currentValue[col] === null) && (dataSource[0] || {}).children instanceof Array) {
-				data[col + 1] = (dataSource[0] || {}).children || [];
+				/* eslint-enable */
 			}
 			return data;
 		},
@@ -143,7 +146,7 @@ McComponent({
 		getTouchColumn(val) {
 			const { currentValue } = this.data;
 			for (let i = 0, length = val.length; i < length; i++) {
-				if (val[i] !== currentValue[i] || (val[i] === 0 && currentValue[i] == undefined)) {
+				if ((currentValue[i] !== undefined && val[i] !== currentValue[i]) || (val[i] !== 0 && currentValue[i] === undefined)) {
 					return i;
 				}
 			}
@@ -177,6 +180,12 @@ McComponent({
 				}
 				const data = this.parseData(dataSource, { currentValue: value });
 				this.setData({ currentData: data });
+				if (value.length > data.length) {
+					value = value.splice(0, data.length);
+				} else if (data.length > value.length) {
+					let left = data.length - value.length;
+					value.splice(value.length, 0, ...Array(left).fill(0));
+				}
 			}
 			this.setData({ currentValue: value });
 			this.$emit('change', this.parserValue(value));
@@ -202,6 +211,12 @@ McComponent({
 		display: flex;
 		justify-content: center;
 		align-items: center;
+	}
+	.mc-picker-view__item-text {
+		display: block;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;
 	}
 }
 </style>

@@ -1,11 +1,12 @@
 {
 	"pages": [
-		"pages/dropdown-menu/index",
+		"pages/picker/index",
 		"pages/action-sheet/index",
 		"pages/button/index",
 		"pages/cascader/index",
 		"pages/collapse/index",
 		"pages/count-down/index",
+		"pages/dropdown-menu/index",
 		"pages/form/index",
 		"pages/icon/index",
 		"pages/image/index",
@@ -15,7 +16,6 @@
 		"pages/list/index",
 		"pages/modal/index",
 		"pages/notice-bar/index",
-		"pages/picker/index",
 		"pages/popup/index",
 		"pages/portal/index",
 		"pages/recycle-list/index",
