@@ -1,0 +1,99 @@
+<template>
+	<view class="mc-radio" bindtap="handleChange">
+		<view class="mc-radio-icon" >
+			<mc-icon
+				type="{{ value === name ? 'select-checked' : 'select' }}"
+				style="color: {{ disabled ? '#999' : color}}"
+			>
+			</mc-icon>
+		</view>
+		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e'}}">{{ label }}</text>
+		<slot wx:else />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+function emit(target, value) {
+	target.setData({
+		value
+	});
+	target.$emit('change', value);
+}
+
+McComponent({
+	relations: {
+		'./radio-group': {
+			type: 'ancestor',
+			linked(target) {
+				this.parent = target;
+			},
+			unlinked(target) {
+				this.parent = null;
+			}
+		}
+	},
+
+	props: {
+		disabled: {
+			type: Boolean,
+			default: false
+		},
+		value: {
+			type: [String, Number, Boolean],
+			default: false,
+			observer(val) {
+				this.setData({
+					currentValue: !!val
+				});
+			}
+		},
+		label: {
+			type: [String, Number, Boolean],
+		},
+		color: {
+			type: String,
+			value: '#26be76'
+		},
+		name: {
+			type: String
+		},
+	},
+	data: {
+	},
+	methods: {
+		handleChange() {
+			let { name, disabled } = this.data;
+			if (disabled) return;
+			this.emitChange(name);
+		},
+		emitChange(value) {
+			const curentTarget = this.parent || this;
+			curentTarget.setData({
+				value
+			});
+			curentTarget.$emit('change', value);
+		}
+	}
+});
+</script>
+<style lang="scss">
+.mc-radio {
+	display: flex;
+	align-items: center;
+	font-size: 28rpx;
+	padding: 4rpx 10rpx;
+	.mc-radio-icon {
+		margin-right: 10rpx;
+	}
+
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
+}
+</config>

@@ -1,0 +1,42 @@
+<template>
+	<view class="g-pd-30" >基础用法 </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-radio-group value="{{value}}" class="g-flex" bind:change="handleChange">
+			<mc-radio name="a">苹果</mc-radio>
+			<mc-radio name="b" label="香蕉"></mc-radio>
+			<mc-radio name="c" color="red">菠萝</mc-radio>
+			<mc-radio name="d" disabled>西瓜</mc-radio>
+		</mc-radio-group>
+
+	</view>
+	<view class="g-pd-30" >禁用模式 </view>
+	<view class="g-pd-lr-30 g-flex">
+		<mc-radio-group value="{{value}}" disabled class="g-flex" bind:change="handleChange">
+			<mc-radio name="a">苹果</mc-radio>
+			<mc-radio name="b">香蕉</mc-radio>
+			<mc-radio name="c">菠萝</mc-radio>
+			<mc-radio name="d">西瓜</mc-radio>
+		</mc-radio-group>
+	</view>
+</template>
+
+<script>
+Page({
+	data: {
+		value: 'b'
+	},
+	handleChange(detail) {
+		console.log(detail, this.data.value);
+	}
+});
+</script>
+<style lang="scss">
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-radio": "../../components/radio/radio",
+		"mc-radio-group": "../../components/radio/radio-group"
+	}
+}
+</config>
