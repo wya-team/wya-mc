@@ -86,7 +86,7 @@ McComponent({
 			if (this.parent) {
 				this.setParentValue(this.parent, !currentValue);
 			} else {
-				emit(this, !currentValue);
+				this.sync(!currentValue);
 			}
 		},
 		setParentValue(parent, value) {
@@ -95,16 +95,21 @@ McComponent({
 			if (value) {
 				if (parentValue.indexOf(name) === -1) {
 					parentValue.push(name);
-					emit(parent, parentValue);
+					this.sync(parentValue);
 				}
 			} else {
 				const index = parentValue.indexOf(name);
 				if (index !== -1) {
 					parentValue.splice(index, 1);
-					emit(parent, parentValue);
+					this.sync(parentValue);
 				}
 			}
 		},
+		sync(value) {
+			const curentTarget = this.parent || this;
+			curentTarget.setData({ value });
+			curentTarget.$emit('change', value);
+		}
 	}
 });
 </script>

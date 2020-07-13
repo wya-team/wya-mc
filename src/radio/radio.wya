@@ -14,13 +14,6 @@
 <script>
 import McComponent from '../common/component';
 
-function emit(target, value) {
-	target.setData({
-		value
-	});
-	target.$emit('change', value);
-}
-
 McComponent({
 	relations: {
 		'./radio-group': {
@@ -65,13 +58,11 @@ McComponent({
 		handleChange() {
 			let { name, disabled } = this.data;
 			if (disabled) return;
-			this.emitChange(name);
+			this.sync(name);
 		},
-		emitChange(value) {
+		sync(value) {
 			const curentTarget = this.parent || this;
-			curentTarget.setData({
-				value
-			});
+			curentTarget.setData({ value });
 			curentTarget.$emit('change', value);
 		}
 	}
