@@ -1,11 +1,11 @@
 <template>
 	<view style="padding-left: {{indent}}rpx" class="mc-form-item mc-class">
 		<view class="mc-form-item__wrapper {{classes}}">
-			<label wx:if="{{label || !useLabelSlot}}" for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label">
+			<view wx:if="{{label || !useLabelSlot}}" for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label label-class">
 				{{label}}
-			</label>
+			</view>
 			<slot name="label"></slot>
-			<view style="{{contentStyle}}" class="mc-form-item__content">
+			<view style="{{contentStyle}}" class="mc-form-item__content content-class">
 				<slot />
 			</view>
 		</view>
@@ -19,6 +19,7 @@ import { formComponents } from './relations';
 import { getPropByPath, filterEmpty } from '../common/utils';
 
 McComponent({
+	externalClasses: ['label-class', 'content-class'],
 	relations: {
 		'./index': {
 			type: 'ancestor',
@@ -225,6 +226,8 @@ McComponent({
 		padding-bottom: 24rpx;
 		padding-right: 24rpx;
 		vertical-align: middle;
+		clear: both;
+		overflow: hidden;
 		&:after {
 			position: absolute;
 			box-sizing: border-box;

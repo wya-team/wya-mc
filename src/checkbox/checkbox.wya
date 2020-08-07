@@ -49,7 +49,7 @@ McComponent({
 		},
 		shape: {
 			type: String,
-			value: 'round', // round, square,
+			value: 'square', // round, square,
 		},
 		color: {
 			type: String,
@@ -68,8 +68,8 @@ McComponent({
 	},
 	data: {
 		currentValue: false,
-		activeIcon: 'select-checked',
-		icon: 'select'
+		activeIcon: 'xuanzhong',
+		icon: 'xuanze'
 	},
 	observers: {
 		'shape': function (val) {
