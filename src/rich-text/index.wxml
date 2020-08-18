@@ -1,0 +1,5 @@
+<import src="./wx-parse.wxml"/>
+
+<view class="ql-editor" >
+	<template is="wxParse" data="{{ wxParseData: currentValue.nodes }}"/>
+</view>
