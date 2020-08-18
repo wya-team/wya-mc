@@ -45,7 +45,7 @@
 		</block>
 		<input 
 			wx:else
-			class="mc-input__input {{right ? 'is-right' : ''}} mc-input-class"
+			class="mc-input__input {{right ? 'is-right' : ''}} {{disabled ? 'is-disabled' : ''}} mc-input-class"
 			type="{{ type }}"
 			focus="{{ focus }}"
 			cursor="{{ cursor }}"
@@ -72,7 +72,7 @@
 		/>
 		<view wx:if="{{useAppendslot || clearable}}" class="mc-input__append">
 			<mc-icon 
-				wx:if="{{!disabled && !useClearSlot && currentValue && clearable}}" 
+				wx:if="{{!disabled && !useClearSlot && currentValue && clearable && isFocus}}" 
 				type="clear" 
 				mc-class="mc-input__clear" 
 				bind:click="handleClear"
@@ -136,6 +136,7 @@ McComponent({
 		currentValue: '',
 		isPopup: false,
 		textareaHeight: 150, // 默认150px
+		isFocus: false
 	},
 	observers: {
 		type(val) {
@@ -178,10 +179,14 @@ McComponent({
 			this.sync(value);
 		},
 		handleBlur(event) {
+			setTimeout(() => {
+				this.setData({ isFocus: false });
+			}, 100);
 			this.$emit('blur', this.data.currentValue);
 			this.parent && this.parent.fieldBlur();
 		},
 		handleFocus(event) {
+			this.setData({ isFocus: true });
 			this.$emit('focus', event.detail);
 		},
 		handleConfirm(event) {
@@ -248,6 +253,12 @@ McComponent({
 		}
 		padding-left: 7rpx;
 		padding-right: 7rpx;
+		&.is-disabled {
+			background-color: #f3f3f3;
+			opacity: 1;
+			cursor: not-allowed;
+			color: #ccc;
+		}
 	}
 	.mc-input__append {
 		padding-left: 20rpx; 

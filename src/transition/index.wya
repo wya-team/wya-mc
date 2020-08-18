@@ -1,7 +1,7 @@
 <template>
 	<view
 		wx:if="{{ inited }}"
-		class="mc-transition {{ classes }}"
+		class="mc-transition mc-class {{ classes }}"
 		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }} {{ mcStyle }}"
 		bind:transitionend="onTransitionEnd"
 	>
@@ -40,58 +40,46 @@ McComponent({
 }
 
 .mc-fade-down-enter-active,.mc-fade-down-leave-active,.mc-fade-left-enter-active,.mc-fade-left-leave-active,.mc-fade-right-enter-active,.mc-fade-right-leave-active,.mc-fade-up-enter-active,.mc-fade-up-leave-active {
-	transition-property: opacity,-webkit-transform;
 	transition-property: opacity,transform;
-	transition-property: opacity,transform,-webkit-transform
 }
 
 .mc-fade-up-enter,.mc-fade-up-leave-to {
-	-webkit-transform: translate3d(0,100%,0);
 	transform: translate3d(0,100%,0);
 	opacity: 0
 }
 
 .mc-fade-down-enter,.mc-fade-down-leave-to {
-	-webkit-transform: translate3d(0,-100%,0);
 	transform: translate3d(0,-100%,0);
 	opacity: 0
 }
 
 .mc-fade-left-enter,.mc-fade-left-leave-to {
-	-webkit-transform: translate3d(-100%,0,0);
 	transform: translate3d(-100%,0,0);
 	opacity: 0
 }
 
 .mc-fade-right-enter,.mc-fade-right-leave-to {
-	-webkit-transform: translate3d(100%,0,0);
 	transform: translate3d(100%,0,0);
 	opacity: 0
 }
 
 .mc-slide-down-enter-active,.mc-slide-down-leave-active,.mc-slide-left-enter-active,.mc-slide-left-leave-active,.mc-slide-right-enter-active,.mc-slide-right-leave-active,.mc-slide-up-enter-active,.mc-slide-up-leave-active {
-	transition-property: -webkit-transform;
 	transition-property: transform;
-	transition-property: transform,-webkit-transform
 }
 
 .mc-slide-up-enter,.mc-slide-up-leave-to {
-	-webkit-transform: translate3d(0,100%,0);
 	transform: translate3d(0,100%,0)
 }
 
 .mc-slide-down-enter,.mc-slide-down-leave-to {
-	-webkit-transform: translate3d(0,-100%,0);
 	transform: translate3d(0,-100%,0)
 }
 
 .mc-slide-left-enter,.mc-slide-left-leave-to {
-	-webkit-transform: translate3d(-100%,0,0);
 	transform: translate3d(-100%,0,0)
 }
 
 .mc-slide-right-enter,.mc-slide-right-leave-to {
-	-webkit-transform: translate3d(100%,0,0);
 	transform: translate3d(100%,0,0)
 }
 </style>

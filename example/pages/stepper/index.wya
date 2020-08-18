@@ -29,7 +29,7 @@ page {
 <config>
 {
 	"usingComponents": {
-		"mc-stepper": "../../components/stepper"
+		"mc-stepper": "../../components/stepper/index"
 	}
 }
 </config>

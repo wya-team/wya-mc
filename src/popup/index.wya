@@ -1,13 +1,13 @@
 <template>
-	<!-- <mc-transition wx:if="{{mask}}" name="fade" visible="{{mask && visible}}"> -->
-		<view 
-			wx:if="{{mask && visible}}" 
-			class="mc-popup__mask" 
-			style="{{maskStyle}}"
-			catchtap="handleClose" 
-			catch:touchmove="preventToucheMove" 
-		/>
-	<!-- </mc-transition> -->
+	<mc-transition 
+		wx:if="{{mask}}" 
+		visible="{{mask && visible}}" 
+		duration="{{ duration }}"
+		mc-class="mc-popup__mask" 
+		mc-style="z-index: {{ zIndex }}; {{ maskStyle }}"
+		catchtap="handleClose" 
+		catch:touchmove="preventToucheMove" 
+	/>
 	<view 
 		wx:if="{{inited}}" 
 		class="mc-popup {{classes}} mc-popup__{{placement}} mc-popup__round mc-class"
@@ -55,7 +55,11 @@ McComponent({
 			type: String,
 			value: 'top-right'
 		},
-		maskStyle: String
+		maskStyle: String,
+		zIndex: {
+			type: Number,
+			value: 1000,
+		},
 	},
 	data: {
 	},

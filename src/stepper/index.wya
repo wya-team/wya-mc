@@ -153,7 +153,7 @@ McComponent({
 		},
 		handleInput(event) {
 			const { value = '' } = event.detail || {};
-			this.sync(value);
+			this.sync(value, 'input');
 		},
 		async handleClick(event) {
 			const { type } = event.currentTarget.dataset;
@@ -220,21 +220,16 @@ McComponent({
 			this.sync(this.range(value));
 			this.$emit(type);
 		},
-
-		triggerInput(value, type) {
-			this.setData({
-				value: this.data.async ? this.data.value : value,
-			});
-			this.$emit('change', value);
-			this.parent && this.parent.fieldChange();
-			
-		},
-		sync(v) {
+		sync(v, type) {
 			this.setData({
 				value: v,
 			});
 			this.$emit('change', v);
 			this.parent && this.parent.fieldChange();
+			// 失焦以及操作"+"、"-"才会触发async
+			if (this.data.async && type !== 'input') {
+				this.$emit('async', v);
+			}
 		},
 
 		computeInputStyle() {

@@ -138,3 +138,19 @@ export const add = (num1, num2) => {
 	const cardinal = 10 ** 10;
 	return Math.round((num1 + num2) * cardinal) / cardinal;
 };
+
+export function requestAnimationFrame(cb) {
+	const systemInfo = getSystemInfoSync();
+  
+	if (systemInfo.platform === 'devtools') {
+		return nextTick(cb);
+	}
+  
+	return wx
+		.createSelectorQuery()
+		.selectViewport()
+		.boundingClientRect()
+		.exec(() => {
+			cb();
+		});
+}
