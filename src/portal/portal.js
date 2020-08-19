@@ -101,11 +101,13 @@ class Portal {
 		let update = ctx.update || ctx.onPortalUpdate;
 		update && update.call(ctx, options);
 
-		if (ctx[PORTAL_TAG] && ctx.$emit) return ctx;
+		// 避免快速点击造成出现两次弹框
+		if (ctx[PORTAL_TAG]) return ctx;
 		let on = ctx.triggerEvent;
 
 		let done = (hook, detail) => {
 			this.destroy();
+			ctx[PORTAL_TAG] = false;
 			hook && hook(detail);
 		};
 
@@ -125,6 +127,7 @@ class Portal {
 		};
 
 		ctx[PORTAL_TAG] = true;
+		// 每次render必须重新，拿去新的onSure和onClose
 		ctx.triggerEvent = overrideTrigger;
 
 		return ctx;
