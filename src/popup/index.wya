@@ -68,7 +68,9 @@ McComponent({
 	},
 	observers: {
 		visible(val) {
-			TextareaHack.toggle(val);
+			if (this.data.visible !== val) {
+				TextareaHack.toggle(val);	
+			}
 		}
 	},
 	methods: {
