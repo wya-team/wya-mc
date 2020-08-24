@@ -5,7 +5,7 @@
 		</view>
 		<block wx:if="{{ type === 'textarea' }}">
 			<textarea 
-				wx:if="{{!isPopup}}"
+				wx:if="{{!shouldHide}}"
 				id="{{uuid}}"
 				class="mc-input__textarea"
 				value="{{ currentValue }}"
@@ -102,8 +102,10 @@ McComponent({
 		'../collapse/collapse-item': {
 			type: 'ancestor',
 			linked(parent) {
+				this.collaspeItem = parent;
 			},
 			unlinked(child) {
+				this.collaspeItem = null;
 			}
 		},
 	},
@@ -134,7 +136,7 @@ McComponent({
 	},
 	data: {
 		currentValue: '',
-		isPopup: false,
+		shouldHide: false,
 		textareaHeight: 150, // 默认150px
 		isFocus: false
 	},

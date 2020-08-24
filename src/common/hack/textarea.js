@@ -27,13 +27,14 @@ class TextareaHack {
 			}
 			data.forEach(instance => {
 				instance.setData({
-					isPopup: visible
+					shouldHide: visible
 				});
 			});
 		} else {
 			this.instanceList.forEach((instance) => {
+				if (instance.collaspeItem && !instance.collaspeItem.data.isActive && !visible) return;
 				instance.setData({
-					isPopup: visible
+					shouldHide: visible
 				});
 			});
 		}
