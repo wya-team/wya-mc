@@ -43,11 +43,16 @@ McComponent({
 		'./index': {
 			type: 'parent',
 			linked(target) {
+				this.parent = target;
 				if (!this.data.indent) {
 					this.setData({
 						indent: 32
 					});	
 				}
+				this.setLabelStyle(this.data.labelWidth);
+			},
+			unlinked() {
+				this.parent = null;
 			},
 		}
 	},
@@ -56,6 +61,9 @@ McComponent({
 		labelWidth: {
 			type: String,
 			optionalTypes: [Number],
+			observer(val) {
+				this.parent && this.setLabelStyle(val);
+			}
 		},
 		content: String,
 		url: String,
@@ -91,8 +99,9 @@ McComponent({
 	data: {
 		showRightIcon: true
 	},
-	observers: {
-		'labelWidth': function (labelWidth) {
+	methods: {
+		setLabelStyle(labelWidth) {
+			labelWidth = labelWidth || this.parent.data.labelWidth;
 			if (!labelWidth || labelWidth === 'auto') {
 				this.setData({
 					labelStyle: 'width: auto'
@@ -103,9 +112,7 @@ McComponent({
 					labelStyle: `min-width: ${width}; max-width: ${width}rpx`
 				});
 			}
-		}
-	},
-	methods: {
+		},
 		handleClick(event) {
 			let { url = '', linkType } = this.data;
 			this.$emit('click', event.detail);

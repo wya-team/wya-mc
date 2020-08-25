@@ -24,7 +24,11 @@ McComponent({
 		border: {
 			type: Boolean,
 			value: true
-		}
+		},
+		labelWidth: {
+			type: String,
+			optionalTypes: [Number],
+		},
 	},
 });
 </script>
