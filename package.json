@@ -1,8 +1,11 @@
 {
   "name": "wya-mc",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "微一案微信小程序UI组件库",
   "main": "lib",
+  "files": [
+    "lib/**"
+  ],
   "scripts": {
     "start": "npm run dev",
     "dev": "npm run serve",
@@ -12,6 +15,7 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --fix --watch",
     "mock": "cd ./mock && npm run start",
+    "pub": "bash config/publish.sh",
     "test": "jest --config=jest.config.js --coverage",
     "test:watch": "jest --config=jest.config.js --coverage --watch",
     "add": "node ./config/add.prompt.js"
