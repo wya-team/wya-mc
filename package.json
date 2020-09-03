@@ -1,5 +1,5 @@
 {
-  "name": "wya-mc",
+  "name": "@wya/mc",
   "version": "1.0.0",
   "description": "微一案微信小程序UI组件库",
   "main": "lib",
