@@ -10,7 +10,7 @@
 	/>
 </template>
 <script>
-// TODO: 按需加载echarts
+// TODO: 按需加载echarts, 如getApp().echarts
 import * as echarts from 'echarts/dist/echarts.min';
 
 import McComponent from '../common/component';

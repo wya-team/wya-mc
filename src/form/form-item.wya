@@ -12,6 +12,7 @@
 	</view>
 </template>
 <script>
+// TODO: 按需加载async-validator, 如getApp().AsyncValidator
 import AsyncValidator from 'async-validator';
 import { RegEx } from '../common/regex';
 import McComponent from '../common/component';
