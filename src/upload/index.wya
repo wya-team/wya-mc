@@ -71,6 +71,7 @@ McComponent({
 		ready() {
 			this.__isMounted = true;
 
+			// TODO: this.data.fns传递的对象也可以起到传递函数的作用
 			this.$fns = {
 				enhancer: null,
 				onPostBefore: null,
@@ -87,6 +88,7 @@ McComponent({
 				},
 				onComplete() {}
 			};
+
 			this.$emit('ready', {
 				done: (fns = {}) => this.$fns = { ...this.$fns, ...fns }
 			});
