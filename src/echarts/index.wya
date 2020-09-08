@@ -1,0 +1,196 @@
+<template>
+	<canvas 
+		type="2d"
+		class="mc-echarts" 
+		id="{{ elementId }}" 
+		bindinit="init" 
+		bindtouchstart="handleStart" 
+		bindtouchmove="handleMove" 
+		bindtouchend="handleEnd"
+	/>
+</template>
+<script>
+// TODO: 按需加载echarts
+import * as echarts from 'echarts/dist/echarts.min';
+
+import McComponent from '../common/component';
+import WxCanvas from './wx-canvas';
+
+const wrapTouch = (e) => {
+	for (let i = 0; i < e.touches.length; ++i) {
+		const touch = e.touches[i];
+		touch.offsetX = touch.x;
+		touch.offsetY = touch.y;
+	}
+	return e;
+};
+
+McComponent({
+	// 同@wya/vc下vc-echarts
+	props: {
+		elementId: {
+			type: String,
+			value: 'mc-echarts'
+		},
+
+		options: {
+			type: Object,
+			observer(value) {
+				if (!this.chart && value) {
+					this.init();
+				} else {
+					this.chart.setOption(value);
+				}
+			},
+		},
+
+		lazy: {
+			type: Boolean,
+			default: false
+		}
+
+		// theme: [String, Object],
+		// initOptions: Object,
+		// group: String,
+		// autoResize: Boolean,
+		// watchShallow: Boolean,
+		// manualUpdate: Boolean
+	},
+	data: {
+	},
+	lifetimes: {
+		attached() {
+			this.__isMounted = false;
+		},
+		ready() {
+			// Disable prograssive because drawImage doesn't support DOM as parameter
+			// See https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.drawImage.html
+			echarts.registerPreprocessor(option => {
+				if (option && option.series) {
+					if (option.series.length > 0) {
+						option.series.forEach(series => {
+							series.progressive = 0;
+						});
+					} else if (typeof option.series === 'object') {
+						option.series.progressive = 0;
+					}
+				}
+			});
+
+			if (!this.data.options) {
+				console.warn('组件需绑定 options 变量，例：<mc-echarts id="mychart" options="{{ options }}" />');
+				return;
+			}
+
+			if (!this.data.lazy) {
+				this.init();
+			}
+		},
+		detached() {
+			this.__isMounted = false;
+		}
+	},
+	methods: {
+		init() {
+			const query = this.createSelectorQuery();
+			query
+				.select('.mc-echarts')
+				.fields({ node: true, size: true })
+				.exec(res => {
+					const { width, height, node } = res[0];
+					const devicePixelRatio = wx.getSystemInfoSync().pixelRatio;
+
+					const canvas = new WxCanvas(node, this.data.elementId);
+
+					echarts.setCanvasCreator(() => canvas);
+
+					this.chart = echarts.init(canvas, null, {
+						width,
+						height,
+						devicePixelRatio
+					});
+
+					canvas.setChart(this.chart);
+					this.chart.setOption(this.data.options);
+				});
+			
+		},
+
+		canvasToTempFilePath(opts) {
+			const query = this.createSelectorQuery();
+			query
+				.select('.mc-canvas')
+				.fields({ node: true, size: true })
+				.exec(res => {
+					const { node } = res[0];
+					opt.canvas = node;
+					wx.canvasToTempFilePath(opts);
+				});
+		},
+
+		handleStart(e) {
+			if (this.chart && e.touches.length > 0) {
+				let touch = e.touches[0];
+				let handler = this.chart.getZr().handler;
+				handler.dispatch('mousedown', {
+					zrX: touch.x,
+					zrY: touch.y
+				});
+				handler.dispatch('mousemove', {
+					zrX: touch.x,
+					zrY: touch.y
+				});
+				handler.processGesture(wrapTouch(e), 'start');
+			}
+		},
+
+		handleMove(e) {
+			if (this.chart && e.touches.length > 0) {
+				let touch = e.touches[0];
+				let handler = this.chart.getZr().handler;
+				handler.dispatch('mousemove', {
+					zrX: touch.x,
+					zrY: touch.y
+				});
+				handler.processGesture(wrapTouch(e), 'change');
+			}
+		},
+
+		handleEnd(e) {
+			if (this.chart) {
+				let touch = e.changedTouches ? e.changedTouches[0] : {};
+				let handler = this.chart.getZr().handler;
+				handler.dispatch('mouseup', {
+					zrX: touch.x,
+					zrY: touch.y
+				});
+				handler.dispatch('click', {
+					zrX: touch.x,
+					zrY: touch.y
+				});
+				handler.processGesture(wrapTouch(e), 'end');
+			}
+		},
+
+		refresh() {
+			if (this.chart) {
+				this.init();
+			}
+		}
+	}
+});
+
+</script>
+
+<style lang="scss">
+.mc-echarts {
+	width: 100%;
+	height: 100%;
+}
+</style>
+
+<config>
+{
+	"component": true
+}
+</config>
