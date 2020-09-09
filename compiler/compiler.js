@@ -51,8 +51,8 @@ const getGulpConfig = () => {
 	const ignoreFile = (process.env.IGNORED_COMPONENTS || '').split(',');
 	return {
 		ignore: [...ignoreFile, path.resolve(temp, './libs/**/**')]
-	}
-}
+	};
+};
 
 // 获取gulp的输出路径
 const getGulpOutput = (file) => {
@@ -61,7 +61,7 @@ const getGulpOutput = (file) => {
 		return distComponents;
 	}
 	return dist;
-}
+};
 
 const getGulpTempOutput = (file) => {
 	const srcRegex = /\/src/;
@@ -69,62 +69,76 @@ const getGulpTempOutput = (file) => {
 		return tempComponents;
 	}
 	return temp;
-}
+};
 
 class Compiler {
-	static sass = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			.pipe(sass().on('error', sass.logError))
-			.pipe(postcss())
-			.pipe(rename({ extname: '.wxss' }))
-			.pipe(gulp.dest(getGulpOutput));
+	static sass(src) {
+		return function _sass() {
+			return gulp
+				.src(src, getGulpConfig())
+				.pipe(sass().on('error', sass.logError))
+				.pipe(postcss())
+				.pipe(rename({ extname: '.wxss' }))
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static js = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			.pipe(babel(babelConfig))
-			.pipe(gulp.dest(getGulpOutput));
+	static js(src) {
+		return function js() {
+			return gulp
+				.src(src, getGulpConfig())
+				.pipe(babel(babelConfig))
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static wxml = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			.pipe(gulp.dest(getGulpOutput));
+	static wxml(src) {
+		return function wxml() {
+			return gulp
+				.src(src, getGulpConfig())
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static wxs = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			// .pipe(babel(babelConfig))
-			// .pipe(rename({ extname: '.wxs' }))
-			.pipe(gulp.dest(getGulpOutput));
+	static wxs(src) {
+		return function wxs() {
+			return gulp
+				.src(src, getGulpConfig())
+				// .pipe(babel(babelConfig))
+				// .pipe(rename({ extname: '.wxs' }))
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static json = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			.pipe(gulp.dest(getGulpOutput));
+	static json(src) {
+		return function json() {
+			return gulp
+				.src(src, getGulpConfig())
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static cleaner = () => {
+	static cleaner() {
 		return del([`${dist}/**`, `${temp}/**`], { force: true });
 	}
 
-	static wya = (src) => () => {
-		return gulp
-			.src(src, getGulpConfig())
-			.pipe(complieWya())
-			.pipe(rename({ extname: '.js' }))
-			.pipe(babel(babelConfig))
-			.pipe(gulp.dest(getGulpOutput));
+	static wya(src) {
+		return function wya() {
+			return gulp
+				.src(src, getGulpConfig())
+				.pipe(complieWya())
+				.pipe(rename({ extname: '.js' }))
+				.pipe(babel(babelConfig))
+				.pipe(gulp.dest(getGulpOutput));
+		};
 	}
 
-	static runtime = (src) => () => {
-		return gulp
-			.src(src)
-			.pipe(complieRuntime())
+	static runtime(src) {
+		return function runtime() {
+			return gulp
+				.src(src)
+				.pipe(complieRuntime());
+		};
 	}
 }
 // build task
