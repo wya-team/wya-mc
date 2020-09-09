@@ -1,6 +1,6 @@
 {
   "name": "@wya/mc",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "微一案微信小程序UI组件库",
   "main": "lib",
   "files": [
@@ -38,7 +38,6 @@
   },
   "homepage": "https://github.com/wya-team/wya-mc#readme",
   "dependencies": {
-    "@wya/utils": "^1.6.0",
     "async-validator": "^3.3.0",
     "echarts": "^4.9.0"
   },
