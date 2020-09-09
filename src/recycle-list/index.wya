@@ -15,7 +15,7 @@
 		bind:touchend="handleTouchEnd"
 	>
 		<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="overflow: hidden;">
-			<text>{{ pullDownText }}</text>
+			<text class="mc-recycle-list__text">{{ pullDownText }}</text>
 		</view>
 
 		<view
@@ -26,7 +26,7 @@
 		</view>
 
 		<view class="mc-recycle-list__scroll">
-			<text> {{ scrollText }}</text>
+			<text class="mc-recycle-list__text"> {{ scrollText }}</text>
 		</view>
 	</scroll-view>
 </template>
@@ -253,7 +253,7 @@ McComponent({
 	align-items: center;
 	justify-content: center;
 	height: 60rpx;
-	text {
+	.mc-recycle-list__text {
 		color: #333;
 		line-height: 60rpx;
 		font-size: 24rpx;
@@ -268,7 +268,7 @@ McComponent({
 	&.is-transition {
 		transition: height .3s ease
 	}
-	text {
+	.mc-recycle-list__text {
 		color: #333;
 		line-height: 60rpx;
 		font-size: 24rpx;
