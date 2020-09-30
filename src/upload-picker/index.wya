@@ -45,6 +45,7 @@
 
 			<!-- 上传样式 -->
 			<block wx:if="{{!disabled && currentMultiple.image}}">
+				<!-- fns="{{ uploadOpts.fns }}" -->
 				<mc-upload 
 					max="{{currentMax.image}}"
 					multiple="{{currentMultiple.image}}"
