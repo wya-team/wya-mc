@@ -46,6 +46,7 @@ McComponent({
 			this.handleClose();
 		},
 		handleOK() {
+			this.$emit('sure');
 			this.$emit('ok');
 			this.handleClose();
 		},

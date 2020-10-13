@@ -1,0 +1,50 @@
+<template>
+	<mc-date-picker
+		value="{{dateValue}}"
+		label="日期"
+		mode="date"
+		title="选择日期"
+		bind:change="handleDateChange"
+	>
+	</mc-date-picker>
+	<mc-date-picker 
+		value="{{monthValue}}"
+		label="月份"
+		mode="month"
+		title="选择月份"
+	>
+	</mc-date-picker>
+	<mc-date-picker 
+		value="{{quarterValue}}"
+		label="季度"
+		mode="quarter"
+		title="选择季度"
+	>
+	</mc-date-picker>
+</template>
+<script>
+const app = getApp();
+import Portal from '../../components/portal/index';
+
+Page({
+	data: {
+		dateValue: '2020-09-20',
+		monthValue: '2020-09',
+		quarterValue: '2020-01',
+	},
+	onShow() {
+		
+	},
+	handleDateChange(event) {
+		console.log('event', event.detail);
+	}
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-date-picker": "../../components/date-picker"
+	}
+}
+</config>
