@@ -38,7 +38,7 @@ McComponent({
 	},
 	observers: {
 		'dataSource, value': function (dataSource, value) {
-			let currentValue = this.formatValue(value, true);
+			let currentValue = this.formatValue(value);
 			if (!isEqualWith(currentValue, this.data.currentValue)) {
 				this.setData({ currentValue });
 			}

@@ -28,7 +28,6 @@
 			indicator-class="{{indicatorClass}}"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
-			bind:label-change="handleLabelChange"
 		/>
 	</mc-picker-popup>
 </template>
@@ -68,7 +67,9 @@ McComponent({
 				let formatValue = val.split('-');
 				if (!isEqualWith(formatValue, this.data.currentValue)) {
 					this.setData({
-						currentValue: formatValue
+						currentValue: formatValue,
+						pickValue: formatValue,
+						extra: this.data.formatter.formatterExtra(val)
 					});
 				}
 			}
@@ -103,9 +104,15 @@ McComponent({
 			type: String,
 			value: '请选择'
 		},
+		formatter: {
+			type: Object,
+			value: {
+				formatterExtra: (value) => value
+			}
+		}
 	},
 	data: {
-		currentValue: ''
+		currentValue: []
 	},
 	observers: {
 		'mode': function (mode) {
@@ -144,11 +151,6 @@ McComponent({
 					this.handleClose();
 				});
 			}
-		},
-		handleLabelChange(event) {
-			event.detail.length > 0 && this.setData({
-				extra: event.detail.join(',')
-			});
 		},
 		handleChange(event) {
 			this.setData({
