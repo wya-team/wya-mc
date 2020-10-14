@@ -154,3 +154,42 @@ export function requestAnimationFrame(cb) {
 			cb();
 		});
 }
+
+/**
+ * new Date 兼容ios，2020/10/14 
+ * @param {*} dateStr 
+ */
+export const hackDate = (dateStr) => {
+	if (typeof dateStr !== 'string') {
+		throw new Error('【@wya/mc utils/hackDate】参数类型错误，应为日期字符串');
+	}
+	return dateStr.replace(/-/g, '/');
+};
+
+/**
+ * 分割日期字符串
+ * @param {*} dateStr 
+ */
+export const splitDateStr = (dateStr) => {
+	if (typeof dateStr !== 'string') {
+		throw new Error('【@wya/mc utils/hackDate】参数类型错误，应为日期字符串');
+	}
+	if (dateStr.includes('-')) {
+		return dateStr.split('-');
+	} else if (dateStr.includes('/')) {
+		return dateStr.split('/');
+	}
+	return '';
+};
+
+/**
+ * 小于10的数字前面加0
+ */
+export const preZero = (num) => {
+	if (num < 10 && num > 0) {
+		return "0" + num;
+	} else if (num <= 0) {
+		return '00';
+	}
+	return num;
+};

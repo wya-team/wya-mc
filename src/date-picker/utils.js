@@ -63,8 +63,6 @@ export const createDataSource = (mode, opts = {}) => {
 			return createQuarterData(minDate, maxDate);
 		case 'month':
 			return createMonthData(minDate, maxDate);
-		case 'time':
-			return [];
 		default:
 			return [];
 	}

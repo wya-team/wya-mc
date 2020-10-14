@@ -1,8 +1,8 @@
 <template>
-	<view class="mc-date-picker mc-class" bindtap="handleClick">
+	<view class="mc-time-picker mc-class" bindtap="handleClick">
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
-			wrapper-class="{{paddingNone ? 'mc-date-picker__padding-none' : ''}}"
+			wrapper-class="{{paddingNone ? 'mc-time-picker__padding-none' : ''}}"
 			content-class="content-class"
 			indent="{{0}}"
 			content="{{content || extra}}"
@@ -32,7 +32,7 @@
 	</mc-picker-popup>
 </template>
 <script>
-import { isEqualWith, hackDate, splitDateStr } from '../common/utils';
+import { isEqualWith, hackDate, splitDateStr, preZero } from '../common/utils';
 import McComponent from '../common/component';
 import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
@@ -61,31 +61,24 @@ McComponent({
 		...pickerViewProps,
 		...pickerPopupProps,
 		value: {
-			type: String,
+			type: String, // 为24小时制的 时间字符串
 			value: '',
 			observer(val) {
-				let formatValue = splitDateStr(val);
+				let formatValue = this.formatValue(val);
 				if (!isEqualWith(formatValue, this.data.currentValue)) {
 					this.setData({
 						currentValue: formatValue,
 						pickValue: formatValue,
-						content: val
+						content: this.formatContent(formatValue)
 					});
 				}
 			}
 		},
 		mode: {
 			type: String, // date、month、quarter
-			value: 'date',
+			value: '24',
 		},
-		minDate: {
-			type: String,
-			value: '1940/01/01 00:00'
-		},
-		maxDate: {
-			type: String,
-			value: '2030/12/31 23:59'
-		},
+		// TODO: 最大值、最小值
 		label: String,
 		labelWidth: {
 			type: String,
@@ -126,10 +119,60 @@ McComponent({
 		createDataSource(mode) {
 			this.setData({
 				dataSource: createDataSource(mode, {
-					minDate: new Date(hackDate(this.data.minDate)),
-					maxDate: new Date(hackDate(this.data.maxDate)),
+					
 				})
 			});
+		},
+		// 外部传入的时间转换成组件内需要的数组格式
+		formatValue(value) {
+			let [hour, minute] = value.split(':');
+			if (this.data.mode == '12') {
+				let quantum;
+				// 24小时制的 00 -> 12小时制的 12 am
+				// 24小时制的 12 -> 12小时制的 12 pm
+				if (hour == 0) {
+					quantum = 1;
+					hour = 12;
+				} else if (hour == 12) {
+					quantum = 2;
+				} else {
+					quantum = hour < 12 ? 1 : 2;
+					hour = hour < 12 ? hour : hour - 12;
+				}
+				return [quantum, hour, minute];
+			}
+			return [hour, minute];
+		},
+		// 外部的时间字符串转化为组件要展示的文案
+		formatContent(value) {
+			if (this.data.mode == '12') {
+				const [quantum, hour, minute] = value;
+				const quantunMap = {
+					1: 'a.m.',
+					2: 'p.m.',
+				};
+				return `${preZero(hour)}:${minute} ${quantunMap[quantum]}`;
+			} else {
+				let [hour, minute] = value;
+				return `${preZero(hour)}:${minute}`;
+			}
+		},
+		// 内部的数组格式转化为外部要接收的字符串
+		parseValue(value) {
+			if (this.data.mode == '12') {
+				let [quantum, hour, minute] = value;
+				if (quantum == 1 && hour == 12) {
+					hour = 0;
+				} else if (quantum == 2 && hour == 12) {
+					hour = 12;
+				} else if (quantum == 2) {
+					hour += 12;
+				}
+				return `${preZero(hour)}:${minute}`;
+			} else {
+				let [hour, minute] = value;
+				return `${preZero(hour)}:${minute}`;
+			}
 		},
 		handleViewReady(event) {
 			this.viewInstance = event.detail;
@@ -154,12 +197,11 @@ McComponent({
 		},
 		handleOK() {
 			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
-			const value = pickValue.join('-');
 			this.setData({
-				content: value,
+				content: this.formatContent(pickValue),
 				currentValue: pickValue
 			});
-			this.$emit('change', { value });
+			this.$emit('change', { value: this.parseValue(pickValue) });
 			this.parent && this.parent.fieldChange();
 		},
 		handleCancel() {
@@ -176,8 +218,8 @@ McComponent({
 <style lang="scss">
 @import '../common/index.scss';
 
-.mc-date-picker {
-	.mc-date-picker__padding-none {
+.mc-time-picker {
+	.mc-time-picker__padding-none {
 		padding: 0
 	}
 }

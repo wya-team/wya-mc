@@ -1,0 +1,42 @@
+<template>
+	<mc-time-picker
+		value="{{dateValue}}"
+		label="24小时制"
+		title="选择时间"
+		bind:change="handleDateChange"
+	>
+	</mc-time-picker>
+	<mc-time-picker
+		value="{{timeValue}}"
+		label="12小时制"
+		title="选择时间"
+		mode="12"
+		bind:change="handleDateChange"
+	>
+	</mc-time-picker>
+	
+</template>
+<script>
+const app = getApp();
+import Portal from '../../components/portal/index';
+
+Page({
+	data: {
+		dateValue: '12:30',
+		timeValue: '00:10'
+	},
+	onShow() {
+	},
+	handleDateChange(event) {
+		console.log('event', event.detail);
+	}
+});
+
+</script>
+<config>
+{
+	"usingComponents": {
+		"mc-time-picker": "../../components/time-picker"
+	}
+}
+</config>

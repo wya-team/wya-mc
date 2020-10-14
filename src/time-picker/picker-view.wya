@@ -1,0 +1,117 @@
+<template>
+	<picker-view 
+		class="mc-picker-view" 
+		value="{{currentValue}}" 
+		indicator-style="{{indicatorStyle}}" 
+		indicator-class="{{indicatorClass}}" 
+		style="width: 100%"
+		bindchange="handleChange" 
+	>
+		<picker-view-column wx:for="{{dataSource}}" wx:for-item="column" wx:key="index">
+			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
+				<view class="mc-picker-view__item-text">{{item.label}}</view>
+			</view>
+		</picker-view-column>
+	</picker-view>
+</template>
+<script>
+import { isEqualWith } from '../common/utils';
+import McComponent from '../common/component';
+import { pickerViewProps } from './props';
+import { DAYS_MAP } from './utils';
+
+McComponent({
+	props: {
+		...pickerViewProps,
+		value: {
+			type: Array,
+			value: []
+		},
+		dataSource: {
+			type: Array,
+			value: []
+		},
+		mode: String
+	},
+	data: {
+		currentValue: [],
+	},
+	observers: {
+		'dataSource, value': function (dataSource, value) {
+			let currentValue = this.formatValue(value);
+			if (!isEqualWith(currentValue, this.data.currentValue)) {
+				this.setData({ currentValue });
+			}
+		}
+	},
+	lifetimes: {
+		attached() {
+			this.$emit('ready', this);
+		},
+	},
+	methods: {
+		// 根据外部的值，返回列中数据对应的index
+		formatValue(value) {
+			return value.map((cur, index) => {
+				let i = (this.data.dataSource[index] || []).findIndex((it) => it.value == cur);
+				return i >= 0 ? i : 0;
+			});
+		},
+		// 根据选中item的index，返回对应的数据
+		parserValue(value) {
+			return value.map((cur, index) => {
+				return this.data.dataSource[index][cur].value;
+			});
+		},
+		handleChange(event) {
+			const { dataSource } = this.data;
+			let { value } = event.detail;
+			let parsedValue = this.parserValue(value);
+
+			
+			this.setData({ currentValue: value });
+			this.$emit('change', parsedValue);
+		},
+		getDefaultValue() {
+			const { dataSource } = this.data;
+			return dataSource.reduce((pre, cur) => {
+				const item = cur[0] || {};
+				pre.push(item.value);
+				return pre;
+			}, []);
+		},
+		reset(val) {
+			const { dataSource } = this.data;
+			const value = this.formatValue(val);
+			this.setData({ currentValue: value });
+		},
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-picker-view {
+	height: 476rpx;
+	.mc-picker-view__item {
+		line-height: 80rpx; 
+		font-size: 34rpx;
+		color: #000;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.mc-picker-view__item-text {
+		display: block;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

@@ -14,8 +14,11 @@
 		<mc-form-item label="选择器" prop="array">
 			<mc-picker dataSource="{{dataSource1}}" value="{{formValidate.array}}" bind:change="handleSelect"/>
 		</mc-form-item>
-		<mc-form-item label="时间选择器" prop="dateValue">
+		<mc-form-item label="日期选择器" prop="dateValue">
 			<mc-date-picker value="{{formValidate.dateValue}}" />
+		</mc-form-item>
+		<mc-form-item label="时间选择器" prop="timeValue">
+			<mc-time-picker value="{{formValidate.timeValue}}" />
 		</mc-form-item>
 		<mc-form-item label="联级器" prop="area">
 			<mc-cascader 
@@ -47,7 +50,8 @@ Page({
 			input2: '',
 			array: [],
 			area: [],
-			dateValue: ''
+			dateValue: '',
+			timeValue: ''
 		},
 		ruleValidate: {
 			input: [
@@ -72,6 +76,12 @@ Page({
 				{
 					required: true,
 					name: '~~dateValue项~~'
+				}
+			],
+			timeValue: [
+				{
+					required: true,
+					name: '~~timeValue项~~'
 				}
 			],
 		}
@@ -170,6 +180,7 @@ Page({
 		"mc-input": "../../components/input",
 		"mc-picker": "../../components/picker",
 		"mc-date-picker": "../../components/date-picker",
+		"mc-time-picker": "../../components/time-picker",
 		"mc-cascader": "../../components/cascader"
 	}
 }
