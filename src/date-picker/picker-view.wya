@@ -53,7 +53,8 @@ McComponent({
 		// 根据外部的值，返回列中数据对应的index
 		formatValue(value) {
 			return value.map((cur, index) => {
-				let i = this.data.dataSource[index].findIndex((it) => it.value == cur);
+				console.log(this.data.dataSource, index);
+				let i = (this.data.dataSource[index] || []).findIndex((it) => it.value == cur);
 				return i >= 0 ? i : 0;
 			});
 		},

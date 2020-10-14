@@ -76,7 +76,7 @@ McComponent({
 		},
 		mode: {
 			type: String, // date、month、quarter
-			value: 'date'
+			value: 'date',
 		},
 		minDate: {
 			type: String,
@@ -109,27 +109,28 @@ McComponent({
 		currentValue: [],
 		content: ''
 	},
-	observers: {
-		'mode': function (mode) {
-			this.setData({
-				dataSource: createDataSource(mode, {
-					minDate: new Date(this.data.minDate),
-					maxDate: new Date(this.data.maxDate),
-				})
-			});
-		}
-	},
 	lifetimes: {
 		attached() {
 			this.Func = new Portal({ 
 				el: `#${this.data.tag}` 
 			});
+			if (this.data.mode) {
+				this.createDataSource(this.data.mode);
+			}
 		}
 	},
 	destroyed() {
 	
 	},
 	methods: {
+		createDataSource(mode) {
+			this.setData({
+				dataSource: createDataSource(mode, {
+					minDate: new Date(this.data.minDate),
+					maxDate: new Date(this.data.maxDate),
+				})
+			});
+		},
 		handleViewReady(event) {
 			this.viewInstance = event.detail;
 		},
@@ -176,7 +177,7 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-date-picker {
-	.mc-picker__padding-none {
+	.mc-date-picker__padding-none {
 		padding: 0
 	}
 }
