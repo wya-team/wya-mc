@@ -5,7 +5,7 @@
 			wrapper-class="{{paddingNone ? 'mc-date-picker__padding-none' : ''}}"
 			content-class="content-class"
 			indent="{{0}}"
-			content="{{extra}}"
+			content="{{content || extra}}"
 			label="{{label}}"
 			label-width="{{labelWidth}}"
 			border="{{border}}"
@@ -69,7 +69,7 @@ McComponent({
 					this.setData({
 						currentValue: formatValue,
 						pickValue: formatValue,
-						extra: this.data.formatter.formatterExtra(val)
+						content: val
 					});
 				}
 			}
@@ -104,15 +104,10 @@ McComponent({
 			type: String,
 			value: '请选择'
 		},
-		formatter: {
-			type: Object,
-			value: {
-				formatterExtra: (value) => value
-			}
-		}
 	},
 	data: {
-		currentValue: []
+		currentValue: [],
+		content: ''
 	},
 	observers: {
 		'mode': function (mode) {
@@ -140,7 +135,6 @@ McComponent({
 		},
 		handleClick(event) {
 			if (this.Func) {
-				// TODO 异步获取dataSource
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
 					title: this.data.title
@@ -161,7 +155,7 @@ McComponent({
 			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
 			const value = pickValue.join('-');
 			this.setData({
-				extra: value,
+				content: value,
 				currentValue: pickValue
 			});
 			this.$emit('change', { value });
