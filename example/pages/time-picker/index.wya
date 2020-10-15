@@ -22,8 +22,8 @@ import Portal from '../../components/portal/index';
 
 Page({
 	data: {
-		dateValue: '12:30',
-		timeValue: '00:10'
+		dateValue: '05:30',
+		timeValue: '01:10'
 	},
 	onShow() {
 	},

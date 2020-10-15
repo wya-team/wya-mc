@@ -139,9 +139,9 @@ McComponent({
 					quantum = hour < 12 ? 1 : 2;
 					hour = hour < 12 ? hour : hour - 12;
 				}
-				return [quantum, hour, minute];
+				return [+quantum, +hour, +minute];
 			}
-			return [hour, minute];
+			return [+hour, +minute];
 		},
 		// 外部的时间字符串转化为组件要展示的文案
 		formatContent(value) {
