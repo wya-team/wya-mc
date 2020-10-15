@@ -7,6 +7,18 @@ export const pickerViewProps = {
 		type: String,
 		value: ''
 	},
+	mode: {
+		type: String, // date、month、quarter
+		value: 'date',
+	},
+	minDate: {
+		type: String,
+		value: '1940/01/01 00:00'
+	},
+	maxDate: {
+		type: String,
+		value: '2030/12/31 23:59'
+	},
 };
 
 export const pickerPopupProps = {

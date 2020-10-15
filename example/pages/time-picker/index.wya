@@ -14,7 +14,8 @@
 		bind:change="handleDateChange"
 	>
 	</mc-time-picker>
-	
+	<mc-time-picker-view bind:change="handleViewChange" />
+	<mc-time-picker-view mode="12" bind:change="handleViewChange" />
 </template>
 <script>
 const app = getApp();
@@ -29,6 +30,9 @@ Page({
 	},
 	handleDateChange(event) {
 		console.log('event', event.detail);
+	},
+	handleViewChange(event) {
+		console.log('event', event.detail);
 	}
 });
 
@@ -36,7 +40,8 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-time-picker": "../../components/time-picker"
+		"mc-time-picker": "../../components/time-picker",
+		"mc-time-picker-view": "../../components/time-picker/picker-view"
 	}
 }
 </config>

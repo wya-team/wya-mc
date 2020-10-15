@@ -7,6 +7,11 @@ export const pickerViewProps = {
 		type: String,
 		value: ''
 	},
+	mode: {
+		type: String, // date、month、quarter
+		value: '24',
+	},
+	// TODO: 最大值、最小值
 };
 
 export const pickerPopupProps = {

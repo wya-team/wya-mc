@@ -23,6 +23,7 @@
 		title="选择季度"
 	>
 	</mc-date-picker>
+	<mc-date-picker-view bind:change="handleViewChange" />
 </template>
 <script>
 const app = getApp();
@@ -39,6 +40,9 @@ Page({
 	},
 	handleDateChange(event) {
 		console.log('event', event.detail);
+	},
+	handleViewChange(event) {
+		console.log('event', event.detail);
 	}
 });
 
@@ -46,7 +50,8 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-date-picker": "../../components/date-picker"
+		"mc-date-picker": "../../components/date-picker",
+		"mc-date-picker-view": "../../components/date-picker/picker-view"
 	}
 }
 </config>

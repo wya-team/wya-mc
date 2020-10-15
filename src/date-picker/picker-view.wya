@@ -15,10 +15,10 @@
 	</picker-view>
 </template>
 <script>
-import { isEqualWith } from '../common/utils';
+import { isEqualWith, hackDate } from '../common/utils';
 import McComponent from '../common/component';
 import { pickerViewProps } from './props';
-import { DAYS_MAP } from './utils';
+import { DAYS_MAP, createDataSource } from './utils';
 
 McComponent({
 	props: {
@@ -27,17 +27,13 @@ McComponent({
 			type: Array,
 			value: []
 		},
-		dataSource: {
-			type: Array,
-			value: []
-		},
-		mode: String
 	},
 	data: {
 		currentValue: [],
+		dataSource: []
 	},
 	observers: {
-		'dataSource, value': function (dataSource, value) {
+		'value': function (value) {
 			let currentValue = this.formatValue(value);
 			if (!isEqualWith(currentValue, this.data.currentValue)) {
 				this.setData({ currentValue });
@@ -47,11 +43,22 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.$emit('ready', this);
+			if (this.data.mode) {
+				this.createDataSource(this.data.mode);
+			}
 		},
 	},
 	methods: {
+		createDataSource(mode) {
+			this.setData({
+				dataSource: createDataSource(mode, {
+					minDate: new Date(hackDate(this.data.minDate)),
+					maxDate: new Date(hackDate(this.data.maxDate)),
+				})
+			});
+		},
 		// 根据外部的值，返回列中数据对应的index
-		formatValue(value) {
+		formatValue(value = []) {
 			return value.map((cur, index) => {
 				let i = (this.data.dataSource[index] || []).findIndex((it) => it.value == cur);
 				return i >= 0 ? i : 0;

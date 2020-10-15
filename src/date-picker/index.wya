@@ -24,6 +24,8 @@
 			value="{{currentValue}}"
 			dataSource="{{dataSource}}"
 			mode="{{mode}}"
+			maxDate="{{maxDate}}"
+			minDate="{{minDate}}"
 			indicator-style="{{indicatorStyle}}"
 			indicator-class="{{indicatorClass}}"
 			bind:change="handleChange"
@@ -36,7 +38,6 @@ import { isEqualWith, hackDate, splitDateStr } from '../common/utils';
 import McComponent from '../common/component';
 import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
-import { createDataSource } from './utils';
 
 McComponent({
 	externalClasses: ['content-class'],
@@ -74,18 +75,6 @@ McComponent({
 				}
 			}
 		},
-		mode: {
-			type: String, // date、month、quarter
-			value: 'date',
-		},
-		minDate: {
-			type: String,
-			value: '1940/01/01 00:00'
-		},
-		maxDate: {
-			type: String,
-			value: '2030/12/31 23:59'
-		},
 		label: String,
 		labelWidth: {
 			type: String,
@@ -114,23 +103,12 @@ McComponent({
 			this.Func = new Portal({ 
 				el: `#${this.data.tag}` 
 			});
-			if (this.data.mode) {
-				this.createDataSource(this.data.mode);
-			}
 		}
 	},
 	destroyed() {
 	
 	},
 	methods: {
-		createDataSource(mode) {
-			this.setData({
-				dataSource: createDataSource(mode, {
-					minDate: new Date(hackDate(this.data.minDate)),
-					maxDate: new Date(hackDate(this.data.maxDate)),
-				})
-			});
-		},
 		handleViewReady(event) {
 			this.viewInstance = event.detail;
 		},
