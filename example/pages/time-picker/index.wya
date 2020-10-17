@@ -27,6 +27,11 @@ Page({
 		timeValue: '01:10'
 	},
 	onShow() {
+		setTimeout(() => {
+			this.setData({
+				dateValue: '10:31'
+			});
+		}, 5000);
 	},
 	handleDateChange(event) {
 		console.log('event', event.detail);

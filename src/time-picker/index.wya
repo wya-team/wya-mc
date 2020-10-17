@@ -127,7 +127,7 @@ McComponent({
 			}
 			return [+hour, +minute];
 		},
-		// 外部的时间字符串转化为组件要展示的文案
+		// 内部的数组格式转化为组件要展示的文案
 		formatContent(value) {
 			if (this.data.mode == '12') {
 				const [quantum, hour, minute] = value;
@@ -135,10 +135,10 @@ McComponent({
 					1: 'a.m.',
 					2: 'p.m.',
 				};
-				return `${preZero(hour)}:${minute} ${quantunMap[quantum]}`;
+				return `${preZero(hour)}:${preZero(minute)} ${quantunMap[quantum]}`;
 			} else {
 				let [hour, minute] = value;
-				return `${preZero(hour)}:${minute}`;
+				return `${preZero(hour)}:${preZero(minute)}`;
 			}
 		},
 		// 内部的数组格式转化为外部要接收的字符串
@@ -152,10 +152,10 @@ McComponent({
 				} else if (quantum == 2) {
 					hour += 12;
 				}
-				return `${preZero(hour)}:${minute}`;
+				return `${preZero(hour)}:${preZero(minute)}`;
 			} else {
 				let [hour, minute] = value;
-				return `${preZero(hour)}:${minute}`;
+				return `${preZero(hour)}:${preZero(minute)}`;
 			}
 		},
 		handleViewReady(event) {

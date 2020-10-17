@@ -23,7 +23,7 @@
 		title="选择季度"
 	>
 	</mc-date-picker>
-	<mc-date-picker-view bind:change="handleViewChange" />
+	<mc-date-picker-view value="{{pickerViewValue}}" bind:change="handleViewChange" />
 </template>
 <script>
 const app = getApp();
@@ -34,9 +34,15 @@ Page({
 		dateValue: '2019-09-20',
 		monthValue: '2020-09',
 		quarterValue: '2020-01',
-		maxDate: '2020-10-14'
+		maxDate: '2020-10-14',
+		pickerViewValue: [2020, 11, 10]
 	},
 	onShow() {
+		setTimeout(() => {
+			this.setData({
+				dateValue: '2019-08-21'
+			});
+		}, 5000);
 	},
 	handleDateChange(event) {
 		console.log('event', event.detail);

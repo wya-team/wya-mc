@@ -43,19 +43,20 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.$emit('ready', this);
-			if (this.data.mode) {
-				this.createDataSource(this.data.mode);
-			}
+			this.createDataSource(this.data.mode);
 		},
 	},
 	methods: {
 		createDataSource(mode) {
-			this.setData({
-				dataSource: createDataSource(mode, {
-					minDate: new Date(hackDate(this.data.minDate)),
-					maxDate: new Date(hackDate(this.data.maxDate)),
-				})
-			});
+			if (mode) {
+				this.setData({
+					dataSource: createDataSource(mode, {
+						minDate: new Date(hackDate(this.data.minDate)),
+						maxDate: new Date(hackDate(this.data.maxDate)),
+					}),
+				});
+				this.setData({ currentValue: this.formatValue(this.data.value) });
+			}
 		},
 		// 根据外部的值，返回列中数据对应的index
 		formatValue(value = []) {

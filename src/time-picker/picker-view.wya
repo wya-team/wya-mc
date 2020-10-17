@@ -30,9 +30,10 @@ McComponent({
 	},
 	data: {
 		currentValue: [],
+		dataSource: []
 	},
 	observers: {
-		'value': function (dataSource, value) {
+		'value': function (value) {
 			let currentValue = this.formatValue(value);
 			if (!isEqualWith(currentValue, this.data.currentValue)) {
 				this.setData({ currentValue });
@@ -42,18 +43,15 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.$emit('ready', this);
-			if (this.data.mode) {
-				this.createDataSource(this.data.mode);
-			}
+			this.createDataSource(this.data.mode);
 		},
 	},
 	methods: {
 		createDataSource(mode) {
-			this.setData({
-				dataSource: createDataSource(mode, {
-					
-				})
-			});
+			if (this.data.mode) {
+				this.setData({ dataSource: createDataSource(mode, {}) });
+				this.setData({ currentValue: this.formatValue(this.data.value) });
+			}
 		},
 		// 根据外部的值，返回列中数据对应的index
 		formatValue(value = []) {
