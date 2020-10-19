@@ -1,13 +1,14 @@
+import { preZero } from '../common/utils';
+
 const create12TimeData = () => {
 	let hours = Array.from(new Array(12 + 1).keys()).slice(1).map((it) => ({
-		label: it >= 10 ? `${it}` : `0${it}`,
+		label: preZero(it),
 		value: it
 	}));
 	let minutes = Array.from(new Array(59 + 1).keys()).map((it) => {
-		let minute = it >= 10 ? `${it}` : `0${it}`;
 		return {
-			label: minute,
-			value: minute
+			label: preZero(it),
+			value: it
 		};
 	});
 	let timeQuantums = [
@@ -19,14 +20,13 @@ const create12TimeData = () => {
 
 const create24TimeData = () => {
 	let hours = Array.from(new Array(23 + 1).keys()).map((it) => ({
-		label: it >= 10 ? `${it}` : `0${it}`,
+		label: preZero(it),
 		value: it
 	}));
 	let minutes = Array.from(new Array(59 + 1).keys()).map((it) => {
-		let minute = it >= 10 ? `${it}` : `0${it}`;
 		return {
-			label: minute,
-			value: minute
+			label: preZero(it),
+			value: it
 		};
 	});
 	return [hours, minutes];

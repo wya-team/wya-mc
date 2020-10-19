@@ -46,7 +46,6 @@ const createQuarterData = (minDate, maxDate) => {
 	let quarterArray = getQuarterArray();
 	return [yearArray, quarterArray];
 };
-const createTimeData = () => {};
 
 export const createDataSource = (mode, opts = {}) => {
 	const { minDate, maxDate } = opts;

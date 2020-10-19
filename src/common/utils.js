@@ -175,9 +175,9 @@ export const splitDateStr = (dateStr) => {
 		throw new Error('【@wya/mc utils/hackDate】参数类型错误，应为日期字符串');
 	}
 	if (dateStr.includes('-')) {
-		return dateStr.split('-');
+		return dateStr.split('-').map((it) => Number(it));
 	} else if (dateStr.includes('/')) {
-		return dateStr.split('/');
+		return dateStr.split('/').map((it) => Number(it));
 	}
 	return '';
 };
