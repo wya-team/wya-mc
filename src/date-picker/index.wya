@@ -75,6 +75,19 @@ McComponent({
 				}
 			}
 		},
+		defaultValue: {
+			type: String,
+			value: '',
+			observer(val) {
+				let formatValue = splitDateStr(val);
+				if (!isEqualWith(formatValue, this.data.currentValue)) {
+					this.setData({
+						currentValue: formatValue,
+						pickValue: formatValue,
+					});	
+				}
+			}
+		},
 		label: String,
 		labelWidth: {
 			type: String,

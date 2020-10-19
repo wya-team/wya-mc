@@ -1,6 +1,6 @@
 const create12TimeData = () => {
 	let hours = Array.from(new Array(12 + 1).keys()).slice(1).map((it) => ({
-		label: it,
+		label: it >= 10 ? `${it}` : `0${it}`,
 		value: it
 	}));
 	let minutes = Array.from(new Array(59 + 1).keys()).map((it) => {
@@ -19,7 +19,7 @@ const create12TimeData = () => {
 
 const create24TimeData = () => {
 	let hours = Array.from(new Array(23 + 1).keys()).map((it) => ({
-		label: it,
+		label: it >= 10 ? `${it}` : `0${it}`,
 		value: it
 	}));
 	let minutes = Array.from(new Array(59 + 1).keys()).map((it) => {
