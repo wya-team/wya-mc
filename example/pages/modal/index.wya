@@ -6,7 +6,7 @@
 		<mc-list-item label="弹框" bind:click="handleOpenModal2" />
 	</mc-list>
 
-	<mc-modal id="modal1" />
+	<mc-modal id="modal1" mask-style="z-index: 10000" mc-style="z-index: 10001"/>
 	<mc-modal id="modal2">
 		<view style="height: 200rpx">sd阿斯顿发斯蒂芬</view>
 	</mc-modal>

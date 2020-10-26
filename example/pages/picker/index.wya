@@ -22,6 +22,7 @@ import Portal from '../../components/portal/index';
 
 Page({
 	data: {
+		value: [2, '5'],
 		dataSource1: [
 			{ 
 				label: '男',
@@ -123,6 +124,7 @@ Page({
 	},
 	handleOK(event) {
 		const { value, label } = event.detail;
+		console.log(value, label);
 		this.setData({
 			value
 		});

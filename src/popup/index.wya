@@ -4,7 +4,7 @@
 		visible="{{mask && visible}}" 
 		duration="{{ duration }}"
 		mc-class="mc-popup__mask" 
-		mc-style="z-index: {{ zIndex }}; {{ maskStyle }}"
+		mc-style="{{ maskStyle }}"
 		catchtap="handleClose" 
 		catch:touchmove="preventToucheMove" 
 	/>

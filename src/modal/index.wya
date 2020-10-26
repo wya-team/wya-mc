@@ -4,6 +4,8 @@
 		visible="{{visible}}" 
 		mask="{{mask}}" 
 		mask-closable="{{maskClosable}}" 
+		mask-style="{{maskStyle}}"
+		mc-style="{{mcStyle}}"
 		zIndex="{{zIndex}}"
 		placement="center"
 		bind:close="handleCancel"
@@ -44,6 +46,7 @@ McComponent({
 			type: Boolean,
 			value: true
 		},
+		maskStyle: String,
 		// 蒙层的层级
 		zIndex: {
 			type: Number,

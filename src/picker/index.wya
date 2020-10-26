@@ -66,7 +66,8 @@ McComponent({
 			observer(val) {
 				if (!isEqualWith(val, this.data.currentValue)) {
 					this.setData({
-						currentValue: val
+						currentValue: val,
+						pickValue: val,
 					});
 				}
 			}
