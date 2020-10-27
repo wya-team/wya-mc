@@ -2,7 +2,7 @@
 	<wxs src="../wxs/utils.wxs" module="utils" />
 
 	<view
-		style="{{ viewStyle }}"
+		style="{{ viewStyle }}; {{ mcStyle }}"
 		class="mc-class {{ utils.bem('image', { round })}}"
 		bind:tap="onClick"
 	>
