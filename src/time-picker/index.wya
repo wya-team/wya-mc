@@ -64,12 +64,15 @@ McComponent({
 			value: '',
 			observer(val) {
 				let formatValue = this.formatValue(val);
+				let formatContent = this.formatContent(formatValue);
 				if (!isEqualWith(formatValue, this.data.currentValue)) {
 					this.setData({
 						currentValue: formatValue,
-						pickValue: formatValue,
-						content: this.formatContent(formatValue)
+						pickValue: formatValue
 					});
+				}
+				if (!isEqualWith(formatContent, this.data.content)) {
+					this.setData({ content: formatContent });
 				}
 			}
 		},

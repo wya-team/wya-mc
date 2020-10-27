@@ -69,9 +69,11 @@ McComponent({
 				if (!isEqualWith(formatValue, this.data.currentValue)) {
 					this.setData({
 						currentValue: formatValue,
-						pickValue: formatValue,
-						content: val
+						pickValue: formatValue
 					});
+				}
+				if (!isEqualWith(val, this.data.content)) {
+					this.setData({ content: val });
 				}
 			}
 		},

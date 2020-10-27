@@ -179,7 +179,7 @@ export const splitDateStr = (dateStr) => {
 	} else if (dateStr.includes('/')) {
 		return dateStr.split('/').map((it) => Number(it));
 	}
-	return '';
+	return [];
 };
 
 /**
