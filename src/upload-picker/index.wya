@@ -1,6 +1,6 @@
 <template>
-		<wxs src="../wxs/utils.wxs" module="utils" />
-	<view class="mc-upload-picker">
+	<wxs src="../wxs/utils.wxs" module="utils" />
+	<view class="mc-upload-picker mc-class" style="{{ mcStyle }}">
 		<view class="mc-upload-picker__wrapper">
 			<!-- 预览样式 -->
 			<!-- TODO video -->
