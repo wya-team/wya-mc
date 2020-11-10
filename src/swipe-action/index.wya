@@ -1,5 +1,5 @@
 <template>
-<view class="mc-swipe-action {{ mcClass }}" style="{{ mcStyle }}">
+<view class="mc-swipe-action mc-class" style="{{ mcStyle }}">
 	<view wx:if="{{ !disabled && left }}" class="mc-swipe-action__actions mc-swipe-action__actions--left">
 		<view
 			wx:for="{{ left }}"
@@ -68,14 +68,6 @@ McComponent({
 		autoClose: {
 			type: Boolean,
 			value: true
-		},
-		mcStyle: {
-			type: String,
-			value: ''
-		},
-		mcClass: {
-			type: String,
-			value: ''
 		}
 	},
 	data: {
