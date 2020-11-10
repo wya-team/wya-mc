@@ -1,0 +1,285 @@
+<template>
+<view class="mc-swipe-action {{ mcClass }}" style="{{ mcStyle }}">
+	<view wx:if="{{ !disabled && left }}" class="mc-swipe-action__actions mc-swipe-action__actions--left">
+		<view
+			wx:for="{{ left }}"
+			wx:key="index"
+			data-index="{{ index }}"
+			data-pos="left"
+			class="mc-swipe-action__action mc-swipe-action__action--left {{ item.extraClass }}"
+			style="{{ transitionStyle }}transform: translate3d({{ leftPos[index] || 0 }}px, 0, 0);z-index:{{ leftPos.length - index }};"
+			bind:tap="handleTap"
+		>
+			<view class="mc-swipe-action__action--inner">{{ item.label }}</view>
+		</view>
+	</view>
+	<view wx:if="{{ !disabled && right }}" class="mc-swipe-action__actions mc-swipe-action__actions--right">
+		<view
+			wx:for="{{ right }}"
+			wx:key="index"
+			data-index="{{ index }}"
+			data-pos="right"
+			class="mc-swipe-action__action mc-swipe-action__action--right {{ item.extraClass }}"
+			style="{{ transitionStyle }}transform: translate3d(-{{ rightPos[index] || 0 }}px, 0, 0)"
+			bind:tap="handleTap"
+		>
+			<view class="mc-swipe-action__action--inner">{{ item.label }}</view>
+		</view>
+	</view>
+	<view 
+		class="mc-swipe-action__content"
+		style="{{ contentStyle }}{{ transitionStyle }}"
+		bind:touchstart="handleTouchstart"
+		catch:touchmove="handleTouchmove"
+		bind:touchend="handleTouchend"
+		bind:touchcancel="handleTouchend"
+	>
+		<slot />
+	</view>
+</view>
+</template>
+
+<script>
+import '@wya/mp-polyfill';
+import McComponent from '../common/component';
+
+let ARRAY = [];
+
+McComponent({
+	props: {
+		left: {
+			type: Array,
+			value: null
+		},
+		right: {
+			type: Array,
+			value: null
+		},
+		// 触发状态改变的阈值（滑动距离），单位为px
+		threshold: {
+			type: Number,
+			value: 30
+		},
+		disabled: {
+			type: Boolean,
+			value: false
+		},
+		// 点击按钮时自动关闭
+		autoClose: {
+			type: Boolean,
+			value: true
+		},
+		mcStyle: {
+			type: String,
+			value: ''
+		},
+		mcClass: {
+			type: String,
+			value: ''
+		}
+	},
+	data: {
+		isTouching: false,
+		isMoved: false,
+		status: 'close', // close | leftOpen | rightOpen
+		baseX: 0, // 保存触发touchstart时的offsetX，用于后续计算
+		offsetX: 0, // 内容块的偏移值
+		contentStyle: '',
+		transitionStyle: '',
+		maxOffsetLeft: 0, // 向右滑时，左边最大可拉伸长度
+		maxOffsetRight: 0, // 向左滑时，右边最大可拉伸长度
+		leftData: null, // 左侧按钮元素的宽高信息
+		rightData: null,
+		leftPos: [], // 左侧按钮偏移值的数组
+		rightPos: []
+	},
+	observers: {
+		offsetX(v, a) {
+			this.calcLadderPos(v);
+			this.setData({
+				contentStyle: this.data.disabled ? '' : `transform: translate3d(${this.data.offsetX}px, 0, 0);`
+			});
+		},
+		isTouching(v) {
+			this.setData({
+				transitionStyle: v || this.data.disabled ? '' : 'transition: all .25s ease;'
+			});
+		}
+	},
+	lifetimes: {
+		attached() {
+			ARRAY.push(this);
+		},
+		detached() {
+			ARRAY = ARRAY.filter(item => item !== this);
+		}
+	},
+	methods: {
+		handleTouchstart(event) {
+			if (this.data.disabled) return;
+			this.calcBaseData();
+			this.setData({
+				startX: event.touches[0].pageX,
+				baseX: this.data.offsetX,
+				isTouching: true
+			});
+			this.closeOthers();
+		},
+		handleTouchmove(event) {
+			if (this.data.disabled) return;
+			this.setData({ isMoved: true });
+			const changedX = event.touches[0].pageX - this.data.startX;
+			let offsetX = this.data.baseX + changedX;
+			// changedX < 0 向左
+			if (changedX < 0) {
+				if (!this.data.right && offsetX < 0) {
+					offsetX = 0;
+				} else if (-offsetX > this.data.maxOffsetRight) {
+					offsetX = -this.data.maxOffsetRight;
+				}
+			} else if (!this.data.left && offsetX > 0) {
+				offsetX = 0;
+			} else if (offsetX > this.data.maxOffsetLeft) {
+				offsetX = this.data.maxOffsetLeft;
+			}
+			this.resetOffsetX(offsetX);
+		},
+		handleTouchend(event) {
+			if (this.data.disabled) return;
+			if (this.data.isMoved) {
+				this.setData({ isTouching: false, isMoved: false });
+				// baseX等于offsetX说明在此次滑动的最终并没有改变offsetX，故status也不需要改变，直接return
+				if (this.data.disabled || this.data.baseX === this.data.offsetX) return;
+				let status = this.data.status;
+				const changedX = event.changedTouches[0].pageX - this.data.startX;
+				if (Math.abs(changedX) > this.data.threshold) {
+					// 松手时计算应该处于哪个状态
+					if (
+						this.data.status === 'close'
+						&& changedX * this.data.offsetX > 0 // 保证同号（即都小于0或者都大于0，这种情况下必定有一侧的按钮是已经展示出来了）
+					) {
+						status = changedX < 0 ? 'rightOpen' : 'leftOpen';
+					} else {
+						status = 'close';
+					}
+				}
+				this.resetStatus(status);
+			} else {
+				this.setData({ isTouching: false });
+				this.close();
+			}
+		},
+		handleTap(event) {
+			const { index, pos } = event.currentTarget.dataset;
+			this.$emit('action', pos === 'left' ? this.data.left[index] : this.data.right[index]);
+			this.data.autoClose && this.close();
+		},
+		resetStatus(status) {
+			if (this.data.status !== status) {
+				this.setData({ status });
+				this.$emit(
+					status === 'close' ? status : 'open', 
+					status === 'close' ? undefined : { position: status === 'leftOpen' ? 'left' : 'right' }
+				);
+			}
+			this.resetOffsetX(status === 'close' ? 0 : status === 'leftOpen' ? this.data.maxOffsetLeft : -this.data.maxOffsetRight);
+		},
+		resetOffsetX(offsetX) {
+			offsetX !== this.data.offsetX && this.setData({ offsetX });
+		},
+		/**
+		 * 计算必要的初始数据
+		 */
+		calcBaseData() {
+			const query = this.createSelectorQuery();
+			query.selectAll('.mc-swipe-action__action--left').boundingClientRect();
+			query.selectAll('.mc-swipe-action__action--right').boundingClientRect();
+			query.exec(res => {
+				this.setData({
+					leftData: res[0],
+					rightData: res[1],
+					maxOffsetLeft: this.data.left ? this.calcMaxOffset(res[0]) : 0,
+					maxOffsetRight: this.data.right ? this.calcMaxOffset(res[1]) : 0
+				});
+			});
+		},
+		calcMaxOffset(buttons) {
+			return buttons.reduce((sum, cur) => (sum + cur.width), 0);
+		},
+		/**
+		 * 计算左右两侧按钮的位置
+		 * 滑动时，每个按钮的偏移距离是不一样的（阶梯式）
+		 * 内容块的偏移值 / 内容块在当前方向上（left、right）的最大偏移距离 = 该按钮实时的偏移值（要计算的就是这个值） / 该按钮最大偏移值
+		 */
+		calcLadderPos(offsetX) {
+			let ladderPos;
+			const ratio = Math.abs(offsetX) / (offsetX > 0 ? this.data.maxOffsetLeft : this.data.maxOffsetRight);
+			const data = {};
+			if (this.data.left) {
+				data.leftPos = this.data.left.map((it, index) => {
+					const maxOffset = this.calcMaxOffset(this.data.leftData.slice(0, index + 1));
+					return offsetX > 0 ? ratio * maxOffset : 0;
+				});
+			}
+			if (this.data.right) {
+				data.rightPos = this.data.right.map((it, index) => {
+					const maxOffset = this.calcMaxOffset(this.data.rightData.slice(index));
+					return offsetX < 0 ? ratio * maxOffset : 0;
+				});
+			}
+			this.setData(data);
+		},
+		closeOthers() {
+			ARRAY.forEach(it => {
+				it !== this && it.data.status !== 'close' && it.close();
+			});
+		},
+		/**
+		 * 外部通过实例方法调用
+		 */
+		open(options = {}) {
+			this.calcBaseData();
+			const { position = 'right' } = options;
+			const status = position === 'left' ? 'leftOpen' : 'rightOpen';
+			this.resetStatus(status);
+		},
+		/**
+		 * 外部通过实例方法调用
+		 */
+		close() {
+			this.resetStatus('close');
+		}
+	},
+});
+</script>
+
+<style lang="scss">
+.mc-swipe-action {
+	overflow: hidden;
+	position: relative;
+	&__action {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		padding-left: 30rpx;
+		padding-right: 30rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+		white-space: nowrap;
+		&--left {
+			right: 100%;
+		}
+		&--right {
+			left: 100%;
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"component": true
+}
+</config>

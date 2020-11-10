@@ -1,0 +1,149 @@
+<template>
+<view class="example-swipe-action">
+	<mc-list mc-style="margin-top:">
+		<mc-swipe-action 
+			left="{{ leftButtons }}" 
+			bind:action="handleAction"
+			bind:open="handleOpen"
+			bind:close="handleClose"
+		>
+			<mc-list-item label="仅左侧唤出"></mc-list-item>
+		</mc-swipe-action>
+		<mc-swipe-action 
+			right="{{ rightButtons }}"
+			bind:action="handleAction"
+			bind:open="handleOpen"
+			bind:close="handleClose"
+		>
+			<mc-list-item label="仅右侧唤出"></mc-list-item>
+		</mc-swipe-action>
+		<mc-swipe-action 
+			left="{{ leftButtons }}" 
+			right="{{ rightButtons }}"
+			bind:action="handleAction"
+			bind:open="handleOpen"
+			bind:close="handleClose"
+		>
+			<mc-list-item label="左右均可唤出"></mc-list-item>
+		</mc-swipe-action>
+		<mc-swipe-action 
+			right="{{ rightButtons }}"
+			autoClose="{{ false }}"
+			bind:action="handleAction"
+			bind:open="handleOpen"
+			bind:close="handleClose"
+		>
+			<mc-list-item label="仅右侧唤出，点击按钮不自动关闭"></mc-list-item>
+		</mc-swipe-action>
+		<mc-swipe-action 
+			left="{{ leftButtons }}" 
+			disabled
+		>
+			<mc-list-item label="禁用"></mc-list-item>
+		</mc-swipe-action>
+	</mc-list>
+	<mc-swipe-action 
+		left="{{ normalButtons }}"
+		right="{{ normalButtons }}"
+		mc-class="_custom-item"
+		bind:action="handleAction"
+		bind:open="handleOpen"
+		bind:close="handleClose"
+	>
+		<view class="_custom-content">自定义两侧按钮样式</view>
+	</mc-swipe-action>
+</view>
+</template>
+
+<script>
+Page({
+	data: {
+		leftButtons: [
+			{ label: '回复', extraClass: '_c-white _bg-blue' },
+			{ label: '取消关注', extraClass: '_c-white _bg-gray' }
+		],
+		rightButtons: [
+			{ label: '置顶', extraClass: '_c-white _bg-black' },
+			{ label: '删除', extraClass: '_c-white _bg-red' }
+		],
+		normalButtons: [
+			{ label: '置顶' },
+			{ label: '删除' }
+		]
+	},
+	handleAction(event) {
+		console.log(event);
+		wx.showModal({ title: `你点击了${event.detail.label}按钮` });
+	},
+	handleOpen(event) {
+		console.log(event);
+	},
+	handleClose(event) {
+		console.log(event);
+	}
+});
+</script>
+
+<style lang="scss">
+.example-swipe-action {
+	overflow: hidden;
+	._c-white {
+		color: #fff;
+	}
+	._bg-red {
+		background: red;
+	}
+	._bg-black {
+		background: #333;
+	}
+	._bg-blue {
+		background: #5495f6;
+	}
+	._bg-gray {
+		background: gray;
+	}
+	._custom-item {
+		width: 90%;
+		margin: 40rpx auto;
+		text-align: center;
+		._custom-content {
+			height: 100rpx;
+			line-height: 100rpx;
+			border-radius: 10rpx;
+			font-size: 36rpx;
+			background: #fff;
+		}
+		.mc-swipe-action__action {
+			padding: 0;
+			&--left {
+				.mc-swipe-action__action--inner {
+					margin-right: 20rpx;
+				}
+			}
+			&--right {
+				.mc-swipe-action__action--inner {
+					margin-left: 20rpx;
+				}
+			}
+		}
+		.mc-swipe-action__action--inner {
+			width: 80rpx;
+			height: 80rpx;
+			line-height: 80rpx;
+			background: #fff;
+			border-radius: 50%;
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"navigationBarTitleText": "滑动唤出行为",
+	"usingComponents": {
+		"mc-swipe-action": "../../components/swipe-action/index",
+		"mc-list": "../../components/list/index",
+		"mc-list-item": "../../components/list/list-item"
+	}
+}
+</config>
