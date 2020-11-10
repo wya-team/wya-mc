@@ -122,7 +122,7 @@ McComponent({
 			const timeData = parseTimeData(remain);
 
 			if (this.data.useSlot) {
-				this.$emit('change', parseTimeDataByFormat(timeData));
+				this.$emit('change', parseTimeDataByFormat(this.data.format, timeData));
 			}
 
 			this.setData({
