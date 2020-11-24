@@ -5,7 +5,7 @@
 		scroll-y="true"
 		lower-threshold="100"
 		enable-back-to-top="true"
-		class="mc-recycle-list"
+		class="mc-recycle-list mc-class"
 		refresher-enabled="{{false}}"
 		pullDownHeight="{{pullDownHeight}}"
 		change:pullDownHeight="{{scroll.setPullDownHeight}}"
@@ -14,18 +14,18 @@
 		bind:touchstart="{{scroll.handleTouchStart}}"
 		bind:touchend="handleTouchEnd"
 	>
-		<view class="mc-recycle-list__pull-down {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="overflow: hidden;">
+		<view class="mc-recycle-list__pull-down pull-down-class {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="overflow: hidden;">
 			<text class="mc-recycle-list__text">{{ pullDownText }}</text>
 		</view>
 
 		<view
-			class="mc-recycle-list__content"
+			class="mc-recycle-list__content content-class"
 			bind:touchmove="{{scroll.handleTouchMove}}"
 		>
 			<slot />
 		</view>
 
-		<view class="mc-recycle-list__scroll">
+		<view class="mc-recycle-list__scroll pull-up-class">
 			<text class="mc-recycle-list__text"> {{ scrollText }}</text>
 		</view>
 	</scroll-view>
@@ -35,6 +35,7 @@ import McComponent from '../common/component';
 import { PULL_DOWN_STATUS, PULL_UP_STATUS, SCROLL_STATUS } from './constant';
 
 McComponent({
+	externalClasses: ['content-class', 'pull-down-class', 'pull-up-class'],
 	props: {
 		pauseY: {
 			type: Number,
