@@ -1,65 +1,136 @@
 <template>
 	<wxs src="../wxs/utils.wxs" module="utils" />
+	<wxs module="tools">
+		var includes = function includes(data, target) {
+			return data.indexOf(target) !== -1;
+		};
+
+		module.exports = {
+			includes: includes
+		};
+	</wxs>
 	<view class="mc-upload-picker mc-class" style="{{ mcStyle }}">
 		<view class="mc-upload-picker__wrapper">
-			<!-- 预览样式 -->
-			<!-- TODO video -->
-			<!-- TODO file -->
-			<view
-				wx:if="{{ previewImage }}"
-				wx:for="{{ currentValue.image }}"
-				wx:key="index"
-				class="mc-upload-picker__preview"
-			>
-				<mc-image
-					wx:if="{{ utils.assertTypeof(item, 'string') }}"
-					fit="{{ imageFit }}"
-					src="{{ item }}"
-					alt="{{ '图片' + index }}"
-					mc-class="mc-upload-picker__preview-image"
-					width="{{previewSize}}rpx"
-					height="{{previewSize}}rpx"
-					data-index="{{ index }}"
-					data-src="{{ item }}"
-					bind:tap="handlePreviewImage"
-				/>
+			<!-- 以下为视频上传 -->
+			<block wx:if="{{ tools.includes(picker, 'video')}}">
 				<view
-					wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
-					class="mc-upload-picker__mask"
+					wx:if="{{ previewVideo }}"
+					wx:for="{{ currentValue.video }}"
+					wx:key="index"
+					class="mc-upload-picker__preview"
 				>
-					<block wx:if="{{ item.status === 'failed' }}">
-						<mc-icon type="o-warning" class="mc-upload-picker__mask-icon" />
-						<text class="mc-upload-picker__upload-text">上传失败</text>
-					</block>
-					<mc-spin wx:else size="{{50}}" color="#ffffff" class="mc-upload-picker__loading" />
-				</view>
-				<mc-icon
-					wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
-					type="close"
-					mc-class="mc-upload-picker__preview-delete"
-					data-index="{{ index }}"
-					data-type="image"
-					bind:tap="handleDeleteItem"
-				/>
-			</view>
-
-			<!-- 上传样式 -->
-			<block wx:if="{{!disabled && currentMultiple.image}}">
-				<!-- fns="{{ uploadOpts.fns }}" -->
-				<mc-upload 
-					max="{{currentMax.image}}"
-					multiple="{{currentMultiple.image}}"
-					class="mc-upload-picker__slot"
-					bind:ready="handleReady"
-				>
+					<video
+						wx:if="{{ utils.assertTypeof(item, 'string') }}"
+						src="{{ item }}"
+						mc-class="mc-upload-picker__preview-video"
+						style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx"
+						data-index="{{ index }}"
+						data-src="{{ item }}"
+						controls="{{ false }}"
+						showPlayBtn="{{ false }}"
+						showCenterPlayBtn="{{ false }}"
+						bind:tap="handlePreviewVideo"
+					/>
 					<view
-						class="mc-upload-picker__upload {{ disabled ? 'mc-upload-picker__upload--disabled': ''}}"
-						style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
+						wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
+						class="mc-upload-picker__mask"
 					>
-						<mc-icon type="plus" mc-class="mc-upload-picker__upload-icon" />
-						<text wx:if="{{ uploadText }}" class="mc-upload-picker__upload-text">{{ uploadText }}</text>
+						<block wx:if="{{ item.status === 'failed' }}">
+							<mc-icon type="o-warning" class="mc-upload-picker__mask-icon" />
+							<text class="mc-upload-picker__upload-text">上传失败</text>
+						</block>
+						<mc-spin wx:else size="{{ 50 }}" color="#ffffff" class="mc-upload-picker__loading" />
 					</view>
-				</mc-upload>
+					<mc-icon
+						wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
+						type="close"
+						mc-class="mc-upload-picker__preview-delete"
+						data-index="{{ index }}"
+						data-type="video"
+						bind:tap="handleDeleteItem"
+					/>
+				</view>
+
+				<!-- 上传样式 -->
+				<block wx:if="{{!disabled && currentMultiple.video}}">
+					<!-- fns="{{ uploadOpts.fns }}" -->
+					<mc-upload 
+						max="{{currentMax.video}}"
+						multiple="{{currentMultiple.video}}"
+						class="mc-upload-picker__slot"
+						bind:ready="handleReady"
+						mode="video"
+					>
+						<view
+							class="mc-upload-picker__upload {{ disabled ? 'mc-upload-picker__upload--disabled': ''}}"
+							style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
+						>
+							<mc-icon type="plus" mc-class="mc-upload-picker__upload-icon" />
+							<text wx:if="{{ uploadText }}" class="mc-upload-picker__upload-text">{{ uploadText }}</text>
+						</view>
+					</mc-upload>
+				</block>
+			</block>
+			<!-- TODO file -->
+
+			<!-- 以下为图片上传 -->
+			<block wx:if="{{ tools.includes(picker, 'image')}}">
+				<view
+					wx:if="{{ previewImage }}"
+					wx:for="{{ currentValue.image }}"
+					wx:key="index"
+					class="mc-upload-picker__preview"
+				>
+					<mc-image
+						wx:if="{{ utils.assertTypeof(item, 'string') }}"
+						fit="{{ imageFit }}"
+						src="{{ item }}"
+						alt="{{ '图片' + index }}"
+						mc-class="mc-upload-picker__preview-image"
+						width="{{ previewSize }}rpx"
+						height="{{ previewSize }}rpx"
+						data-index="{{ index }}"
+						data-src="{{ item }}"
+						bind:tap="handlePreviewImage"
+					/>
+					<view
+						wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
+						class="mc-upload-picker__mask"
+					>
+						<block wx:if="{{ item.status === 'failed' }}">
+							<mc-icon type="o-warning" class="mc-upload-picker__mask-icon" />
+							<text class="mc-upload-picker__upload-text">上传失败</text>
+						</block>
+						<mc-spin wx:else size="{{50}}" color="#ffffff" class="mc-upload-picker__loading" />
+					</view>
+					<mc-icon
+						wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
+						type="close"
+						mc-class="mc-upload-picker__preview-delete"
+						data-index="{{ index }}"
+						data-type="image"
+						bind:tap="handleDeleteItem"
+					/>
+				</view>
+
+				<!-- 上传样式 -->
+				<block wx:if="{{!disabled && currentMultiple.image}}">
+					<!-- fns="{{ uploadOpts.fns }}" -->
+					<mc-upload 
+						max="{{currentMax.image}}"
+						multiple="{{currentMultiple.image}}"
+						class="mc-upload-picker__slot"
+						bind:ready="handleReady"
+					>
+						<view
+							class="mc-upload-picker__upload {{ disabled ? 'mc-upload-picker__upload--disabled': ''}}"
+							style="width: {{ previewSize }}rpx; height: {{ previewSize }}rpx;"
+						>
+							<mc-icon type="plus" mc-class="mc-upload-picker__upload-icon" />
+							<text wx:if="{{ uploadText }}" class="mc-upload-picker__upload-text">{{ uploadText }}</text>
+						</view>
+					</mc-upload>
+				</block>
 			</block>
 		</view>
 	</view>
@@ -109,6 +180,12 @@ McComponent({
 			type: Array,
 			value: ['image']
 		},
+
+		previewVideo: {
+			type: Boolean,
+			value: true,
+		},
+
 		previewImage: {
 			type: Boolean,
 			value: true,
@@ -232,6 +309,19 @@ McComponent({
 				fail: (err) => {
 					console.log('[mc-upload-picker] error：', err);
 				}
+			});
+		},
+		handlePreviewVideo(event) {
+			const { index, src } = event.target.dataset;
+			const { currentValue } = this.data;
+			wx.previewMedia({
+				sources: currentValue.video.map(item => {
+					return {
+						url: item,
+						type: 'video'
+					};
+				}),
+				current: index
 			});
 		},
 		handleDeleteItem(event) {
@@ -428,7 +518,8 @@ McComponent({
 	height: 150rpx;
 }
 
-.mc-upload-picker__preview-image {
+.mc-upload-picker__preview-image,
+.mc-upload-picker__preview-video {
 	display: block;
 	overflow: hidden;
 	border-radius: 4rpx

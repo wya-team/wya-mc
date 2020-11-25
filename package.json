@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/wya-team/wya-mc#readme",
   "dependencies": {
+    "@wya/mp-polyfill": "^1.0.1",
     "async-validator": "^3.3.0",
     "echarts": "^4.9.0"
   },

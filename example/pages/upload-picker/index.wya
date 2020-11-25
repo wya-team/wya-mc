@@ -5,6 +5,13 @@
 			dataSource="{{ dataSource1 }}"
 			bind:ready="handleReady"
 		/>
+
+		<mc-upload-picker
+			max="{{3}}"
+			dataSource="{{ dataSource1 }}"
+			bind:ready="handleReady"
+			picker="{{ ['video'] }}"
+		/>
 	</view>
 	<!-- <mc-upload-picker
 		dataSource="{{ dataSource2 }}"
@@ -48,7 +55,7 @@ Page({
 						url: 'https://zdds-wap.ruishan666.com/base/oss/get-sign.json',
 						method: 'POST',
 						header: {
-							token: '5cd4a6d8bc51ea52ca1c3b5ddd585dd2'
+							token: 'a7dcb0bf2543a415cc5a0169517b778c'
 						},
 						success(res) {
 							const { data, status } = res.data || {};
