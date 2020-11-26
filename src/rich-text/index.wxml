@@ -1,5 +1,5 @@
 <import src="./wx-parse.wxml"/>
 
-<view class="ql-editor" >
+<view class="ql-editor mc-class" style="{{ mcStyle }}">
 	<template is="wxParse" data="{{ wxParseData: currentValue.nodes }}"/>
 </view>

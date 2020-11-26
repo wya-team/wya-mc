@@ -1,7 +1,8 @@
 import { wxParse } from './wx-parse.js';
+import McComponent from '../common/component';
 
-Component({
-	properties: {
+McComponent({
+	props: {
 		value: {
 			type: String,
 			value: '',

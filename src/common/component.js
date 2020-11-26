@@ -2,7 +2,7 @@ import { basic } from '../mixins/basic';
 
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
-	const { externalClasses = [], mixins = [], props, options, ...restOpts } = mcOptions;
+	const { externalClasses = [], mixins = [], props = {}, properties = {}, options, ...restOpts } = mcOptions;
 	if (!externalClasses.includes('mc-class')) {
 		externalClasses.push('mc-class');
 	}
@@ -18,6 +18,7 @@ function McComponent(mcOptions) {
 		behaviors: mixins,
 		properties: {
 			...props,
+			...properties,
 			mcStyle: String
 		},
 	};
