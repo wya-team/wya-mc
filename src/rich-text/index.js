@@ -24,6 +24,7 @@ McComponent({
 	},
 	data: {
 		currentValue: '',
+		scaledImagePadding: 0
 	},
 	methods: {
 		reset() {
