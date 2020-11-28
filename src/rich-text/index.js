@@ -1,5 +1,6 @@
 import { wxParse } from './wx-parse.js';
 import McComponent from '../common/component';
+import { scalePx } from '../common/utils';
 
 McComponent({
 	props: {
@@ -9,10 +10,20 @@ McComponent({
 			observer() {
 				this.reset();
 			}
-		}
+		},
+		// 单位为px，内部做不同屏幕的视频
+		imagePadding: {
+			type: Number,
+			value: 5,
+			observer(value) {
+				this.setData({
+					scaledImagePadding: scalePx(value)
+				});
+			}
+		},
 	},
 	data: {
-		currentValue: ''
+		currentValue: '',
 	},
 	methods: {
 		reset() {
@@ -21,7 +32,7 @@ McComponent({
 				'html', 
 				this.data.value, 
 				this, 
-				5
+				this.data.scaledImagePadding
 			);
 		}
 	}

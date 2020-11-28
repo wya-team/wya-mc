@@ -193,3 +193,12 @@ export const preZero = (num) => {
 	}
 	return num;
 };
+
+let screenWidth;
+// 不同屏幕下 获取对应的像素值
+export const scalePx = (value) => {
+	if (!screenWidth) {
+		screenWidth = wx.getSystemInfoSync().screenWidth;
+	}
+	return (screenWidth * value) / 375;
+};
