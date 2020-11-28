@@ -1169,3 +1169,31 @@
 .ql-container.ql-snow {
 	border: 1px solid #ccc;
 }
+
+.ql-editor {
+	font-size: 28rpx;
+}
+.ql-editor .ql-size-12px {
+	font-size: 24rpx;
+}
+.ql-editor .ql-size-14px {
+	font-size: 28rpx;
+}
+.ql-editor .ql-size-16px {
+	font-size: 32rpx;
+}
+.ql-editor .ql-size-18px {
+	font-size: 36rpx;
+}
+.ql-editor .ql-size-20px {
+	font-size: 40rpx;
+}
+.ql-editor .ql-size-22px {
+	font-size: 44rpx;
+}
+.ql-editor .ql-size-24px {
+	font-size: 48rpx;
+}
+.ql-editor .ql-size-50px {
+	font-size: 100rpx;
+}
