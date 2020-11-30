@@ -174,7 +174,11 @@ McComponent({
 			}).exec();
 		},
 		handleInput(event) {
-			const value = event.detail.value;
+			let value = event.detail.value;
+			const { maxlength } = this.data;
+			if (maxlength > -1) {
+				value = value.length > maxlength ? value.substring(0, maxlength) : value;
+			}
 			this.setData({
 				currentValue: value
 			});
