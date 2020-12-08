@@ -10,9 +10,6 @@
 	/>
 </template>
 <script>
-// TODO: 按需加载echarts, 如getApp().echarts
-import * as echarts from 'echarts/dist/echarts.min';
-
 import McComponent from '../common/component';
 import WxCanvas from './wx-canvas';
 
@@ -61,11 +58,16 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.__isMounted = false;
+			if (getApp().require) {
+				this.echarts = getApp().require('echarts', { replace: false });
+			} else {
+				throw new Error('使用mc-echarts，需要提供getApp().require的方法，由外部进行按需加载');				
+			}
 		},
 		ready() {
 			// Disable prograssive because drawImage doesn't support DOM as parameter
 			// See https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.drawImage.html
-			echarts.registerPreprocessor(option => {
+			this.echarts.registerPreprocessor(option => {
 				if (option && option.series) {
 					if (option.series.length > 0) {
 						option.series.forEach(series => {
@@ -102,9 +104,9 @@ McComponent({
 
 					const canvas = new WxCanvas(node, this.data.elementId);
 
-					echarts.setCanvasCreator(() => canvas);
+					this.echarts.setCanvasCreator(() => canvas);
 
-					this.chart = echarts.init(canvas, null, {
+					this.chart = this.echarts.init(canvas, null, {
 						width,
 						height,
 						devicePixelRatio

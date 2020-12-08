@@ -8,6 +8,11 @@
 </template>
 
 <script>
+import * as echarts from 'echarts/dist/echarts.min';
+
+getApp().require = (pkg, opts) => {
+	return echarts;
+};
 
 Page({
 	data: {
