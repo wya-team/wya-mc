@@ -1,3 +1,4 @@
+<!-- 请确保echarts已经加载时使用该组件，必要时候使用wx:if -->
 <template>
 	<canvas 
 		type="2d"
@@ -30,6 +31,11 @@ McComponent({
 			value: 'mc-echarts'
 		},
 
+		echarts: {
+			type: Object,
+			value: null
+		},
+
 		options: {
 			type: Object,
 			observer(value) {
@@ -58,10 +64,13 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.__isMounted = false;
-			if (getApp().require) {
+			this.echarts = this.data.echarts;
+
+			if (!this.echarts) {
+				if (!getApp().require) {
+					throw new Error('使用mc-echarts，需要提供getApp().require的方法，由外部进行按需加载');	
+				}
 				this.echarts = getApp().require('echarts', { replace: false });
-			} else {
-				throw new Error('使用mc-echarts，需要提供getApp().require的方法，由外部进行按需加载');				
 			}
 		},
 		ready() {
