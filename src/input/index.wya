@@ -88,7 +88,6 @@ import { props } from './props';
 import { getUid } from '../common/utils';
 
 McComponent({
-	externalClasses: ['mc-class'],
 	addGlobalClass: ['mc-input-class'],
 	relations: {
 		'../form/form-item': {
