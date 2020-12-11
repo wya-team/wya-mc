@@ -17,6 +17,7 @@ export const transition = (showDefaultValue) => {
 				value: showDefaultValue,
 				observer: 'observeShow'
 			},
+			// TODO: 300 -> 0.3s
 			duration: {
 				type: null,
 				value: 300,
