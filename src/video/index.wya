@@ -3,7 +3,7 @@
 		<!-- 在失败后点击视频播放，默认自动播放 -->
 		<video
 			wx:if="{{ (!hasLoadFail && hasTryLoad) || (hasLoadFail && hasClick) }}"
-			key="{{ elementId }}"
+			wx:key="{{ elementId }}"
 			id="{{ elementId }}"
 			class="is-tag-video"
 			src="{{ src }}"
@@ -23,7 +23,16 @@
 			class="mc-video__placeholder" 
 			bind:tap="handlePlay"
 		>
-			<view class="is-tag-div" style="{{ playStyle }}" />
+			<mc-spin 
+				wx:if="{{ !hasLoadFail }}" 
+				color="#ffffff" 
+				size="{{ spinOpts.size }}"
+			/>
+			<view 
+				wx:else
+				class="is-tag-div" 
+				style="{{ playStyle }}" 
+			/>
 		</view>
 	</view>
 </template>
@@ -38,16 +47,19 @@ const getUid = () => `mc-video-${id++}`;
 
 let nextSchedule = Promise.resolve();
 const createSchedule = () => {
-	let complete;
+	let next;
 	let preSchedule = nextSchedule;
 	nextSchedule = new Promise((resolve, reject) => {
-		complete = resolve;
+		next = resolve;
 	});
 
 	return {
-		complete,
+		complete: () => {
+			next();
+			return preSchedule;
+		},
 		start: async (done) => {
-			await preSchedule;
+			let allow = await preSchedule;
 			done();
 		}
 	};
@@ -55,6 +67,12 @@ const createSchedule = () => {
 
 McComponent({
 	props: {
+		spinOpts: {
+			type: Object,
+			value: {
+				size: 50
+			}
+		},
 		playStyle: {
 			type: String,
 			value: ''
@@ -126,17 +144,16 @@ McComponent({
 	},
 
 	methods: {
-		init() {
+		async init() {
 			console.log('[@wya-mc/video]: init');
 			if (this.schedule) {
-				this.schedule.complete();
-
+				await this.schedule.complete();
 				// 已经try load 或 load fail
-				if (this.hasTryLoad || this.hasLoadFail) {
+				if (this.data.hasTryLoad || this.data.hasLoadFail) {
 					this.setData({
 						elementId: getUid(),
 						hasTryLoad: false,
-						hasLoadFail: false,
+						hasLoadFail: false
 					});
 				}
 			}
@@ -227,6 +244,9 @@ McComponent({
 
 <config>
 {
-	"component": true
+	"component": true,
+	"usingComponents": {
+		"mc-spin": "../spin/index"
+	}
 }
 </config>
