@@ -2,12 +2,11 @@
 	<view 
 		wx:for="{{ videos }}" 
 		wx:key="index"
-		wx:item="src"
-
+		wx:item="item"
 		style="width: 100vw; height: calc(100vw / 16 * 9)"
 	>
 		<mc-video 
-			src="{{ src }}" 
+			src="{{ item }}" 
 			mcClass="v-video" 
 			mcStyle="padding: 10rpx 0"
 		/>
