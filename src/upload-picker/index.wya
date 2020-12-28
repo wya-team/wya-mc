@@ -42,7 +42,7 @@
 						<mc-spin wx:else size="{{ 50 }}" color="#ffffff" class="mc-upload-picker__loading" />
 					</view>
 					<mc-icon
-						wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
+						wx:if="{{!disabled && (utils.assertTypeof(item, 'string') || item.status === 'failed')}}"
 						type="close"
 						mc-class="mc-upload-picker__preview-delete"
 						data-index="{{ index }}"
@@ -104,7 +104,7 @@
 						<mc-spin wx:else size="{{50}}" color="#ffffff" class="mc-upload-picker__loading" />
 					</view>
 					<mc-icon
-						wx:if="{{utils.assertTypeof(item, 'string') || item.status === 'failed'}}"
+						wx:if="{{!disabled && (utils.assertTypeof(item, 'string') || item.status === 'failed')}}"
 						type="close"
 						mc-class="mc-upload-picker__preview-delete"
 						data-index="{{ index }}"
