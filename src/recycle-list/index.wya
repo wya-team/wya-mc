@@ -28,6 +28,9 @@
 		<view class="mc-recycle-list__scroll pull-up-class">
 			<text class="mc-recycle-list__text"> {{ scrollText }}</text>
 		</view>
+		<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">
+			<slot name="extra" />
+		</block>
 	</scroll-view>
 </template>
 <script>
