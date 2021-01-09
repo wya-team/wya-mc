@@ -127,10 +127,13 @@ McComponent({
 			return data;
 		},
 		formatValue(value, needUpdateCurrentData) {
-			const { dataSource } = this.data;
+			const { dataSource, cols } = this.data;
 			if (needUpdateCurrentData && this.isOneDimensional) {
-				const currentData = this.parseDataByValue(dataSource, { value });
-				this.setData({ currentData });
+				let data = this.parseDataByValue(dataSource, { value });
+				if (cols > 0 && data.length > cols) {
+					data = data.slice(0, cols);
+				}
+				this.setData({ currentData: data });
 			}
 			value = value.map((it, index) => {
 				return (this.data.currentData[index] || []).findIndex((i) => i.value === it);
