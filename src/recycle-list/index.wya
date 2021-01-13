@@ -3,6 +3,7 @@
 	<scroll-view
 		style="height:{{height}}"
 		scroll-y="true"
+		scroll-top='{{scrollTop}}' 
 		lower-threshold="100"
 		enable-back-to-top="true"
 		class="mc-recycle-list mc-class"
@@ -84,6 +85,14 @@ McComponent({
 		show: {
 			type: Boolean,
 			value: true
+		},
+		scrollTop: { // 内部滚动距离
+			type: Number,
+			value: 0
+		},
+		listenSrcoll: { // 是否抛出滚动事件
+			type: Boolean,
+			value: false
 		}
 	},
 	data: {
@@ -112,7 +121,7 @@ McComponent({
 		 * 3.进入pause状态 （loading）
 		 */
 		pullUpStatus: 0,
-		scrollTop: 0,
+		currentScrollTop: 0,
 		// 页面
 		currentPage: 0,
 		animate: {}
@@ -138,9 +147,13 @@ McComponent({
 	},
 	methods: {
 		handleScroll(e) {
+			const scrollTop = e.detail.scrollTop;
 			this.setData({
-				scrollTop: e.detail.scrollTop
+				currentScrollTop: scrollTop
 			});
+			if (this.data.listenSrcoll) {
+				this.$emit('scroll', scrollTop);
+			}
 		},
 		handleEndReached() {
 			this.loadDataForScroll();
@@ -152,11 +165,11 @@ McComponent({
 			}
 		},
 		handleTouchMove(e) {
-			if (!this.canRefresh() || this.data.scrollTop > 0) return;
+			if (!this.canRefresh() || this.data.currentScrollTop > 0) return;
 			let pulledY = e.touches[0].clientY - this.startY;
 
 			// 滚动条所在位置
-			if (this.data.scrollTop <= 0) {
+			if (this.data.currentScrollTop <= 0) {
 				let pullDownStatus = pulledY > this.data.pauseY ? 2 : 1;
 				if (this.data.pullDownStatus !== pullDownStatus) {
 					this.setData({
