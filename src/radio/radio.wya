@@ -4,6 +4,7 @@
 			<mc-icon
 				type="{{ value === name ? 'select-checked' : 'select' }}"
 				style="color: {{ disabled ? '#999' : color}}"
+				mcStyle="{{ iconStyle }}"
 			>
 			</mc-icon>
 		</view>
@@ -49,6 +50,9 @@ McComponent({
 			value: '#26be76'
 		},
 		name: {
+			type: String
+		},
+		iconStyle: {
 			type: String
 		},
 	},
