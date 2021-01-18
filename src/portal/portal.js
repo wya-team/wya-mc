@@ -73,6 +73,7 @@ class Portal {
 							onSure: resolve,
 							onClose: reject,
 						});
+						this.waiting = false;
 					}).catch((res) => {
 						this.waiting = false;
 						reject(res);
