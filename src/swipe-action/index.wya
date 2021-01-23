@@ -30,7 +30,7 @@
 		class="mc-swipe-action__content"
 		style="{{ contentStyle }}{{ transitionStyle }}"
 		bind:touchstart="handleTouchstart"
-		catch:touchmove="handleTouchmove"
+		bind:touchmove="handleTouchmove"
 		bind:touchend="handleTouchend"
 		bind:touchcancel="handleTouchend"
 	>
