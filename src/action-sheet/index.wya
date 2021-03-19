@@ -80,19 +80,39 @@ McComponent({
 		}
 	},
 	methods: {
-		handleClose() {
+		onPortalUpdate(options = {}) {
+			this.setData({
+				actions: options.actions || this.data.actions,
+				cancelText: options.cancelText || this.data.cancelText,
+				title: options.title || this.data.title,
+				description: options.description || this.data.description,
+				closeOnClickAction: options.closeOnClickAction || this.data.closeOnClickAction,
+			});
+
+			this.onBeforeSure = options.onBeforeSure || (() => true);
+			this.onBeforeClose = options.onBeforeClose || (() => true);
+		},
+		async handleClose() {
+			let allow = await this.onBeforeClose(this);
+			if (typeof allow === 'boolean' && !allow) return;
+
 			this.$emit('close');
 		},
 		handleCancel() {
 			this.$emit('cancel');
 			this.handleClose();
 		},
-		handleSelect(event) {
+		async handleSelect(event) {
 			let index = event.currentTarget.dataset.index;
 			let item = this.data.actions[index];
 			if (item && !item.disabled) {
+				let allow = await this.onBeforeSure(this);
+				if (typeof allow === 'boolean' && !allow) return;
+
+				// TODO: 这里可能存在bug, sure的时候会关闭弹窗
 				this.$emit('sure', item);
 				this.$emit('select', item);
+
 				if (this.data.closeOnClickAction) {
 					this.handleClose();
 				}
