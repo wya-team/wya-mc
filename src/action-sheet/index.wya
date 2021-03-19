@@ -1,17 +1,22 @@
 <template>
+	<wxs src="../wxs/array.wxs" module="tools" />
 	<mc-popup 
 		mc-class="mc-action-sheet mc-class" 
-		visible="{{visible}}" 
+		visible="{{ visible }}" 
 		round="{{ round }}"
 		mask="{{ mask }}"
 		maskClosable="{{ maskClosable }}"
 		bind:close="handleClose"
 	>
-		<view wx:if="{{title}}" class="mc-hairline__bottom mc-action-sheet__title">
-			{{title}}
+		<view 
+			wx:if="{{ title }}" 
+			class="mc-hairline__bottom mc-action-sheet__title"
+			style=""
+		>
+			{{ title }}
 		</view>
-		<view wx:if="{{description}}" class="mc-action-sheet__description">
-			{{description}}
+		<view wx:if="{{ description }}" class="mc-action-sheet__description">
+			{{ description }}
 		</view>
 		<button
 			wx:for="{{ actions }}"
@@ -36,8 +41,28 @@
 			show-message-card="{{ showMessageCard }}"
 			app-parameter="{{ appParameter }}"
 		>
-			{{ item.name }}
-			<text wx:if="{{ item.subname }}" class="mc-action-sheet__subname" >{{ item.subname }}</text>
+			<view>
+				<text>{{ item.name }}</text>
+			</view>
+			<!-- TODO: 存在问题，无法组织冒泡(button -> view可行，但原生事件不行) -->
+			<block
+				wx:if="{{ tools.isArray(item.extra) }}"
+			>
+				<view 
+					wx:for="{{ item.extra }}"
+					wx:for-index="$index"
+					wx:for-item="$item"
+					wx:key="$index"
+					data-indexes="{{ index }}_{{ $index }}"
+					catchtap="handleExtra"
+					class="mc-action-sheet__extra"
+				>
+					{{ $item.name }}
+				</view>
+			</block>
+			<view wx:elif="{{ item.subname }}" class="mc-action-sheet__subname">
+				<text>{{ item.subname }}</text>
+			</view>
 		</button>
 		<slot></slot>
 		<view
@@ -108,6 +133,7 @@ McComponent({
 			if (item && !item.disabled) {
 				let allow = await this.onBeforeSure(this);
 				if (typeof allow === 'boolean' && !allow) return;
+				item.onClick && item.onClick(item, this);
 
 				// TODO: 这里可能存在bug, sure的时候会关闭弹窗
 				this.$emit('sure', item);
@@ -117,6 +143,13 @@ McComponent({
 					this.handleClose();
 				}
 			}
+		},
+
+		handleExtra(event) {
+			let { indexes } = event.currentTarget.dataset;
+			let [index, $index] = indexes.split('_');
+			const item = this.data.actions[index].extra[$index];
+			item.onClick && item.onClick(item, this);
 		}
 	}
 });
@@ -144,13 +177,15 @@ McComponent({
 	.mc-action-sheet__cancel,
 	.mc-action-sheet__item {
 		font-weight: normal;
-		text-align: center;
 		font-size: 36rpx;
 		line-height: 100rpx;
 		background-color: #fff;
 		width: 100%;
 		box-shadow: border-box;
 		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		&.is-disabled {
 			color: #CDCDCD;
 			background-color: #fff;
@@ -170,6 +205,11 @@ McComponent({
 		margin-left: 8rpx;
 		font-size: 24rpx;
 		color: #646566;
+	}
+
+	.mc-action-sheet__extra {
+		margin-left: 15rpx;
+		color: #4787F2;
 	}
 	button:after {
 		display: block

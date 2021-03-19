@@ -1,5 +1,5 @@
 import Portal from '../../../components/portal/index';
 
-export const PopupActionSheet = new Portal({ 
+export const ActionSheet = new Portal({ 
 	el: "#action-sheet" 
 });

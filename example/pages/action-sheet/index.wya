@@ -1,38 +1,34 @@
 <template>
-	<mc-list>
-		<mc-list-item label="上拉菜单" bind:click="handleOpenActionSheet" />
-	</mc-list>
-
-	<mc-action-sheet 
-		id="action-sheet" 
-		title='title' 
-		actions="{{action1}}"
-	>
-	</mc-action-sheet>
+	<buntton bind:tap="handleOpenActionSheet">点击</buntton>
+	<mc-action-sheet  id="action-sheet" title='title' description="description"/>
 </template>
 <script>
-import { PopupActionSheet } from './popup/portal';
+import { ActionSheet } from './popup/portal';
 
 Page({
-	handleOpenActionSheet() {
-		PopupActionSheet.popup({
-			count: 10
-		}).then((res) => {
-			console.log('sure', res);
-		}).catch((err) => {
-			console.log('close', err);
-		});
-	},
 	data: {
 		show: false,
-		action1: [
-			{ name: '复制文本', },
-			{ name: '删除', color: '#ff1234' },
+		actions: [
+			{ 
+				name: '复制文本', 
+				// TODO: 存在问题，无法组织冒泡(button -> view可行，但原生事件不行)
+				extra: [
+					{
+						name: '复制',
+						onClick: () => {
+							console.log('extra');
+						}
+					}
+				] 
+			},
+			{ name: '删除', color: '#ff1234', onClick: () => console.log('click') },
 			{ name: '选项', subname: '副文本', disabled: true }
 		],
 	},
-	handleClose() {
-		Popup.destroy();
+	handleOpenActionSheet() {
+		ActionSheet.popup({
+			actions: this.data.actions
+		});
 	},
 });
 
@@ -40,9 +36,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-action-sheet": "../../../components/action-sheet/index",
-		"mc-list": "../../../components/list/index",
-		"mc-list-item": "../../../components/list/list-item"
+		"mc-action-sheet": "../../../components/action-sheet/index"
 	}
 }
 </config>
