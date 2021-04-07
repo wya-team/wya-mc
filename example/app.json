@@ -1,10 +1,6 @@
 {
 	"pages": [
-		"pages/icon/index",
-		"pages/image/index",
-		"pages/spin/index",
-		"pages/upload/index",
-		"pages/upload-picker/index"
+		"pages/theme/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",

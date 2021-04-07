@@ -1,0 +1,27 @@
+<template>
+	<view 
+		src="{{ source }}"
+		style="{{ styles }} {{ mcStyle }}"
+		class="mc-theme-view mc-class"
+	>	
+		<slot />
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import theme from './behavior';
+
+McComponent({
+	mixins: [theme],
+	props: {
+		// TODO, view 有关的变量
+	}
+});
+
+</script>
+
+<config>
+{
+	"component": true
+}
+</config>

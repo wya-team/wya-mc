@@ -1,0 +1,63 @@
+<template>
+	<mc-theme-view 
+		key="{{ current }}"
+		mc-style="height: 100rpx"
+		mc-class="vc-theme-basic"
+		background-color="color-background" 
+		bind:tap="handleClick"
+	>
+		<mc-theme-text color="color-primary">点我切换主题</mc-theme-text>
+	</mc-theme-view>
+</template>
+
+<script>
+const THEME = {
+	light: {
+		'color-primary': '	',
+		'color-background': 'yellow'
+	},
+	dark: {
+		'color-primary': 'white',
+		'color-background': 'black'
+	},
+};
+const app = getApp();
+
+
+Page({
+	onLoad() {
+		app.$mc.config.Theme = THEME[this.data.current];
+		app.emitter && app.emitter.emit('themeUpdated');
+	},
+
+	data: {
+		current: 'light'
+	},
+
+	handleClick(e) {
+
+		this.setData({
+			current: this.data.current === 'dark' ? 'light' : 'dark'
+		});
+
+		app.$mc.config.Theme = THEME[this.data.current];
+
+		app.emitter && app.emitter.emit('themeUpdated');
+	}
+});
+
+</script>
+<style lang="scss">
+page {
+	background-color: #fff;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-theme-view": "../../components/theme/theme-view",
+		"mc-theme-text": "../../components/theme/theme-text",
+		"mc-theme-image": "../../components/theme/theme-image"
+	}
+}
+</config>

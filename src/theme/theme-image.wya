@@ -1,0 +1,27 @@
+<template>
+	<image 
+		src="{{ source }}"
+		style="{{ styles }} {{ mcStyle }}"
+		mode="{{ mode }}"
+		class="mc-theme-image mc-class"
+	/>
+</template>
+<script>
+import McComponent from '../common/component';
+import theme from './behavior';
+
+McComponent({
+	mixins: [theme],
+	props: {
+		mode: String
+		// TODO, image 有关的变量
+	}
+});
+
+</script>
+
+<config>
+{
+	"component": true
+}
+</config>
