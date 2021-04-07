@@ -86,7 +86,9 @@ export default Behavior({
 			if (/[a-zA-z]+:\/\/[^\s]*/.test(name)) {
 				return name;
 			}
-			let its = app.$mc.config.Theme || {};
+			let its = app.$mc && app.$mc.config && app.$mc.config.Theme
+				? app.$mc.config.Theme
+				: {};
 			return its[name] || name;
 		}
 	}
