@@ -1,16 +1,204 @@
 <template>
-<view class="v-index">欢迎使用@wya/mc</view>
+	<mc-list mc-class="g-m-t-40">
+		<mc-list-item
+			label="ActionSheet(动作面板)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/action-sheet/index"
+		/>
+		<mc-list-item
+			label="Button(按钮)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/button/index"
+		/>
+		<mc-list-item
+			label="Cascader(多级联动)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/cascader/index"
+		/>
+		<mc-list-item
+			label="Checkbox(复选框)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/checkbox/index"
+		/>
+		<mc-list-item
+			label="Collapse(折叠面板)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/collapse/index"
+		/>
+		<mc-list-item
+			label="CountDown(倒计时)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/count-down/index"
+		/>
+		<mc-list-item
+			label="DatePicker(日期选择器)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/date-picker/index"
+		/>
+		<mc-list-item
+			label="DropDown(下拉菜单)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/dropdown-menu/index"
+		/>
+		<mc-list-item
+			label="Form(表单)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/form/index"
+		/>
+		<mc-list-item
+			label="Icon(图标)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/icon/index"
+		/>
+		<mc-list-item
+			label="Image(图片)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/image/index"
+		/>
+		<mc-list-item
+			label="Input(输入框)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/input/index"
+		/>
+		<mc-list-item
+			label="InputSearch(搜索框)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/input-search/index"
+		/>
+		<mc-list-item
+			label="List(列表)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/list/index"
+		/>
+		<mc-list-item
+			label="Modal(弹框)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/modal/index"
+		/>
+		<mc-list-item
+			label="NoticeBar(通告栏)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/notice-bar/index"
+		/>
+		<mc-list-item
+			label="Picker(选择器)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/picker/index"
+		/>
+		<mc-list-item
+			label="Popup(弹层)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/popup/index"
+		/>
+		<mc-list-item
+			label="Radio(单选框)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/radio/index"
+		/>
+		<mc-list-item
+			label="RecycleList(分页列表)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/recycle-list/index"
+		/>
+		<mc-list-item
+			label="RichText(富文本)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/recycle-list/index"
+		/>
+		<mc-list-item
+			label="Slider(滑动条)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/slider/index"
+		/>
+		<mc-list-item
+			label="Spin(加载中)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/spin/index"
+		/>
+		<mc-list-item
+			label="Stepper(步进器)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/stepper/index"
+		/>
+		<mc-list-item
+			label="SwipeAction(滑动操作)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/swipe-action/index"
+		/>
+		<mc-list-item
+			label="Switch(滑动开关)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/switch/index"
+		/>
+		<mc-list-item
+			label="Tabs(标签页)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/tabs/index"
+		/>
+		<mc-list-item
+			label="Theme(主题)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/theme/index"
+		/>
+		<mc-list-item
+			label="TimePicker(时间选择器)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/time-picker/index"
+		/>
+		<mc-list-item
+			label="UploadPicker(上传)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/upload-picker/index"
+		/>
+		<mc-list-item
+			label="Video(视频)"
+			is-link
+			link-type="navigateTo"
+			url="/pages/video/index"
+		/>
+	</mc-list>
+	
 </template>
 <script>
 const app = getApp();
 
-Page({
-	
-});
-
+Page({});
 </script>
 <config>
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "mc-list": "../../components/list/index",
+    "mc-list-item": "../../components/list/list-item"
+  }
 }
 </config>
