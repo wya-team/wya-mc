@@ -121,7 +121,7 @@ class Portal {
 					done(_onClose, detail);
 					break;
 				default:
-					on(type);
+					on(type, detail);
 					break;
 					
 			}
