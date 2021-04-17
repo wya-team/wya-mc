@@ -153,7 +153,8 @@ McComponent({
 }
 
 .mc-image--round .mc-image__img {
-	border-radius: inherit
+	border-radius: inherit;
+	font-size: 0;
 }
 
 .mc-image__error,.mc-image__img,.mc-image__loading {
