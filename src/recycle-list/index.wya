@@ -1,52 +1,61 @@
 <template>
-	<wxs module="scroll" src="./index.wxs"></wxs>
-	<scroll-view
-		style="height:{{height}}"
-		scroll-y="true"
-		scroll-top='{{scrollTop}}' 
-		lower-threshold="100"
-		enable-back-to-top="true"
-		class="mc-recycle-list mc-class"
-		refresher-enabled="{{false}}"
-		pullDownHeight="{{pullDownHeight}}"
-		change:pullDownHeight="{{scroll.setPullDownHeight}}"
-		bind:scroll="{{scroll.handleScroll}}"
-		bind:scrolltolower="handleEndReached"
-		bind:touchstart="{{scroll.handleTouchStart}}"
-		bind:touchend="handleTouchEnd"
-	>
-		<view class="mc-recycle-list__pull-down pull-down-class {{ pullDownStatus === 3 || pullDownStatus === 0 ? 'is-transition' : '' }}" style="overflow: hidden;">
-			<text class="mc-recycle-list__text">{{ pullDownText }}</text>
-		</view>
-
-		<view
-			class="mc-recycle-list__content content-class"
-			bind:touchmove="{{scroll.handleTouchMove}}"
+	<movable-area class="mc-recycle-list mc-class" style="height: {{ height }}">
+		<movable-view 
+			class="mc-recycle-list__scroll"
+			style="height: calc(100% + {{ refreshHeight }}rpx);"
+			direction="vertical"
+			y="{{ y }}"
+			bind:change="handleMoveChange"
+			bind:touchend="handleTouchEnd"
 		>
-			<slot />
-		</view>
+			<scroll-view
+				class="mc-recycle-list__view"
+				scroll-y="{{ true }}"
+				scroll-top='{{ scrollTop }}' 
+				lower-threshold="{{ lowerThreshold }}"
+				enable-back-to-top="{{ true }}"
+				bind:scroll="handleScroll"
+				bind:scrolltolower="handleEndReached"
+			>
+				<view 
+					id="mc-refresh-view"
+					class="mc-recycle-list__pull-down pull-down-class" 
+					style="height: {{ refreshHeight }}rpx;"
+				>
+					<text class="mc-recycle-list__text">{{ PULL_DOWN_STATUS[pullDownStatus] }}</text>
+				</view>
 
-		<view class="mc-recycle-list__scroll pull-up-class">
-			<text class="mc-recycle-list__text"> {{ scrollText }}</text>
-		</view>
-		<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">
-			<slot name="extra" />
-		</block>
-	</scroll-view>
+				<slot />
+
+				<view class="mc-recycle-list__pull-up pull-up-class">
+					<text class="mc-recycle-list__text"> {{ SCROLL_STATUS[scrollStatus] }}</text>
+				</view>
+				<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">
+					<slot name="extra" />
+				</block>
+			</scroll-view>
+		</movable-view>
+	</movable-area>
 </template>
 <script>
 import McComponent from '../common/component';
 import { PULL_DOWN_STATUS, PULL_UP_STATUS, SCROLL_STATUS } from './constant';
 
 McComponent({
-	externalClasses: ['content-class', 'pull-down-class', 'pull-up-class'],
+	externalClasses: ['pull-down-class', 'pull-up-class'],
 	props: {
 		pauseY: {
 			type: Number,
-			value: 40
+			value: -10
 		},
 		height: {
-			type: String
+			type: String,
+			value: '100vh'
+		},
+		refreshHeight: {
+			type: Number,
+			value: 120,
+
 		},
 		total: {
 			type: Number,
@@ -93,10 +102,16 @@ McComponent({
 		listenSrcoll: { // 是否抛出滚动事件
 			type: Boolean,
 			value: false
+		},
+		lowerThreshold: {
+			type: Number,
+			value: 100
 		}
 	},
 	data: {
-		y: 0,
+		y: -60,
+		refreshOffset: 0, // 下拉刷新视图高度
+		isInited: false,
 		/**
 		 * 0.未touchstart 
 		 * 1.pulling但未达到pauseY 
@@ -104,7 +119,7 @@ McComponent({
 		 * 3.进入pause状态 （loading）
 		 */
 		pullDownStatus: 0,
-		pullDownText: PULL_DOWN_STATUS[0],
+		PULL_DOWN_STATUS,
 		/**
 		 * 0: '上滑加载', 
 		 * 1: '加载中', 
@@ -113,14 +128,13 @@ McComponent({
 		 * 4: '没有内容可供显示'
 		 */
 		scrollStatus: 0,
-		scrollText: SCROLL_STATUS[0],
+		SCROLL_STATUS,
 		/**
 		 * 0.未touchstart 
 		 * 1.pulling但未达到pauseY 
 		 * 2.pulling达到pauseY 
 		 * 3.进入pause状态 （loading）
 		 */
-		pullUpStatus: 0,
 		currentScrollTop: 0,
 		// 页面
 		currentPage: 0,
@@ -128,6 +142,7 @@ McComponent({
 	},
 	lifetimes: {
 		ready() {
+			this.init();
 			if (this.data.currentPage === 0) {
 				this.loadDataForScroll();
 			}
@@ -143,92 +158,72 @@ McComponent({
 					this.loadDataForScroll();
 				});
 			}
+		},
+		'refreshHeight': function (refreshHeight) {
+			setTimeout(() => this.init(), 10);
 		}
 	},
 	methods: {
-		handleScroll(e) {
-			const scrollTop = e.detail.scrollTop;
-			this.setData({
-				currentScrollTop: scrollTop
-			});
-			if (this.data.listenSrcoll) {
-				this.$emit('scroll', scrollTop);
+		/**
+		 * 初始化scroll组件参数, 动态获取 下拉刷新区域
+		 */
+		init() {
+			this.createSelectorQuery().select("#mc-refresh-view").boundingClientRect((res) => {
+				const height = -res.height;
+				this.setData({
+					refreshOffset: height,
+					y: height,
+					isInited: true
+				});
+			}).exec();
+		},
+		handleMoveChange(e) {
+			const { pullDownStatus, scrollStatus, pauseY } = this.data;
+			let diff = e.detail.y;
+			if (pullDownStatus >= 3 || scrollStatus == 1) return;
+			if (diff > pauseY) {
+				this.setData({ pullDownStatus: 2 });
+			} else {
+				this.setData({ pullDownStatus: 1 });
+			}
+		},
+		handleTouchEnd() {
+			const { pullDownStatus, refreshOffset } = this.data;
+			if (pullDownStatus >= 3) return;
+			if (pullDownStatus === 2) {
+				wx.vibrateShort();
+				this.setData({
+					pullDownStatus: 3,
+					y: 0,
+				});
+				this.handleRefresh();
+			} else if (pullDownStatus === 1) {
+				this.setData({ y: refreshOffset });
 			}
 		},
 		handleEndReached() {
 			this.loadDataForScroll();
 		},
-		handleTouchStart(e) {
-			if (!this.canRefresh()) return;
-			if (e.touches.length === 1) {
-				this.startY = e.touches[0].clientY;
-			}
-		},
-		handleTouchMove(e) {
-			if (!this.canRefresh() || this.data.currentScrollTop > 0) return;
-			let pulledY = e.touches[0].clientY - this.startY;
-
-			// 滚动条所在位置
-			if (this.data.currentScrollTop <= 0) {
-				let pullDownStatus = pulledY > this.data.pauseY ? 2 : 1;
-				if (this.data.pullDownStatus !== pullDownStatus) {
+		handleRefresh() {
+			this.$emit('loadData', { 
+				page: 1, 
+				refresh: true, 
+				done: () => {
+					let scrollStatus = this.data.total <= 1 ? 2 : 0;
 					this.setData({
-						pullDownStatus,
-						pullDownText: PULL_DOWN_STATUS[pullDownStatus],
-						// y: this.easing(pulledY)
+						pullDownStatus: 0,
+						scrollStatus,
+						y: this.data.refreshOffset,
+						currentPage: 1
 					});
 				}
-			}
+			});
 		},
-		handleTouchEnd(e) {
-			if (!this.canRefresh()) return;
-
-			if (this.data.pullDownStatus == 2) {
-				this.setData({
-					pullDownStatus: 3,
-					pullDownText: PULL_DOWN_STATUS["3"],
-					pullDownHeight: this.data.pauseY
-				});
-				this.$emit('loadData', { 
-					page: 1, 
-					refresh: true, 
-					done: () => {
-						this.setData({
-							pullDownText: PULL_DOWN_STATUS["0"],
-							pullDownStatus: 0,
-							pullDownHeight: 0
-						});
-					}
-				});
-			} else {
-				this.setData({
-					pullDownText: PULL_DOWN_STATUS["0"],
-					pullDownStatus: 0,
-					pullDownHeight: 0
-				});
-			}
-		},
-
-		easing(pulledY) {
-			// 从顶部开始
-			let startY = 0;
-			// 允许拖拽的最大距离
-			let maxY = 500;
-			// 提示标签最大有效拖拽距离
-			let duration = 2.5;
-			return maxY / duration * Math.sin(pulledY / maxY * (Math.PI / 2)) + startY;
-		},
-
 		loadDataForScroll(opts = {}) {
 			const { force = false } = opts;
 			if (!this.data.show || !this.data.scroll) return;
 			if ((!force && this.data.scrollStatus >= 1)) return;
-
-
-			this.setData({
-				scrollStatus: 1,
-				scrollText: SCROLL_STATUS["1"],
-			});
+			this.setData({ scrollStatus: 1 });
 
 			let page = force ? 1 : this.data.currentPage + 1;
 			this.$emit('loadData', {
@@ -236,59 +231,55 @@ McComponent({
 				done: () => {
 					let scrollStatus = this.data.total <= page ? 2 : 0;
 					this.setData({
-						scrollStatus, // TODO
-						scrollText: SCROLL_STATUS[scrollStatus],
+						scrollStatus,
 						currentPage: page
 					});
 				}
 			});
 		},
-
-		canRefresh() {
-			return false;
-			// return this.data.show 
-			// 	&& this.data.pull
-			// 	&& this.data.pullDownStatus !== 3 
-			// 	&& this.data.scrollStatus !== 1;
-		}
+		handleScroll(e) {
+			if (this.data.listenSrcoll) {
+				this.$emit('scroll', scrollTop);
+			}
+		},
 	}
 });
 </script>
 <style lang="scss">
 .mc-recycle-list {
-	position: relative;
-	overflow-y: scroll;
-}
-
-.mc-recycle-list__pull-down {
-	line-height: 60rpx;
-	font-size: 12rpx;
-}
-
-.mc-recycle-list__scroll {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 60rpx;
-	.mc-recycle-list__text {
-		color: #333;
-		line-height: 60rpx;
-		font-size: 24rpx;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	.mc-recycle-list__scroll {
+		width: 100%;
 	}
-}
-
-.mc-recycle-list__pull-down {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 60rpx;
-	&.is-transition {
-		transition: height .3s ease
+	.mc-recycle-list__view {
+		height: 100%;
+		position: relative;
+		box-sizing: border-box;
 	}
-	.mc-recycle-list__text {
-		color: #333;
-		line-height: 60rpx;
-		font-size: 24rpx;
+	.mc-recycle-list__pull-down {
+		font-size: 12rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		.mc-recycle-list__text {
+			color: #333;
+			line-height: 60rpx;
+			font-size: 24rpx;
+		}
+	}
+	.mc-recycle-list__pull-up {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 60rpx;
+		.mc-recycle-list__text {
+			color: #333;
+			line-height: 60rpx;
+			font-size: 24rpx;
+		}
 	}
 }
 </style>
