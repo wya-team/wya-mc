@@ -1,9 +1,9 @@
 <template>
 	<view style="height: 100vh">
 		<mc-recycle-list
-			height="100%"
+			height="calc(100vh - 200rpx)"
 			total="{{ total }}"
-			bind:loadData="loadData" 
+			bind:loadData="loadData1" 
 		>
 			<block wx:for="{{ list }}" wx:key="index" wx:item="item">
 				<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
@@ -12,6 +12,28 @@
 			</block>
 		</mc-recycle-list>
 	</view>
+	<!-- <mc-tabs active="{{ activeTab }}" bind:change="handleTab">
+		<mc-tabs-pane
+			wx:for="{{ tabsWithName }}"
+			wx:key="index"
+			name="{{ item.name }}"
+			info="{{ index + 10 }}"
+			title="{{ '标签 ' + item.index }}"
+		>
+			<mc-recycle-list
+				show="{{ item.name == activeTab }}"
+				height="calc(100vh - 200rpx)"
+				total="{{ listInfo[item.name].total }}"
+				bind:loadData="loadData" 
+			>
+				<block wx:for="{{ listInfo[item.name].list }}" wx:key="index" wx:item="item">
+					<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
+						<text> {{index}}: {{item}} </text>
+					</view>
+				</block>
+			</mc-recycle-list>
+		</mc-tabs-pane>
+	</mc-tabs> -->
 </template>
 <script>
 const app = getApp();
@@ -22,12 +44,58 @@ const generateArray = base => {
 
 Page({
 	data: {
+		listInfo: {
+			a: {
+				list: [],
+				current: 0,
+				total: 0,
+			},
+			b: {
+				list: [],
+				current: 0,
+				total: 0,
+			},
+			c: {
+				list: [],
+				current: 0,
+				total: 0,
+			}
+		},
 		list: [],
 		current: 0,
 		total: 0,
+		scrollTop: 0,
+		activeTab: 'a',
+		tabsWithName: [
+			{ name: 'a', index: 1 },
+			{ name: 'b', index: 2 },
+			{ name: 'c', index: 3 }
+		],
 	},
-	
+	handleTab(event) {
+		this.setData({
+			activeTab: event.detail.name
+		});
+	},
 	loadData(e) {
+		const { page, refresh, done } = e.detail;
+		const { activeTab } = this.data;
+		this.request(page)
+			.then(res => {
+				this.setData({
+					listInfo: {
+						...this.data.listInfo,
+						[activeTab]: {
+							list: refresh ? res.data.list : this.data.listInfo[activeTab].list.concat(res.data.list),
+							current: res.data.page.current,
+							total: res.data.page.total,
+						}
+					}
+				});
+				done();
+			});
+	},
+	loadData1(e) {
 		const { page, refresh, done } = e.detail;
 		this.request(page)
 			.then(res => {
@@ -36,7 +104,6 @@ Page({
 					current: res.data.page.current,
 					total: res.data.page.total,
 				});
-
 				done();
 			});
 	},
@@ -49,7 +116,7 @@ Page({
 					data: {
 						page: {
 							current: page,
-							total: 2,
+							total: 3,
 						},
 						list: generateArray(page),
 					}
@@ -63,7 +130,9 @@ Page({
 <config>
 {
   "usingComponents": {
-  	"mc-recycle-list": "../../components/recycle-list"
+  	"mc-recycle-list": "../../components/recycle-list",
+	  "mc-tabs": "../../components/tabs",
+		"mc-tabs-pane": "../../components/tabs/tabs-pane"
   }
 }
 </config>

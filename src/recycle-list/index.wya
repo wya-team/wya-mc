@@ -142,6 +142,7 @@ McComponent({
 	},
 	lifetimes: {
 		ready() {
+			this.isReady = true;
 			this.init();
 			if (this.data.currentPage === 0) {
 				this.loadDataForScroll();
@@ -153,6 +154,7 @@ McComponent({
 	},
 	observers: {
 		'show': function (show) {
+			if (show) this.init();
 			if (this.data.currentPage === 0) {
 				wx.nextTick(() => {
 					this.loadDataForScroll();
@@ -160,20 +162,21 @@ McComponent({
 			}
 		},
 		'refreshHeight': function (refreshHeight) {
-			setTimeout(() => this.init(), 10);
+			setTimeout(() => this.init(true), 10);
 		}
 	},
 	methods: {
 		/**
 		 * 初始化scroll组件参数, 动态获取 下拉刷新区域
 		 */
-		init() {
+		init(force) {
+			if (!this.isReady || !this.data.show || (this.data.isInited && !force)) return;
 			this.createSelectorQuery().select("#mc-refresh-view").boundingClientRect((res) => {
 				const height = -res.height;
 				this.setData({
 					refreshOffset: height,
 					y: height,
-					isInited: true
+					isInited: height > 0
 				});
 			}).exec();
 		},
