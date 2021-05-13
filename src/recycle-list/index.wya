@@ -18,6 +18,7 @@
 				bind:scrolltolower="handleEndReached"
 			>
 				<view 
+					wx:if="{{ pull }}"
 					id="mc-refresh-view"
 					class="mc-recycle-list__pull-down pull-down-class" 
 					style="height: {{ refreshHeight }}rpx;"
@@ -99,7 +100,7 @@ McComponent({
 			type: Number,
 			value: 0
 		},
-		listenSrcoll: { // 是否抛出滚动事件
+		listenScroll: { // 是否抛出滚动事件
 			type: Boolean,
 			value: false
 		},
@@ -170,6 +171,10 @@ McComponent({
 		 * 初始化scroll组件参数, 动态获取 下拉刷新区域
 		 */
 		init(force) {
+			if (!this.data.pull) {
+				this.setData({ y: 0 });
+				return;
+			}
 			if (!this.isReady || !this.data.show || (this.data.isInited && !force)) return;
 			this.createSelectorQuery().select("#mc-refresh-view").boundingClientRect((res) => {
 				const height = -res.height;
@@ -183,7 +188,7 @@ McComponent({
 		handleMoveChange(e) {
 			const { pullDownStatus, scrollStatus, pauseY } = this.data;
 			let diff = e.detail.y;
-			if (pullDownStatus >= 3 || scrollStatus == 1) return;
+			if (!this.data.pull || pullDownStatus >= 3 || scrollStatus == 1) return;
 			if (diff > pauseY) {
 				this.setData({ pullDownStatus: 2 });
 			} else {
@@ -242,7 +247,7 @@ McComponent({
 		},
 		handleScroll(e) {
 			const scrollTop = e.detail.scrollTop;
-			if (this.data.listenSrcoll) {
+			if (this.data.listenScroll) {
 				this.$emit('scroll', scrollTop);
 			}
 		},
