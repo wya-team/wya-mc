@@ -241,6 +241,7 @@ McComponent({
 			});
 		},
 		handleScroll(e) {
+			const scrollTop = e.detail.scrollTop;
 			if (this.data.listenSrcoll) {
 				this.$emit('scroll', scrollTop);
 			}
