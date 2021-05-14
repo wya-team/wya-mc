@@ -6,16 +6,39 @@
 		dataSource="{{dataSource}}"
 		bind:change="handleChange"
 	/>
+
+	<view>第一级以tabs形式展示</view>
+	<mc-cascader 
+		value="{{value2}}"
+		label="地址" 
+		title="选择地址"
+		dataSource="{{useTabsDataSource}}"
+		useTabs
+		bind:change="handleChange"
+	/>
 </template>
 <script>
 const app = getApp();
 import { areaData } from './mock';
 import Portal from '../../components/portal/index';
 
+const generateTabsData = (data) => {
+	return [
+		data[0],
+		{
+			label: '其它',
+			value: 'other',
+			children: data.slice(1)
+		}
+	];
+};
+
 Page({
 	data: {
 		value: ["140000", "140500", "140525"],
-		dataSource: areaData
+		value2: ['other', "140000", "140500", "140525"],
+		dataSource: areaData,
+		useTabsDataSource: generateTabsData(areaData)
 	},
 	onShow() {
 		

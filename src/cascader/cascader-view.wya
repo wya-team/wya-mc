@@ -1,14 +1,25 @@
 <template>
 	<view class="mc-cascader-view mc-class">
+		<view wx:if="{{ useTabs }}" class="mc-cascader-view__tabs">
+			<view 
+				wx:for="{{ tabs }}"
+				wx:key="value"
+				data-index="{{ index }}"
+				class="mc-cascader-view__tab {{ tabIndex === index ? 'is-active' : '' }}"
+				bind:tap="handleTabTap"
+			>
+				{{ item.label }}
+			</view>
+		</view>
 		<view class="mc-cascader-view__header">
 			<view
-				wx:for="{{currentValue}}"
+				wx:for="{{ subValues }}"
 				wx:key="*this"
-				class="mc-cascader-view__label {{currentIndex === index ? 'is-active' : ''}}"
-				data-index="{{index}}"
+				class="mc-cascader-view__label {{currentIndex === (index + indexOffset) ? 'is-active' : ''}}"
+				data-index="{{index + indexOffset}}"
 				bindtap="handleClickLabel"
 			>
-				{{ currentLabel[index] }}
+				{{ currentLabel[index + indexOffset] }}
 			</view>
 			<view 
 				wx:if="{{hasChildren}}" 
@@ -43,18 +54,26 @@ McComponent({
 		}
 	},
 	data: {
+		indexOffset: 0,
 		currentIndex: 0,
 		currentValue: [],
 		currentLabel: [],
 		rebuildData: [],
 		colData: [],
+
+		tabIndex: 0,
+		tabs: [],
+		subValues: [],
 		hasChildren: true
 	},
 	observers: {
 		'dataSource': function (dataSource) {
+			const rebuildData = this.makeRebuildData();
 			this.setData({
-				rebuildData: this.makeRebuildData()
+				tabs: this.data.useTabs ? rebuildData[0] : [],
+				rebuildData
 			});
+			this.resetTabIndex();
 			this.resetIndex();
 		},
 		'value': function (value) {
@@ -84,13 +103,16 @@ McComponent({
 		},
 		'currentValue': function (currentValue) {
 			const { label = [] } = this.getInfo(currentValue);
+			this.resetTabIndex();
 			this.setData({
+				subValues: this.data.useTabs ? currentValue.slice(1) : currentValue,
 				currentLabel: label.filter(i => i)
 			});
 		}
 	},
 	lifetimes: {
 		ready() {
+			this.setData({ indexOffset: this.data.useTabs ? 1 : 0 });
 			this.$emit('ready', this);
 		},
 	},
@@ -140,6 +162,23 @@ McComponent({
 			let rowIndex = rebuildData[colIndex].findIndex(i => i.value === value);
 
 			this.handleChange({ detail: { value, rowIndex, colIndex, sync: false } });
+		},
+		resetTabIndex() {
+			const { useTabs, currentValue } = this.data;
+			this.setData({
+				tabIndex: useTabs && currentValue.length 
+					? this.data.rebuildData[0].findIndex(it => it.value === currentValue[0]) 
+					: 0
+			});
+		},
+		handleTabTap(event) {
+			const tapIndex = event.target.dataset.index;
+			if (tapIndex === this.data.tabIndex) return;
+			this.setData({
+				tabIndex: tapIndex,
+				currentValue: [this.data.tabs[tapIndex].value]
+			});
+			this.resetIndex();
 		},
 		handleClickLabel(event) {
 			this.setData({
@@ -236,6 +275,23 @@ McComponent({
 	flex-direction: column;
 	height: 100%;
 	flex-grow: 1;
+	.mc-cascader-view__tabs {
+		margin-top: 24rpx;
+		display: flex;
+		justify-content: center;
+		.mc-cascader-view__tab {
+			padding-bottom: 12rpx;
+			font-size: 28rpx;
+			color: #000;
+			&:not(:first-child) {
+				margin-left: 60rpx;
+			}
+			&.is-active {
+				color: #5495f6;
+				border-bottom: 4rpx solid #5495f6;
+			}
+		}
+	}
 	.mc-cascader-view__header {
 		margin-top: 60rpx;
 		padding: 0 24rpx;

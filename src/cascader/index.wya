@@ -28,6 +28,7 @@
 			dataSource="{{dataSource}}"
 			cols="{{cols}}"
 			style="overflow: hidden;flex: 1;"
+			useTabs="{{ useTabs }}"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
 			bind:complete="handleComplete"

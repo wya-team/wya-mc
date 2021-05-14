@@ -3,6 +3,11 @@ export const viewProps = {
 		type: Array,
 		value: []
 	},
+	// 是否将第一级数据以头部tabs形式展示
+	useTabs: {
+		type: Boolean,
+		value: false
+	}
 };
 
 export const popupProps = {
