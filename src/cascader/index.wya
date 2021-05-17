@@ -106,10 +106,8 @@ McComponent({
 		currentValue: []
 	},
 	lifetimes: {
-		attached() {
-			this.Func = new Portal({ 
-				el: `#${this.data.tag}` 
-			});
+		ready() {
+			this.triggerEvent('ready', this);
 		}
 	},
 	methods: {
@@ -117,17 +115,7 @@ McComponent({
 			this.viewInstance = event.detail;
 		},
 		handleClick(event) {
-			if (this.Func) {
-				this.Func.popup({
-					context: this.selectComponent(`#${this.data.tag}`),
-					title: this.data.title
-				}).then((res) => {
-					console.log('sure', res);
-				}).catch((err) => {
-					// TODO 为什么第一次点击蒙层会执行这里，第二次就不会，所以picker-popup内蒙层的点击事件改为handleCancel
-					console.log('close', err);
-				});
-			}
+			this.open();
 		},
 		handleChange(event) {
 			this.setData({
@@ -158,6 +146,29 @@ McComponent({
 				visible: false
 			});
 			this.handleOK();
+		},
+		
+		/**
+		 * 以下方法可供外部调用
+		 */
+		open() {
+			if (!this.Func) {
+				this.Func = new Portal({ 
+					el: `#${this.data.tag}` 
+				});
+			}
+			this.Func.popup({
+				context: this.selectComponent(`#${this.data.tag}`),
+				title: this.data.title
+			}).then((res) => {
+				console.log('sure', res);
+			}).catch((err) => {
+				// TODO 为什么第一次点击蒙层会执行这里，第二次就不会，所以picker-popup内蒙层的点击事件改为handleCancel
+				console.log('close', err);
+			});
+		},
+		close() {
+			this.setData({ visible: false });
 		}
 	}
 });
