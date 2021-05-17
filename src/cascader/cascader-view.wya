@@ -76,6 +76,13 @@ McComponent({
 			this.resetTabIndex();
 			this.resetIndex();
 		},
+		'tabs, tabIndex': function (tabs, tabIndex) {
+			if (!this.data.currentValue.length && tabs.length) {
+				this.setData({
+					currentValue: [tabs[tabIndex].value]
+				});
+			}
+		},
 		'value': function (value) {
 			if (!isEqualWith(value, this.data.currentValue)) {
 				// 外面赋值空数组时，重置掉hasChildren
@@ -106,13 +113,13 @@ McComponent({
 			this.resetTabIndex();
 			this.setData({
 				subValues: this.data.useTabs ? currentValue.slice(1) : currentValue,
+				rebuildData: this.makeRebuildData(),
 				currentLabel: label.filter(i => i)
 			});
 		}
 	},
 	lifetimes: {
 		ready() {
-			this.setData({ indexOffset: this.data.useTabs ? 1 : 0 });
 			this.$emit('ready', this);
 		},
 	},
@@ -152,9 +159,10 @@ McComponent({
 			return data;
 		},
 		resetIndex() {
+			this.setData({ indexOffset: this.data.useTabs ? 1 : 0 });
 			const { currentValue, rebuildData } = this.data;
 			if (currentValue.length === 0 || rebuildData.length === 0) {
-				this.setData({ currentIndex: 0 });
+				this.setData({ currentIndex: this.data.indexOffset });
 				return;
 			}
 			let value = currentValue.slice(-1)[0];
