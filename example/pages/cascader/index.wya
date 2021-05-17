@@ -4,6 +4,7 @@
 		label="地址" 
 		title="选择地址"
 		dataSource="{{dataSource}}"
+		data-prop="value"
 		bind:change="handleChange"
 	/>
 
@@ -14,8 +15,24 @@
 		title="选择地址"
 		dataSource="{{useTabsDataSource}}"
 		useTabs
+		data-prop="value2"
 		bind:change="handleChange"
 	/>
+
+	<mc-cascader
+		value="{{delayValue}}"
+		label="地址" 
+		title="选择地址"
+		dataSource="{{useTabsDataSource}}"
+		useTabs
+		useItemSlot
+		data-prop="delayValue"
+		bind:change="handleChange"
+		bind:ready="handleCascaderReady"
+	/>
+
+	<button bind:tap="handleDelayOpen">点击我，弹窗将在 0.5 秒后弹出</button>
+	<view>delayValue: {{ delayValue }}</view>
 </template>
 <script>
 const app = getApp();
@@ -37,17 +54,25 @@ Page({
 	data: {
 		value: ["140000", "140500", "140525"],
 		value2: ['other', "140000", "140500", "140525"],
+		delayValue: [],
 		dataSource: areaData,
 		useTabsDataSource: generateTabsData(areaData)
 	},
-	onShow() {
-		
+	handleCascaderReady(event) {
+		this.CASCADER = event.detail;
+	},
+	handleDelayOpen() {
+		setTimeout(() => {
+			this.CASCADER.open();
+		}, 500);
+		setTimeout(() => {
+			this.CASCADER.close();
+		}, 2000);
 	},
 	handleChange(event) {
+		const { prop } = event.currentTarget.dataset;
 		const { value, label } = event.detail;
-		this.setData({
-			value
-		});
+		this.setData({ [prop]: value });
 	}
 });
 
