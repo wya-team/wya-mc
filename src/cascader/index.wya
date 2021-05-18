@@ -128,8 +128,10 @@ McComponent({
 				extra: label.join(','),
 				currentValue: this.data.pickValue,
 			});
-			this.$emit('change', { value: this.data.currentValue, label });
-			this.parent && this.parent.fieldChange();
+			if (!isEqualWith(this.data.value, this.data.currentValue)) {
+				this.$emit('change', { value: this.data.currentValue, label });
+				this.parent && this.parent.fieldChange();	
+			}
 		},
 		handleCancel() {
 			this.$emit('cancel');
@@ -163,7 +165,6 @@ McComponent({
 			}).then((res) => {
 				console.log('sure', res);
 			}).catch((err) => {
-				// TODO 为什么第一次点击蒙层会执行这里，第二次就不会，所以picker-popup内蒙层的点击事件改为handleCancel
 				console.log('close', err);
 			});
 		},
