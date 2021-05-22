@@ -36,7 +36,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-action-sheet": "../../../components/action-sheet/index"
+		"mc-action-sheet": "../../components/action-sheet/index"
 	}
 }
 </config>

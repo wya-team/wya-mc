@@ -130,8 +130,8 @@ Page({
 <config>
 {
   "usingComponents": {
-  	"mc-recycle-list": "../../components/recycle-list",
-	  "mc-tabs": "../../components/tabs",
+  	"mc-recycle-list": "../../components/recycle-list/index",
+	  "mc-tabs": "../../components/tabs/index",
 		"mc-tabs-pane": "../../components/tabs/tabs-pane"
   }
 }

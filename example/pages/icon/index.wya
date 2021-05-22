@@ -96,7 +96,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-icon": "../../components/icon"
+		"mc-icon": "../../components/icon/index"
 	}
 }
 </config>

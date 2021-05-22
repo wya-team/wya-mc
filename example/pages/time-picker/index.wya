@@ -45,7 +45,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-time-picker": "../../components/time-picker",
+		"mc-time-picker": "../../components/time-picker/index",
 		"mc-time-picker-view": "../../components/time-picker/picker-view"
 	}
 }

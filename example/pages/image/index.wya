@@ -62,7 +62,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-image": "../../components/image"
+		"mc-image": "../../components/image/index"
 	}
 }
 </config>

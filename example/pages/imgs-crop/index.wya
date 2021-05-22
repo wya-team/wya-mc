@@ -62,7 +62,7 @@ Page({
 <config>
 {
   "usingComponents": {
-  	"mc-imgs-crop": "../../components/imgs-crop"
+  	"mc-imgs-crop": "../../components/imgs-crop/index"
   }
 }
 </config>

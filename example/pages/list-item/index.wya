@@ -61,7 +61,7 @@ Page({
 {
 	"usingComponents": {
 		"mc-list-item": "../../components/list/list-item",
-		"mc-icon": "../../components/icon"
+		"mc-icon": "../../components/icon/index"
 	}
 }
 </config>

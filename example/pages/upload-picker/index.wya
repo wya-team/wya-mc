@@ -106,7 +106,7 @@ page {
 <config>
 {
 	"usingComponents": {
-		"mc-upload-picker": "../../components/upload-picker"
+		"mc-upload-picker": "../../components/upload-picker/index"
 	}
 }
 </config>

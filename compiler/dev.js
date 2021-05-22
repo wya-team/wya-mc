@@ -25,9 +25,16 @@ const setProjectAppID = (appid) => {
 	writeFileSync(projectPath, JSON.stringify(config, null, '\t'));
 };
 
-const setPageJSON = (components) => {
+const setPageJSON = (components, isAll) => {
 	const projectPath = resolve(EXAMPLE_DIR, './app.json');
 	const config = JSON.parse(readFileSync(projectPath));
+
+	// 将index放到第一个
+	if (isAll) {
+		components = components.filter((it) => it !== 'index');
+		components.unshift('index');	
+	}
+
 	config.pages = components.map((name) => `pages/${name}/index`);
 	writeFileSync(projectPath, JSON.stringify(config, null, '\t'));
 };
@@ -67,9 +74,10 @@ registerPrompt('search-checkbox', require('inquirer-search-checkbox'));
 prompt(questions).then((res) => {
 	// res: { components: [ 'imgs-crop' ] }
 	let { components, appid } = res;
+	let isAll = components.includes('all');
 	components = formatComponents(components);
 	setProjectAppID(appid);
-	setPageJSON(components);
+	setPageJSON(components, isAll);
 	// 获取需要过滤打包的组件
 	const ignoredComponents = choices.reduce((pre, cur) => {
 		if (components.includes(cur.name)) return pre;

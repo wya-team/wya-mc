@@ -112,7 +112,7 @@ mc-echarts {
 <config>
 {
 	"usingComponents": {
-		"mc-echarts": "../../components/echarts"
+		"mc-echarts": "../../components/echarts/index"
 	}
 }
 </config>

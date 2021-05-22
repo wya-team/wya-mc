@@ -90,7 +90,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-upload": "../../components/upload"
+		"mc-upload": "../../components/upload/index"
 	}
 }
 </config>

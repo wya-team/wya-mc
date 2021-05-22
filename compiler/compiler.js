@@ -6,6 +6,7 @@ const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
 const complieWya = require('./compile-wya');
+const complieDepend = require('./compile-depend');
 const complieRuntime = require('./compile-runtime');
 const babelConfig = require('./babel-config');
 
@@ -45,10 +46,15 @@ const WXS_EXAMPLE_SRC = `${example}/**/*.wxs`;
 const WYA_SRC = `${src}/**/*.wya`;
 const WYA_EXAMPLE_SRC = `${example}/**/*.wya`;
 
+let DEPEND_COMPONENTS = [];
+
 // 获取gulp的配置
 const getGulpConfig = () => {
 	// 因为从环境变量内拿到的是string类型，需要转换下
-	const ignoreFile = (process.env.IGNORED_COMPONENTS || '').split(',');
+	let ignoreFile = (process.env.IGNORED_COMPONENTS || '').split(',');
+	ignoreFile = ignoreFile.filter((filePath) => {
+		return !DEPEND_COMPONENTS.includes(filePath);
+	});
 	return {
 		ignore: [...ignoreFile, path.resolve(temp, './libs/**/**')]
 	};
@@ -133,6 +139,18 @@ class Compiler {
 		};
 	}
 
+	static collectDepend(complierSrc) {
+		return function collectDepend() {
+			return gulp
+				.src(complierSrc, getGulpConfig())
+				.pipe(complieDepend((dependComps) => {
+					DEPEND_COMPONENTS = dependComps.map((componentName) => {
+						return path.resolve(src, `${componentName}/**/**`);
+					});
+				}));
+		};
+	}
+
 	static runtime(src) {
 		return function runtime() {
 			return gulp
@@ -158,6 +176,8 @@ exports.build = gulp.series(
 // dev task
 exports.dev = gulp.series(
 	Compiler.cleaner,
+	// TODO: WYA_EXAMPLE_SRC
+	Compiler.collectDepend([WYA_SRC, WYA_EXAMPLE_SRC, JS_SRC, JS_EXAMPLE_SRC]),
 	gulp.parallel(
 		Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
 		Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]),

@@ -80,7 +80,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-cascader": "../../components/cascader"
+		"mc-cascader": "../../components/cascader/index"
 	}
 }
 </config>

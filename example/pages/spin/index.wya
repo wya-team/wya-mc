@@ -16,7 +16,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-spin": "../../components/spin"
+		"mc-spin": "../../components/spin/index"
 	}
 }
 </config>

@@ -175,13 +175,13 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-form": "../../components/form",
+		"mc-form": "../../components/form/index",
 		"mc-form-item": "../../components/form/form-item",
-		"mc-input": "../../components/input",
-		"mc-picker": "../../components/picker",
-		"mc-date-picker": "../../components/date-picker",
-		"mc-time-picker": "../../components/time-picker",
-		"mc-cascader": "../../components/cascader"
+		"mc-input": "../../components/input/index",
+		"mc-picker": "../../components/picker/index",
+		"mc-date-picker": "../../components/date-picker/index",
+		"mc-time-picker": "../../components/time-picker/index",
+		"mc-cascader": "../../components/cascader/index"
 	}
 }
 </config>

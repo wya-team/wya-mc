@@ -135,7 +135,7 @@ Page({
 <config>
 {
 	"usingComponents": {
-		"mc-picker": "../../components/picker"
+		"mc-picker": "../../components/picker/index"
 	}
 }
 </config>
