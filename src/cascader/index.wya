@@ -92,6 +92,10 @@ McComponent({
 			type: String,
 			value: '请选择'
 		},
+		disabled: {
+			type: Boolean,
+			value: false
+		}
 	},
 	observers: {
 		'dataSource, value': function (dataSource, value) {
@@ -115,6 +119,7 @@ McComponent({
 			this.viewInstance = event.detail;
 		},
 		handleClick(event) {
+			if (this.data.disabled) return;
 			this.open();
 		},
 		handleChange(event) {
