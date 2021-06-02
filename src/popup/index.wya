@@ -13,6 +13,7 @@
 		class="mc-popup {{classes}} mc-popup__{{placement}} mc-popup__round mc-class"
 		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{mcStyle}}"
 		catch:transitionend="onTransitionEnd"
+		catch:touchmove="preventToucheMove" 
 	>
 		<slot></slot>
 		<view class="mc-popup__close is-{{closeIconPosition}}">
