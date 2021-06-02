@@ -9,6 +9,7 @@
 			label="{{label}}"
 			label-width="{{labelWidth}}"
 			border="{{border}}"
+			disabled="{{ disabled }}"
 		/>
 		<slot wx:else></slot>
 	</view>

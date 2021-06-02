@@ -19,7 +19,7 @@
 				<slot wx:else name="label" />
 			</view>
 
-			<view class="content-class mc-list-item__content">
+			<view class="mc-list-item__content {{ disabled ? 'is-disabled' : ''}} content-class">
 				<block wx:if="{{ content || content === 0 }}">{{ content }}</block>
 				<slot wx:else />
 			</view>
@@ -27,7 +27,7 @@
 			<mc-icon
 				wx:if="{{showRightIcon}}"
 				type="{{arrow}}"
-				mc-class="mc-list-item__right-icon"
+				mc-class="mc-list-item__right-icon {{ disabled ? 'is-disabled' : '' }}"
 			/>
 			<slot wx:else name="right-icon" />
 		</view>
@@ -94,6 +94,11 @@ McComponent({
 		borderIndent: {
 			type: Boolean,
 			value: true
+		},
+		// 只有list-item有，不做list的disabled属性，因为默认拿到的是false，无法判断是list-item设置的还是list设置的
+		disabled: {
+			type: Boolean,
+			value: false
 		}
 	},
 	data: {
@@ -169,10 +174,18 @@ McComponent({
 	font-size: 32rpx;
 	color: #8C8C8C;
 	line-height: 1.5;
+	&.is-disabled {
+		opacity: 0.5;
+		color: #999;
+	}
 }
 .mc-list-item__right-icon {
 	color: #8E8E8E;
 	font-size: 24rpx;
+	&.is-disabled {
+		opacity: 0.5;
+		color: #999;
+	}
 }
 .mc-list-item__left-icon {
 	color: #8E8E8E;
