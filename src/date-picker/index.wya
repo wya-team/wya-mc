@@ -108,6 +108,10 @@ McComponent({
 			type: String,
 			value: '请选择'
 		},
+		disabled: {
+			type: Boolean,
+			value: false
+		}
 	},
 	data: {
 		currentValue: [],
@@ -128,7 +132,7 @@ McComponent({
 			this.viewInstance = event.detail;
 		},
 		handleClick(event) {
-			if (this.Func) {
+			if (this.Func && !this.data.disabled) {
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
 					title: this.data.title
