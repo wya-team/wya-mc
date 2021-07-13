@@ -5,12 +5,13 @@
 			style="height: calc(100% + {{ refreshHeight }}rpx);"
 			direction="vertical"
 			y="{{ y }}"
+			disabled="{{ disabled }}"
 			bind:change="handleMoveChange"
 			bind:touchend="handleTouchEnd"
 		>
 			<scroll-view
 				class="mc-recycle-list__view"
-				scroll-y="{{ true }}"
+				scroll-y="{{ !disabled }}"
 				scroll-top='{{ scrollTop }}' 
 				lower-threshold="{{ lowerThreshold }}"
 				enable-back-to-top="{{ true }}"
@@ -107,6 +108,10 @@ McComponent({
 		lowerThreshold: {
 			type: Number,
 			value: 100
+		},
+		disabled: {
+			type: Boolean,
+			value: false
 		}
 	},
 	data: {
