@@ -1,0 +1,42 @@
+<template>
+	<view class="_top">这是上面部分</view>
+	<mc-sticky offsetTop="{{ 0 }}">
+		<view class="_sticky-bar">这是会吸附的sticky bar</view>
+	</mc-sticky>
+	<view class="_bottom"></view>
+</template>
+
+<script>
+Page({
+	data: {
+		value: 0
+	},
+	
+});
+</script>
+<style lang="scss">
+page {
+	background: #fff
+}
+._top {
+	height: 300rpx;
+	background: #000;
+}
+._sticky-bar {
+	width: 100vw;
+	height: 80rpx;
+	background: #fff;
+}
+._bottom {
+	height:200vh;
+	background:linear-gradient(#000 0%, orange 100%);
+}
+
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-sticky": "../../components/sticky/index"
+	}
+}
+</config>
