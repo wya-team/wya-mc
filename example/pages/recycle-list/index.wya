@@ -1,17 +1,26 @@
 <template>
-	<view style="height: 100vh">
-		<mc-recycle-list
-			height="calc(100vh - 200rpx)"
-			total="{{ total }}"
-			bind:loadData="loadData1" 
-		>
-			<block wx:for="{{ list }}" wx:key="index" wx:item="item">
-				<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
-					<text> {{index}}: {{item}} </text>
-				</view>
-			</block>
-		</mc-recycle-list>
-	</view>
+	<mc-recycle-list
+		height="calc(100vh - 200rpx)"
+		total="{{ total }}"
+		bind:loadData="loadData1" 
+	>
+		<block wx:for="{{ list }}" wx:key="index" wx:item="item">
+			<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
+				<text> {{index}}: {{item}} </text>
+			</view>
+		</block>
+	</mc-recycle-list>
+	<!-- <mc-recycle-list-core
+		total="{{ total }}"
+		bind:loadData="loadData1" 
+	>
+		<view style="position: fixed; top: 0; right: 0; left: 0; z-index: 1; height: 100rpx; background: #fff">lalala</view>
+		<block wx:for="{{ list }}" wx:key="index" wx:item="item">
+			<view style="height: 100rpx; background: #fff; border-bottom: 1rpx solid #333">
+				<text> {{index}}: {{item}} </text>
+			</view>
+		</block>
+	</mc-recycle-list-core> -->
 	<!-- <mc-tabs active="{{ activeTab }}" bind:change="handleTab">
 		<mc-tabs-pane
 			wx:for="{{ tabsWithName }}"
@@ -127,12 +136,16 @@ Page({
 });
 
 </script>
+<style lang="scss">
+
+</style>
 <config>
 {
   "usingComponents": {
   	"mc-recycle-list": "../../components/recycle-list/index",
-	  "mc-tabs": "../../components/tabs/index",
-		"mc-tabs-pane": "../../components/tabs/tabs-pane"
+  	"mc-recycle-list-core": "../../components/recycle-list/core",
+	"mc-tabs": "../../components/tabs/index",
+	"mc-tabs-pane": "../../components/tabs/tabs-pane"
   }
 }
 </config>

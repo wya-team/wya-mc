@@ -1,0 +1,150 @@
+<template>
+	<scroll-view
+		class="mc-recycle-list-core mc-class"
+		scroll-y="{{ !disabled }}"
+		scroll-top='{{ scrollTop }}' 
+		lower-threshold="{{ lowerThreshold }}"
+		enable-back-to-top="{{ true }}"
+		style="height: {{ height }}"
+		bind:scroll="handleScroll"
+		bind:scrolltolower="handleEndReached"
+	>
+		<slot />
+
+		<view class="mc-recycle-list-core__pull-up pull-up-class">
+			<text class="mc-recycle-list-core__text"> {{ SCROLL_STATUS[scrollStatus] }}</text>
+		</view>
+		<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">
+			<slot name="extra" />
+		</block>
+	</scroll-view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { SCROLL_STATUS } from './constant';
+import { coreProps } from './props';
+
+McComponent({
+	externalClasses: ['pull-up-class'],
+	props: {
+		...coreProps,
+		total: {
+			...coreProps.total,
+			observer(value) {
+				/**
+				 * 特别声明(项目中)：连续两次total: 0, 就无法触发loadData
+				 * 1. 与后端约定分页的接口数据为空时，要求后端total也要确保为1（总页数）;
+				 * 
+				 * 必要时候进行转换（1的情况，错误情况等）
+				 * {
+				 * 	status: 1,
+				 * 	data: {
+				 * 		list: [],
+				 * 		page: { count: 0, current: 1, total: 1 }
+				 * 	}
+				 * }
+				 */
+				if (value === 0) {
+					this.setData({
+						currentPage: 0,
+						scrollStatus: 0
+					});
+					this.loadDataForScroll({ force: true });
+				}
+			}
+		},
+	},
+	data: {
+		/**
+		 * 0: '上滑加载', 
+		 * 1: '加载中', 
+		 * 2: '已全部加载', 
+		 * 3: '网络不稳定，请稍后重试', 
+		 * 4: '没有内容可供显示'
+		 */
+		scrollStatus: 0,
+		SCROLL_STATUS,
+		/**
+		 * 0.未touchstart 
+		 * 1.pulling但未达到pauseY 
+		 * 2.pulling达到pauseY 
+		 * 3.进入pause状态 （loading）
+		 */
+		currentScrollTop: 0,
+		// 页面
+		currentPage: 0,
+		animate: {}
+	},
+	lifetimes: {
+		ready() {
+			this.$emit('ready', this);
+			if (this.data.currentPage === 0) {
+				this.loadDataForScroll();
+			}
+		},
+	},
+	observers: {
+		'show': function (show) {
+			if (this.data.currentPage === 0) {
+				wx.nextTick(() => {
+					this.loadDataForScroll();
+				});
+			}
+		},
+	},
+	methods: {
+		handleScroll(e) {
+			if (this.data.listenScroll) {
+				this.$emit('scroll', e.detail);
+			}
+		},
+		handleEndReached() {
+			this.loadDataForScroll();
+		},
+		loadDataForScroll(opts = {}) {
+			const { force = false } = opts;
+			if (!this.data.show || !this.data.scroll) return;
+			if ((!force && this.data.scrollStatus >= 1)) return;
+			this.setData({ scrollStatus: 1 });
+
+			let page = force ? 1 : this.data.currentPage + 1;
+			this.$emit('loadData', {
+				page,
+				done: () => {
+					let scrollStatus = this.data.total <= page ? 2 : 0;
+					this.setData({
+						scrollStatus,
+						currentPage: page
+					});
+				}
+			});
+		},
+	}
+});
+
+</script>
+
+<style lang="scss">
+.mc-recycle-list-core {
+	height: 100%;
+	position: relative;
+	box-sizing: border-box;
+	.mc-recycle-list-core__pull-up {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 60rpx;
+		.mc-recycle-list-core__text {
+			color: #333;
+			line-height: 60rpx;
+			font-size: 24rpx;
+		}
+	}
+}
+</style>
+
+<config>
+{
+	"component": true
+}
+</config>

@@ -1,5 +1,5 @@
 <template>
-	<view class="mc-cascader-col mc-class">
+	<scroll-view scroll-y="{{ true }}" class="mc-cascader-col mc-class">
 		<view 
 			wx:for="{{dataSource}}"
 			wx:key="value"
@@ -17,7 +17,7 @@
 				type="select-checked" 
 			/>
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script>
@@ -55,7 +55,7 @@ McComponent({
 
 <style lang="scss">
 .mc-cascader-col {
-	overflow-y: auto;
+	// overflow-y: auto;
 	background-color: #fff;
 	.mc-cascader-col__item {
 		padding: 20rpx 24rpx;
