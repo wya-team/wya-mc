@@ -101,18 +101,20 @@ McComponent({
 			const { offsetTop } = this.data;
 			this.disconnectObserver('contentObserver');
 			let contentObserver = this.createIntersectionObserver({
-				thresholds: [1],
+				// 部分真机上会出现本应该intersectionRatio为1，但实际是0.999xxxxxxxxxxx的情况，所以这里加了0.999
+				thresholds: [0.999, 1],
 				initialRatio: 1
 			});
 			contentObserver.relativeToViewport({ top: -offsetTop });
 			contentObserver.observe(TARGET_CLASS_NAME, res => {
 				if (this.data.disabled) return;
-				this.setFixed(res.boundingClientRect.top, res.intersectionRatio);
+				this.setFixed(res.boundingClientRect.top);
 			});
 			this.contentObserver = contentObserver;
 		},
-		setFixed(top, intersectionRatio) {
-			const fixed = intersectionRatio < 1;
+		setFixed(top) {
+			// 不能用intersectionRatio是否小于1来判断，原因同上0.999xxxxxxxxxxx
+			const fixed = top < this.data.offsetTop;
 			this.triggerEvent('scroll', {
 				scrollTop: top,
 				isFixed: fixed
@@ -139,7 +141,7 @@ McComponent({
 
 <style lang="scss">
 .mc-sticky {
-	position:relative
+	position:relative;
 }
 .mc-sticky__fixed {
 	position: fixed;
