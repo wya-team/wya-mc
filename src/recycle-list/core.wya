@@ -11,7 +11,7 @@
 	>
 		<slot />
 
-		<view wx:if="{{ scroll }}" class="mc-recycle-list-core__pull-up pull-up-class">
+		<view wx:if="{{ showScrollStatus }}" class="mc-recycle-list-core__pull-up pull-up-class">
 			<text class="mc-recycle-list-core__text">{{ SCROLL_STATUS[scrollStatus] }}</text>
 		</view>
 		<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">

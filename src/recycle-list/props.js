@@ -11,6 +11,11 @@ export const coreProps = {
 		type: Boolean,
 		value: true
 	},
+	// 是否展示底部状态文字
+	showScrollStatus: {
+		type: Boolean,
+		value: true
+	},
 	scrollTop: { // 内部滚动距离
 		type: Number,
 		value: 0

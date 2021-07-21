@@ -16,6 +16,7 @@
 				show="{{ show }}"
 				total="{{ total }}"
 				scroll="{{ scroll }}"
+				showScrollStatus="{{ showScrollStatus }}"
 				disabled="{{ disabled }}"
 				scrollTop="{{ scrollTop }}"
 				lower-threshold="{{ lowerThreshold }}"
