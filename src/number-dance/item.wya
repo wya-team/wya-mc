@@ -56,7 +56,7 @@ McComponent({
 				// 滚动方式为hard时，采用animation的方式
 				if (scrollType === 'hard') {
 					this.setData({
-						stripStyle: `animation: move ${ANIMATION_DURATION}ms linear infinite`
+						stripStyle: `animation: move ${ANIMATION_DURATION}ms linear infinite;filter: blur(1rpx);`
 					});
 					this._timer && clearTimeout(this._timer);
 					this._timer = setTimeout(() => {
@@ -80,7 +80,7 @@ McComponent({
 	&__number {
 		height: 48rpx;
 		line-height: 48rpx;
-		font-size: 32rpx;
+		font-size: 48rpx;
 	}
 }
 @keyframes move {
