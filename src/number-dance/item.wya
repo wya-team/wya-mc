@@ -34,7 +34,7 @@ McComponent({
 	},
 	observers: {
 		value(value) {
-			this._oldValue !== value && this.dance();
+			(this._oldValue !== value || this.data.scrollType === 'hard') && this.dance();
 			this._oldValue = value;
 		}
 	},
