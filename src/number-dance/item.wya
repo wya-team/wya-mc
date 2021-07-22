@@ -1,0 +1,99 @@
+<template>
+	<view class="mc-number-dance-item" style="{{ itemStyle }}">
+		<view 
+			class="mc-number-dance-item__dance-strip" 
+			style="{{ stripStyle }}"
+		>
+			<view
+				wx:for="{{ NUMBER_COUNT }}"
+				wx:key="item"
+				class="mc-number-dance-item__number"
+				style="{{ numberStyle }}"
+			>
+				{{ index === 10 ? 0 : index }}
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import itemProps from './item-props.js';
+
+// 滚动animation-duration，单位ms
+const ANIMATION_DURATION = 600;
+const NUMBER_COUNT = 11;
+
+McComponent({
+	name: 'mc-number-dance-item',
+	props: {
+		...itemProps
+	},
+	data: {
+		NUMBER_COUNT,
+		stripStyle: '',
+	},
+	observers: {
+		value(value) {
+			this._oldValue !== value && this.dance();
+			this._oldValue = value;
+		}
+	},
+	lifetimes: {
+		ready() {
+			this.dance();
+		}
+	},
+	methods: {
+		dance() {
+			const { mode, duration, value, scrollType } = this.data;
+			if (+value >= 10) {
+				throw new Error('mc-number-dance-item: "value" is expected number from 0 to 9');
+			}
+			if (mode === 'scroll') {
+				const translateY = -100 / NUMBER_COUNT * Number(value);
+				const transitionStyle = `transition:transform ${duration || 600}ms ease-out;`;
+				const transformStyle = `transform:translate3d(0, ${translateY}%, 0);`;
+				// 滚动方式为hard时，采用animation的方式
+				if (scrollType === 'hard') {
+					this.setData({
+						stripStyle: `animation: move ${ANIMATION_DURATION}ms linear infinite`
+					});
+					this._timer && clearTimeout(this._timer);
+					this._timer = setTimeout(() => {
+						this.setData({ stripStyle: transformStyle });
+					}, duration);
+				} else {
+					this.setData({ stripStyle: `${transitionStyle}${transformStyle}` });
+				}
+			}
+		},
+	},
+});
+</script>
+<style lang="scss">
+.mc-number-dance-item {
+	overflow: hidden;
+	display: inline-block;
+	height: 48rpx;
+	line-height: 48rpx;
+	text-align: center;
+	&__number {
+		height: 48rpx;
+		line-height: 48rpx;
+		font-size: 32rpx;
+	}
+}
+@keyframes move {
+	from {
+		transform: translate3d(0, -90%, 0);
+	}
+	to {
+		transform: translate3d(0, 0%, 0);
+	}
+}
+</style>
+<config>
+{
+	"component": true
+}
+</config>

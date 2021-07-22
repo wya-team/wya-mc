@@ -1,0 +1,127 @@
+<template>
+	<view class="mc-number-dance">
+		<block wx:for="{{ cells }}" wx:key="index">
+			<mc-number-dance-item 
+				wx:if="{{ item.type === 'number' }}"
+				wx:key="index"
+				mode="{{ mode }}"
+				value="{{ item.value }}" 
+				duration="{{ item.duration }}"
+				scrollType="{{ scrollType }}"
+				itemStyle="{{ itemStyle }}"
+				numberStyle="{{ numberStyle }}"
+			/>
+			<view 
+				wx:elif="{{ item.type === 'separator' }}" 
+				class="mc-number-dance__separator" 
+				style="{{ separatorStyle }}"
+			>{{ separator }}</view>
+			<view 
+				wx:elif="{{ item.type === 'decimal' }}" 
+				class="mc-number-dance__decimal" 
+				style="{{ decimalStyle }}"
+			>.</view>
+		</block>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import itemProps from './item-props.js';
+
+McComponent({
+	name: 'mc-number-dance',
+	props: {
+		...itemProps,
+		// 相邻数字之间动画结束时间延迟，从左到右
+		delay: {
+			type: Number,
+			value: 0
+		},
+		// 整数位3位分隔符
+		separator: {
+			type: String,
+			value: ','
+		},
+		separatorStyle: {
+			type: String,
+			value: ''
+		},
+		decimalStyle: {
+			type: String,
+			value: ''
+		}
+	},
+	data: {
+		cells: [],
+	},
+	observers: {
+		value() {
+			this.parse();
+		}
+	},
+	attached() {
+		this.parse();
+	},
+	methods: {
+		/**
+		 * 将数值解析成cells数据
+		 */
+		parse() {
+			const { separator, duration, delay } = this.data;
+			let value = String(this.data.value);
+			let [intStr, floatStr] = value.split('.');
+			// 处理整数位的3位分隔符
+			if (separator) {
+				const reg = /(\d+)(\d{3})/;
+				while (reg.test(intStr)) {
+					intStr = intStr.replace(reg, '$1' + separator + '$2');
+				}
+			}
+			// 用于记录数字的个数，处理duration延时
+			let numberCount = 0;
+			const cells = intStr.split('').map((it, index) => {
+				const cell = it === separator 
+					? { type: 'separator' } // 分隔符cell
+					: { // 整数位单个数字
+						type: 'number',
+						value: it,
+						numberType: 'integer',
+						duration: duration + numberCount * delay
+					};
+				cell.type === 'number' && numberCount++;
+				return cell;
+			});
+			if (floatStr) {
+				cells.push(
+					{ type: 'decimal' }, // 小数点cell
+					...floatStr.split('').map((it, index) => {
+						return { // 小数点后单个数字
+							type: 'number',
+							value: it,
+							numberType: 'float',
+							duration: duration + (numberCount + index) * delay
+						};
+					})
+				);
+			}
+
+			this.setData({ cells });
+		}
+	},
+});
+</script>
+<style lang="scss">
+.mc-number-dance {
+	&__separator, &__decimal {
+		display: inline-block;
+	}
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-number-dance-item": "./item"
+	}
+}
+</config>

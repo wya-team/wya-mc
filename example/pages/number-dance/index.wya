@@ -1,0 +1,89 @@
+<template>
+	<view class="v-number-dance">
+		<mc-number-dance 
+			value="{{ number }}"
+			duration="{{ duration }}"
+			delay="{{ delay }}"
+			itemStyle="{{ itemStyle }}"
+			numberStyle="{{ numberStyle }}"
+			separatorStyle="{{ separatorStyle }}"
+			decimalStyle="{{ separatorStyle }}"
+		/>
+	</view>
+	<view class="v-number-dance">
+		<mc-number-dance 
+			value="{{ number }}"
+			duration="{{ 1000 }}"
+			delay="{{ 1000 }}"
+			scrollType="hard"
+		/>
+	</view>
+	<button bind:tap="handleUpdate">更新数字</button>
+	<mc-input type="number" value="{{ inputNumber }}" bind:change="handleInput" />
+	<button bind:tap="handleApplyInput">使用输入框中的值</button>
+	<button data-symbol="-" bind:tap="handleStep">-</button>
+	<button data-symbol="+" bind:tap="handleStep">+</button>
+
+	<view>单独使用 mc-number-dance-item</view>
+
+	<view class="v-number-dance">
+		<mc-number-dance-item value="{{ itemNumber }}" />
+	</view>
+	
+	<button bind:tap="handleUpdateItem">更新数字</button>
+
+</template>
+
+<script>
+Page({
+	data: {
+		inputNumber: 0,
+		number: 0,
+		itemNumber: 0,
+		duration: 500,
+		delay: 60,
+		numberStyle: `height:60rpx;font-size:48rpx;font-weight:bold`,
+		itemStyle: 'height:60rpx;line-height:60rpx',
+		separatorStyle: 'position:relative;bottom:20rpx;font-weight:bold;font-size:48rpx;'
+	},
+	handleUpdate() {
+		this.setData({
+			number: `${Math.random() * 1000000000}`.substr(0, 12)
+		});
+	},
+	handleUpdateItem() {
+		this.setData({
+			itemNumber: `${Math.random()}`.substr(2).substr(0, 1)
+		});
+	},
+	handleStep(event) {
+		const { symbol } = event.currentTarget.dataset;
+		this.setData({
+			number: symbol === '+' ? +this.data.number + 1 : this.data.number - 1
+		});
+	},
+	handleInput(event) {
+		this.setData({ inputNumber: event.detail });
+	},
+	handleApplyInput(event) {
+		this.setData({ number: this.data.inputNumber });
+	}
+});
+</script>
+<style lang="scss">
+.v-number-dance {
+	padding: 100rpx 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>
+<config>
+{
+	"usingComponents": {
+		"mc-number-dance": "../../components/number-dance/index",
+		"mc-number-dance-item": "../../components/number-dance/item",
+		"mc-input": "../../components/input/index"
+	}
+}
+</config>
