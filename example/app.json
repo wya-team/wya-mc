@@ -1,8 +1,6 @@
 {
 	"pages": [
-		"pages/cascader/index",
-		"pages/checkbox/index",
-		"pages/date-picker/index"
+		"pages/number-dance/index"
 	],
 	"window": {
 		"backgroundTextStyle": "light",

@@ -14,7 +14,7 @@
 		<mc-number-dance 
 			value="{{ number }}"
 			duration="{{ 1000 }}"
-			delay="{{ 1000 }}"
+			delay="{{ 500 }}"
 			scrollType="hard"
 		/>
 	</view>
@@ -48,7 +48,7 @@ Page({
 	},
 	handleUpdate() {
 		this.setData({
-			number: `${Math.random() * 1000000000}`.substr(0, 12)
+			number: `${Math.random() * 1000000000}`.substr(0, Math.random() > 0.5 ? 12 : 8)
 		});
 	},
 	handleUpdateItem() {
