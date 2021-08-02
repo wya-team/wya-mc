@@ -34,12 +34,19 @@ McComponent({
 	},
 	observers: {
 		value(value) {
-			(this._oldValue !== value || this.data.scrollType === 'hard') && this.dance();
+			/**
+			 * 在组件初始化时，这个observer会比组件ready生命周期先触发，也就说明此时组件还没有布局完成
+			 * 而此时如果在这里里调用了dance()，会导致设置的transition过渡样式在初始化的时候看不到
+			 * 因此需在组件ready触发后的条件下才去调用dance方法
+			 */
+			(this._isReady && this._oldValue != value || this.data.scrollType === 'hard') && this.dance();
 			this._oldValue = value;
 		}
 	},
 	lifetimes: {
 		ready() {
+			// 标识ready生命周期已触发
+			this._isReady = true;
 			this.dance();
 		}
 	},

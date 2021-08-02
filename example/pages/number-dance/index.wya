@@ -38,13 +38,18 @@
 Page({
 	data: {
 		inputNumber: 0,
-		number: 0,
+		number: 123,
 		itemNumber: 0,
 		duration: 500,
 		delay: 60,
 		numberStyle: `height:60rpx;font-size:48rpx;font-weight:bold`,
 		itemStyle: 'height:60rpx;line-height:60rpx',
 		separatorStyle: 'position:relative;bottom:20rpx;font-weight:bold;font-size:48rpx;'
+	},
+	onLoad() {
+		setTimeout(() => {
+			this.setData({ number: 32561 });
+		}, 1000);
 	},
 	handleUpdate() {
 		this.setData({
