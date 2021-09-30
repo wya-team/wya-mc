@@ -15,6 +15,7 @@
 				pull-up-class="pull-up-class"
 				show="{{ show }}"
 				total="{{ total }}"
+				current="{{ current }}"
 				scroll="{{ scroll }}"
 				showScrollStatus="{{ showScrollStatus }}"
 				disabled="{{ disabled }}"

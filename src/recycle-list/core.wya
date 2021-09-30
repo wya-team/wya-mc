@@ -46,7 +46,6 @@ McComponent({
 				 */
 				if (value === 0) {
 					this.setData({
-						currentPage: 0,
 						scrollStatus: 0
 					});
 					this.loadDataForScroll({ force: true });
@@ -71,21 +70,20 @@ McComponent({
 		 * 3.进入pause状态 （loading）
 		 */
 		currentScrollTop: 0,
-		// 页面
-		currentPage: 0,
 		animate: {}
 	},
 	lifetimes: {
 		ready() {
+			console.warn('[wya-mc/recycle-list/core]: current属性必传，请检查');
 			this.$emit('ready', this);
-			if (this.data.currentPage === 0) {
+			if (this.data.current == 0) {
 				this.loadDataForScroll();
 			}
 		},
 	},
 	observers: {
 		'show': function (show) {
-			if (this.data.currentPage === 0) {
+			if (this.data.current == 0) {
 				wx.nextTick(() => {
 					this.loadDataForScroll();
 				});
@@ -107,14 +105,13 @@ McComponent({
 			if ((!force && this.data.scrollStatus >= 1)) return;
 			this.setData({ scrollStatus: 1 });
 
-			let page = force ? 1 : this.data.currentPage + 1;
+			let page = force ? 1 : this.data.current + 1;
 			this.$emit('loadData', {
 				page,
 				done: () => {
 					let scrollStatus = this.data.total <= page ? 2 : 0;
 					this.setData({
 						scrollStatus,
-						currentPage: page
 					});
 				}
 			});

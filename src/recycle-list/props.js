@@ -35,5 +35,10 @@ export const coreProps = {
 	total: {
 		type: Number,
 		value: 0,
+	},
+	current: {
+		type: String,
+		optionalTypes: [Number],
+		value: '0',
 	}
 };
