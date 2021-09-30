@@ -105,7 +105,7 @@ McComponent({
 			if ((!force && this.data.scrollStatus >= 1)) return;
 			this.setData({ scrollStatus: 1 });
 
-			let page = force ? 1 : this.data.current + 1;
+			let page = force ? 1 : ~~this.data.current + 1;
 			this.$emit('loadData', {
 				page,
 				done: () => {
