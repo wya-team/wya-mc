@@ -44,12 +44,15 @@ McComponent({
 				 * 	}
 				 * }
 				 */
-				if (value === 0) {
-					this.setData({
-						scrollStatus: 0
-					});
-					this.loadDataForScroll({ force: true });
-				}
+				const fn = () => {
+					if (value === 0) {
+						this.setData({
+							scrollStatus: 0
+						});
+						this.loadDataForScroll({ force: true });
+					}
+				};
+				this.isReady ? fn() : (this.loadCallback = fn);
 			}
 		},
 	},
@@ -73,21 +76,31 @@ McComponent({
 		animate: {}
 	},
 	lifetimes: {
+		created() {
+			// 初始时要调用的请求方法，show和total都会导致触发，依次覆盖，在ready时调用
+			this.loadCallback = () => {
+				if (this.data.current == 0) {
+					this.loadDataForScroll();
+				}
+			};
+		},
 		ready() {
 			console.warn('[wya-mc/recycle-list/core]: current属性必传，请检查');
+			this.isReady = true;
 			this.$emit('ready', this);
-			if (this.data.current == 0) {
-				this.loadDataForScroll();
-			}
+			this.loadCallback && this.loadCallback();
 		},
 	},
 	observers: {
 		'show': function (show) {
-			if (this.data.current == 0) {
-				wx.nextTick(() => {
-					this.loadDataForScroll();
-				});
-			}
+			const fn = () => {
+				if (this.data.current == 0) {
+					wx.nextTick(() => {
+						this.loadDataForScroll();
+					});
+				}
+			};
+			this.isReady ? fn() : (this.loadCallback = fn);
 		},
 	},
 	methods: {
