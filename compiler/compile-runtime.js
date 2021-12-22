@@ -33,7 +33,8 @@ module.exports = (options) => {
 				nodeResolve.default(),
 				commonjs({}),
 				replace({
-					'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+					'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+					preventAssignment: true
 				}),
 				babel({
 					babelHelpers: 'inline',
