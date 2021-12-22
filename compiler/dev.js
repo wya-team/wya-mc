@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { prompt, registerPrompt } = require('inquirer');
+const { prompt, registerPrompt, Separator } = require('inquirer');
 const { exec } = require('child_process');
 const { readdirSync, readFileSync, writeFileSync } = require('fs-extra');
 
@@ -13,7 +13,7 @@ const getComponentsList = () => {
 	const lists = [...new Set(readdirSync(SRC_DIR).concat(readdirSync(resolve(EXAMPLE_DIR, './pages'))))];
 	return lists.reduce((pre, component) => {
 		if (exclude.includes(component)) return pre;
-		pre.push({ name: component });
+		pre.push(component);
 		return pre;
 	}, []);
 };
@@ -40,26 +40,66 @@ const setPageJSON = (components, isAll) => {
 };
 
 const choices = getComponentsList();
-const formatComponents = (components) => {
-	const isAll = components.some((it) => it === 'all');
-	if (isAll) return choices.map((it) => it.name);
-	return components.map((it) => it);
-};
-
 const questions = [
 	{
-		type: 'input',
-		name: 'appid',
-		message: "小程序要使用的appid",
-		default: () => {
-			return 'wx852cddebbfcfe58f';
-		}
+		type: 'list',
+		name: 'platform',
+		message: 'Select platform:',
+		choices: [
+			new Separator(' = For platform = '),
+			'wx',
+			'tt'
+		],
+		default: 'wx'
 	},
 	{
+		type: 'list',
+		name: 'appid',
+		message: 'Select appid:',
+		choices: [
+			new Separator(' = For appid = '),
+			'testAppId',
+			'wx852cddebbfcfe58f',
+			'custom'
+		],
+		default: 'testAppId'
+	},
+
+	{
+		type: 'input',
+		name: 'customAppid',
+		when: (answers) => answers.appid === 'custom',
+		message: "Custom appid:",
+		default: () => {
+			return 'testAppId';
+		}
+	},
+
+	{
+		type: 'autocomplete',
+		message: 'Select component:',
+		name: 'component',
+		// suggestOnly: true, 开启后可以验证数据且需要使用tab选中
+		default: 'all',
+		source: (answers, input) => {
+			input = input || '';
+			return new Promise((resolve => {
+				let $choices = ['all', 'multiple'].concat(choices);
+				let filter = input 
+					? $choices.filter(item => item.includes(input))
+					: $choices;
+
+				resolve(filter);
+			}));
+		}
+	},
+
+	{
 		type: 'search-checkbox',
-		message: '请选择要运行的组件，如果组件或者示例中使用了其他组件也请选上',
+		message: '多选组件',
 		name: 'components',
-		choices: [{ name: 'all' }, ...choices],
+		when: (answers) => answers.component === 'multiple',
+		choices: choices.map(name => ({ name })),
 		validate: (answer) => {
 			if (answer.length < 1) {
 				return '至少选中一个组件';
@@ -70,23 +110,36 @@ const questions = [
 ]; 
 
 registerPrompt('search-checkbox', require('inquirer-search-checkbox'));
+registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
 
 prompt(questions).then((res) => {
 	// res: { components: [ 'imgs-crop' ] }
-	let { components, appid } = res;
-	let isAll = components.includes('all');
-	components = formatComponents(components);
+	let { component, components, appid, customAppid, platform } = res;
+	appid = customAppid || appid;
+	
+	let selects = [];
+	let isAll = false;
+	if (component === 'all') {
+		isAll = true;
+		selects = choices;
+	} else if (component === 'multiple') {
+		selects = components;
+	} else {
+		selects = [component];
+	}
+
 	setProjectAppID(appid);
-	setPageJSON(components, isAll);
+	setPageJSON(selects, isAll);
 	// 获取需要过滤打包的组件
 	const ignoredComponents = choices.reduce((pre, cur) => {
-		if (components.includes(cur.name)) return pre;
-		pre.push(resolve(SRC_DIR, `${cur.name}/**/**`));
-		pre.push(resolve(EXAMPLE_DIR, `pages/${cur.name}/**/**`));
+		if (selects.includes(cur)) return pre;
+		pre.push(resolve(SRC_DIR, `${cur}/**/**`));
+		pre.push(resolve(EXAMPLE_DIR, `pages/${cur}/**/**`));
 		return pre;
 	}, []);
 
 	process.env.IGNORED_COMPONENTS = ignoredComponents;
+	process.env.PLATFORM = platform;
 	// 开始构建
 	const $process = exec(`npx gulp -f ${gulpConfig} dev --color & npm run lint:watch`);
 	$process.stdout.on('data', (stdout) => console.info(stdout));

@@ -24,7 +24,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.10.2",
-	"appid": "wx852cddebbfcfe58f",
+	"appid": "testAppId",
 	"projectname": "example",
 	"debugOptions": {
 		"hidedInDevtools": []

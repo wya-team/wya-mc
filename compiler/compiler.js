@@ -8,7 +8,9 @@ const babel = require('gulp-babel');
 const complieWya = require('./compile-wya');
 const complieDepend = require('./compile-depend');
 const complieRuntime = require('./compile-runtime');
-const babelConfig = require('./babel-config');
+const compileTemplate = require('./compile-template');
+const { babelConfig, scriptPlugins } = require('./babel-config');
+const platform = require('./platform');
 
 const src = path.resolve(__dirname, '../src');
 const example = path.resolve(__dirname, '../example');
@@ -37,12 +39,12 @@ const JS_SRC = `${src}/**/*.js`;
 const JS_EXAMPLE_SRC = `${example}/**/*.js`;
 const JSON_SRC = `${src}/**/*.json`;
 const JSON_EXAMPLE_SRC = `${example}/**/*.json`;
-const CSS_SRC = `${src}/**/*.{wxss,scss}`;
-const CSS_EXAMPLE_SRC = `${example}/**/*.{wxss,scss}`;
-const WXML_SRC = `${src}/**/*.wxml`;
-const WXML_EXAMPLE_SRC = `${example}/**/*.wxml`;
-const WXS_SRC = `${src}/**/*.wxs`;
-const WXS_EXAMPLE_SRC = `${example}/**/*.wxs`;
+const STYLE_SRC = `${src}/**/*.{${platform.styles.join(',')}}`;
+const STYLE_EXAMPLE_SRC = `${example}/**/*.{${platform.styles.join(',')}}`;
+const TEMPLATE_SRC = `${src}/**/*.${platform.templates.join(',')}`;
+const TEMPLATE_EXAMPLE_SRC = `${example}/**/*.{${platform.templates.join(',')}}`;
+const SCRIPT_SRC = `${src}/**/*.{${platform.scripts.join(',')}}`;
+const SCRIPT_EXAMPLE_SRC = `${example}/**/*.{${platform.scripts.join(',')}}`;
 const WYA_SRC = `${src}/**/*.wya`;
 const WYA_EXAMPLE_SRC = `${example}/**/*.wya`;
 
@@ -78,13 +80,13 @@ const getGulpTempOutput = (file) => {
 };
 
 class Compiler {
-	static sass(src) {
-		return function _sass() {
+	static style(src) {
+		return function style() {
 			return gulp
 				.src(src, getGulpConfig())
 				.pipe(sass().on('error', sass.logError))
 				.pipe(postcss())
-				.pipe(rename({ extname: '.wxss' }))
+				.pipe(rename({ extname: `.${platform.style}` }))
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
@@ -93,25 +95,28 @@ class Compiler {
 		return function js() {
 			return gulp
 				.src(src, getGulpConfig())
-				.pipe(babel(babelConfig))
+				.pipe(babel(babelConfig()))
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
 
-	static wxml(src) {
-		return function wxml() {
+	static template(src) {
+		return function template() {
 			return gulp
 				.src(src, getGulpConfig())
+				.pipe(compileTemplate())
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
 
-	static wxs(src) {
-		return function wxs() {
+	static script(src) {
+		const babelrc = babelConfig({ runtimeHelpers: false });
+		babelrc.plugins = babelrc.plugins.concat(scriptPlugins);
+		return function script() {
 			return gulp
 				.src(src, getGulpConfig())
-				// .pipe(babel(babelConfig))
-				// .pipe(rename({ extname: '.wxs' }))
+				.pipe(babel(babelrc))
+				.pipe(rename({ extname: `.${platform.script}` }))
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
@@ -134,7 +139,7 @@ class Compiler {
 				.src(src, getGulpConfig())
 				.pipe(complieWya())
 				.pipe(rename({ extname: '.js' }))
-				.pipe(babel(babelConfig))
+				.pipe(babel(babelConfig()))
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
@@ -164,10 +169,10 @@ exports.build = gulp.series(
 	Compiler.cleaner,
 	gulp.parallel(
 		Compiler.wya(WYA_SRC),
-		Compiler.sass(CSS_SRC),
+		Compiler.style(STYLE_SRC),
 		Compiler.js(JS_SRC),
-		Compiler.wxml(WXML_SRC),
-		Compiler.wxs(WXS_SRC),
+		Compiler.template(TEMPLATE_SRC),
+		Compiler.script(SCRIPT_SRC),
 		Compiler.json(JSON_SRC),
 	),
 	Compiler.runtime(TEMP_SRC)
@@ -180,17 +185,17 @@ exports.dev = gulp.series(
 	Compiler.collectDepend([WYA_SRC, WYA_EXAMPLE_SRC, JS_SRC, JS_EXAMPLE_SRC]),
 	gulp.parallel(
 		Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]),
-		Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]),
+		Compiler.style([STYLE_SRC, STYLE_EXAMPLE_SRC]),
 		Compiler.js([JS_SRC, JS_EXAMPLE_SRC]),
-		Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]),
-		Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]),
+		Compiler.template([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC]),
+		Compiler.script([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC]),
 		Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]),
 		() => {
 			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]));
 			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC]));
-			gulp.watch([CSS_SRC, CSS_EXAMPLE_SRC], Compiler.sass([CSS_SRC, CSS_EXAMPLE_SRC]));
-			gulp.watch([WXML_SRC, WXML_EXAMPLE_SRC], Compiler.wxml([WXML_SRC, WXML_EXAMPLE_SRC]));
-			gulp.watch([WXS_SRC, WXS_EXAMPLE_SRC], Compiler.wxs([WXS_SRC, WXS_EXAMPLE_SRC]));
+			gulp.watch([STYLE_SRC, STYLE_EXAMPLE_SRC], Compiler.style([STYLE_SRC, STYLE_EXAMPLE_SRC]));
+			gulp.watch([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC], Compiler.template([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC]));
+			gulp.watch([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC], Compiler.script([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC]));
 			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]));
 			gulp.watch(TEMP_SRC, Compiler.runtime(TEMP_SRC));
 		}

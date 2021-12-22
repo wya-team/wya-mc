@@ -7,7 +7,9 @@ const commonjs = require('@rollup/plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const alias = require('@rollup/plugin-alias');
-const { uglify } = require('rollup-plugin-uglify');
+const { babel } = require('@rollup/plugin-babel');
+const { terser } = require('rollup-plugin-terser');
+const { replacePlugins } = require('./babel-config');
 
 module.exports = (options) => {
 	return through.obj(function (file, enc, cb) {
@@ -33,13 +35,19 @@ module.exports = (options) => {
 				replace({
 					'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
 				}),
-				process.env.NODE_ENV === 'production' && uglify()
+				babel({
+					babelHelpers: 'inline',
+					compact: false,
+					plugins: [].concat(replacePlugins)
+				}),
+				process.env.NODE_ENV === 'production' && terser()
 			]
 		}).then((res) => {
 			const regex = new RegExp(process.env.TEMP_DIR);
 			let fullpath = upath
 				.normalize(file.path)
 				.replace(regex, resolve(process.env.DIST_DIR, './libs'));
+
 			res.write({
 				output: {
 					file: resolve(fullpath),
