@@ -1,8 +1,8 @@
 <template>
-	<view class="mc-cascader" bindtap="handleClick">
+	<view class="mc-cascader mc-class" bindtap="handleClick">
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
-			wrapper-class="{{paddingNone ? 'mc-cascader__padding-none' : ''}}"
+			wrapper-class="{{paddingNone ? 'mc-cascader__padding-none' : 'wrapper-class'}}"
 			content-class="content-class"
 			content="{{extra}}"
 			indent="{{0}}"
@@ -30,6 +30,7 @@
 			cols="{{cols}}"
 			style="overflow: hidden;flex: 1;"
 			useTabs="{{ useTabs }}"
+			mc-class="cascader-view-class"
 			bind:change="handleChange"
 			bind:ready="handleViewReady"
 			bind:complete="handleComplete"
@@ -43,7 +44,7 @@ import Portal from '../portal/index';
 import { viewProps, popupProps } from './props';
 
 McComponent({
-	externalClasses: ['content-class'],
+	externalClasses: ['content-class', 'wrapper-class', 'cascader-view-class'],
 	relations: {
 		'../form/form-item': {
 			type: 'ancestor',
