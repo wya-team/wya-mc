@@ -138,10 +138,11 @@ const babelConfig = (opts = {}) => {
 					"legacy": true
 				}
 			],
-			[	
-				'@babel/plugin-proposal-class-properties',
-				{
-					"loose": true
+			[
+				"@babel/plugin-proposal-class-properties", { 
+					"assumptions": {
+						"setPublicClassFields": true
+					}
 				}
 			]
 		].concat(runtimeHelpers ? runtimePlugins : [])
