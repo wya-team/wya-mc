@@ -54,9 +54,11 @@ module.exports = (options) => {
 		if (style) {
 			css = sass.renderSync({
 				data: style,
+				file: file.path,
 				outputStyle: 'compressed',
 				importer(url, prev, done) {
 					let fullpath = resolve(dirname(prev), url);
+
 					if (
 						!fs.existsSync(fullpath) 
 						|| (

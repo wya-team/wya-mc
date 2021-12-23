@@ -1,3 +1,10 @@
+/**
+ * @files
+ * 如果改成.scss
+ * 	使用时仍然使用 @import "./xxx.wxss"
+ * 	而不是@import "./xxx.scss"
+ * 	否者样式会被包含进去
+ */
 .mc-ellipsis {
 	overflow: hidden;
 	white-space: nowrap;
