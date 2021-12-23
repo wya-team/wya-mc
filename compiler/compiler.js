@@ -9,6 +9,7 @@ const complieWya = require('./compile-wya');
 const complieDepend = require('./compile-depend');
 const complieRuntime = require('./compile-runtime');
 const compileTemplate = require('./compile-template');
+const compileJSON = require('./compile-json');
 const { babelConfig, scriptPlugins } = require('./babel-config');
 const platform = require('./platform');
 
@@ -125,6 +126,7 @@ class Compiler {
 		return function json() {
 			return gulp
 				.src(src, getGulpConfig())
+				.pipe(compileJSON())
 				.pipe(gulp.dest(getGulpOutput));
 		};
 	}
