@@ -84,29 +84,29 @@ class Compiler {
 	static style(src) {
 		return function style() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(sass().on('error', sass.logError))
 				.pipe(postcss())
 				.pipe(rename({ extname: `.${platform.style}` }))
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
 	static js(src) {
 		return function js() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(babel(babelConfig()))
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
 	static template(src) {
 		return function template() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(compileTemplate())
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
@@ -115,19 +115,19 @@ class Compiler {
 		babelrc.plugins = babelrc.plugins.concat(scriptPlugins);
 		return function script() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(babel(babelrc))
 				.pipe(rename({ extname: `.${platform.script}` }))
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
 	static json(src) {
 		return function json() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(compileJSON())
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
@@ -138,11 +138,11 @@ class Compiler {
 	static wya(src) {
 		return function wya() {
 			return gulp
-				.src(src, getGulpConfig())
+				.src(src.from || src, getGulpConfig())
 				.pipe(complieWya())
 				.pipe(rename({ extname: '.js' }))
 				.pipe(babel(babelConfig()))
-				.pipe(gulp.dest(getGulpOutput));
+				.pipe(gulp.dest(src.to || getGulpOutput));
 		};
 	}
 
@@ -161,7 +161,7 @@ class Compiler {
 	static runtime(src) {
 		return function runtime() {
 			return gulp
-				.src(src)
+				.src(src.from || src)
 				.pipe(complieRuntime());
 		};
 	}
@@ -192,14 +192,44 @@ exports.dev = gulp.series(
 		Compiler.template([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC]),
 		Compiler.script([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC]),
 		Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]),
-		() => {
-			gulp.watch([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya([WYA_SRC, WYA_EXAMPLE_SRC]));
-			gulp.watch([JS_SRC, JS_EXAMPLE_SRC], Compiler.js([JS_SRC, JS_EXAMPLE_SRC]));
-			gulp.watch([STYLE_SRC, STYLE_EXAMPLE_SRC], Compiler.style([STYLE_SRC, STYLE_EXAMPLE_SRC]));
-			gulp.watch([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC], Compiler.template([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC]));
-			gulp.watch([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC], Compiler.script([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC]));
-			gulp.watch([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json([JSON_SRC, JSON_EXAMPLE_SRC]));
-			gulp.watch(TEMP_SRC, Compiler.runtime(TEMP_SRC));
-		}
 	),
+	Compiler.runtime(TEMP_SRC),
+	function watch() {
+		let fn = (globs, generateTask) => {
+			gulp.watch(globs).on('all', (type, fullpath) => {
+				console.log(type, fullpath);
+				try {
+					const realPath = fullpath
+						.replace(new RegExp(`(${src}|${example})`, 'g'), '');
+					if (type !== 'unlink') {
+						const run = generateTask(
+							{
+								from: fullpath,
+								to: path.dirname(fullpath).replace(new RegExp(`(${src}|${example})`, 'g'), dist)
+							}
+						);
+
+						run();
+					} else {
+						fs.removeSync(dist + realPath);
+					}
+
+					// 日志输出
+					console.log(`${type}: {${realPath}}`);
+					console.log(`from: {${fullpath}}`);
+					console.log(`to: {${dist + realPath}}`);
+				} catch (e) {
+					console.log(e);
+				}
+			});
+		};
+
+		fn([WYA_SRC, WYA_EXAMPLE_SRC], Compiler.wya);
+		fn([JS_SRC, JS_EXAMPLE_SRC], Compiler.js);
+		fn([STYLE_SRC, STYLE_EXAMPLE_SRC], Compiler.style);
+		fn([TEMPLATE_SRC, TEMPLATE_EXAMPLE_SRC], Compiler.template);
+		fn([SCRIPT_SRC, SCRIPT_EXAMPLE_SRC], Compiler.script);
+		fn([JSON_SRC, JSON_EXAMPLE_SRC], Compiler.json);
+		fn(TEMP_SRC, Compiler.runtime);
+	}
 );
