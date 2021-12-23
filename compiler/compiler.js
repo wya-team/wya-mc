@@ -197,15 +197,17 @@ exports.dev = gulp.series(
 	function watch() {
 		let fn = (globs, generateTask) => {
 			gulp.watch(globs).on('all', (type, fullpath) => {
-				console.log(type, fullpath);
 				try {
 					const realPath = fullpath
 						.replace(new RegExp(`(${src}|${example})`, 'g'), '');
+					const isComponent = fullpath.includes(src);
 					if (type !== 'unlink') {
 						const run = generateTask(
 							{
 								from: fullpath,
-								to: path.dirname(fullpath).replace(new RegExp(`(${src}|${example})`, 'g'), dist)
+								to: path
+									.dirname(fullpath)
+									.replace(new RegExp(`(${src}|${example})`, 'g'), `${dist}${isComponent ? '/components' : ''}`)
 							}
 						);
 
@@ -217,7 +219,7 @@ exports.dev = gulp.series(
 					// 日志输出
 					console.log(`${type}: {${realPath}}`);
 					console.log(`from: {${fullpath}}`);
-					console.log(`to: {${dist + realPath}}`);
+					console.log(`to: {${dist + (isComponent ? '/components' : '') + realPath}}`);
 				} catch (e) {
 					console.log(e);
 				}
