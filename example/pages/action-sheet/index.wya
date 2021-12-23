@@ -1,5 +1,5 @@
 <template>
-	<buntton bind:tap="handleOpenActionSheet">点击</buntton>
+	<button bind:tap="handleOpenActionSheet">点击</button>
 	<mc-action-sheet  id="action-sheet" title='title' description="description"/>
 </template>
 <script>
