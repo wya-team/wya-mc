@@ -27,6 +27,7 @@ module.exports = (options) => {
 		const template = $('template').html();
 		const script = $('script').html();
 		const style = $('style').html();
+		const externalStyle = $('external-style').html() || '';
 		const config = $('config').html();
 		// 输出的对应文件路径
 		const fn = (ext) => {
@@ -49,7 +50,6 @@ module.exports = (options) => {
 		config && fs.outputFileSync(fn('json'), config);
 		// wxss
 		let imports = '';
-		let css = '';
 		let regex = new RegExp(`\\.(${platform.styles.join("|")})$`);
 		if (style) {
 			css = sass.renderSync({
@@ -77,7 +77,13 @@ module.exports = (options) => {
 			}).css;
 		}
 		
-		imports + css && fs.outputFileSync(fn(platform.style), imports + css);
+		// tt平台不支持addGlobalClass，但支持externalClasses，虽然文档没有
+		let result = imports + css + (process.env.PLATFORM === 'tt' ? externalStyle : '');
+
+		result && fs.outputFileSync(
+			fn(platform.style), 
+			result
+		);
 
 		file.contents = Buffer.from(script);
 
