@@ -91,6 +91,10 @@ McComponent({
 
 			this.$emit('ready', {
 				done: (fns = {}) => this.$fns = { ...this.$fns, ...fns },
+				click: (e) => {
+					this.handleClick(e);
+				},
+				getContext: () => this,
 				// 直接上传文件
 				uploadFiles: (e) => {
 					if (e instanceof Array) {
