@@ -135,7 +135,8 @@ McComponent({
 			});
 		},
 		handleOK() {
-			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
+			let { pickValue } = this.data;
+			pickValue = pickValue && pickValue.length ? pickValue : this.viewInstance.getDefaultValue();
 			const label = this.viewInstance.getLabelByValue(pickValue);
 			this.setData({
 				extra: label.join(','),
