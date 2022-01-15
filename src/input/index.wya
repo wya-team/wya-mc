@@ -5,7 +5,7 @@
 		</view>
 		<block wx:if="{{ type === 'textarea' }}">
 			<textarea 
-				wx:if="{{!shouldHide}}"
+				hidden="{{ shouldHide }}"
 				id="{{uuid}}"
 				class="mc-input__textarea"
 				value="{{ currentValue }}"
@@ -36,7 +36,7 @@
 			/>
 			<!-- 将当前的textarea样式copy出来用view展示，需拿到textarea当前的高度 -->
 			<view
-				wx:elif="{{viewPlaceholder}}"
+				hidden="{{ !shouldHide || !viewPlaceholder }}"
 				class="mc-input__textarea {{!currentValue ? placeholderClass : ''}}"
 				style="{{ textareaStyle }}; height: {{textareaHeight}}px; overflow-y: auto; box-sizing: border-box; word-break: break-all;  {{!currentValue ? placeholderStyle : ''}}"
 			>
@@ -147,9 +147,11 @@ McComponent({
 					uuid: getUid('input-textarea')
 				});
 				TextareaHack.on(this);
-				wx.nextTick(() => {
+
+				// 渲染需要时间
+				setTimeout(() => {
 					this.getTextareaHeight();
-				});
+				}, 500);
 			}
 		},
 	},
