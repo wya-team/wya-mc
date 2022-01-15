@@ -30,5 +30,9 @@ export const pickerPopupProps = {
 	showToolbar: {
 		type: Boolean,
 		value: true
-	}
+	},
+	maskStyle: {
+		type: String,
+		value: ''
+	},
 };

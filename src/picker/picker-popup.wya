@@ -1,5 +1,5 @@
 <template>
-	<mc-popup mc-class="mc-picker-popup" visible="{{visible}}" bind:close="handleCancel">
+	<mc-popup mc-class="mc-picker-popup" mask-style="{{ maskStyle }}" visible="{{visible}}" bind:close="handleCancel">
 		<view wx:if="{{showToolbar}}" class="mc-picker-popup__header">
 			<view 
 				wx:if="{{cancelText}}" 

@@ -13,5 +13,9 @@ export const popup = Behavior({
 			type: Boolean,
 			value: true
 		},
+		maskStyle: {
+			type: String,
+			value: ''
+		},
 	},
 });

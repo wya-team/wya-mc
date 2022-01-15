@@ -102,7 +102,7 @@ McComponent({
 	left: 0;
 	background-color: rgba(0, 0, 0, .5);
 	height: 100%;
-	z-index: 1000;
+	z-index: 1000; // TODO: 这里1001更加合适，多个弹窗是背景可以盖上去，备用方案maskStyle
 }
 
 .mc-popup {

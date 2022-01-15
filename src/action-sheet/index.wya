@@ -6,6 +6,7 @@
 		round="{{ round }}"
 		mask="{{ mask }}"
 		maskClosable="{{ maskClosable }}"
+		maskStyle="{{ maskStyle }}"
 		bind:close="handleClose"
 	>
 		<view 
