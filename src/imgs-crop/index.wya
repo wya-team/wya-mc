@@ -53,7 +53,8 @@ Component({
 
 		// 裁剪的边框 [x, y]
 		border: {
-			type: [Number, Array],
+			type: Number,
+			optionalTypes: [Array],
 			value: 40
 		},
 

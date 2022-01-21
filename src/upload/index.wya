@@ -17,7 +17,8 @@ McComponent({
 		url: String,
 		headers: Object,
 		name: {
-			type: [Number, String],
+			type: String,
+			optionalTypes: [Number],
 			value: '',
 		},
 		mode: {

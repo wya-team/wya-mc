@@ -39,7 +39,8 @@ McComponent({
 			value: false
 		},
 		value: {
-			type: [String, Number, Boolean],
+			type: Boolean,
+			optionalTypes: [String, Number],
 			value: false,
 			observer(val) {
 				this.setData({
@@ -56,7 +57,8 @@ McComponent({
 			value: '#26be76'
 		},
 		label: {
-			type: [String, Number, Boolean],
+			type: String,
+			optionalTypes: [Boolean, Number],
 		},
 		indeterminate: {
 			type: Boolean,

@@ -109,7 +109,8 @@ McComponent({
 			value: true
 		},
 		pictureInPictureMode: {
-			type: [String, Array],
+			type: String,
+			optionalTypes: [Array],
 		}
 		// TODO: 其他属性
 	},
