@@ -28,7 +28,8 @@ McComponent({
 				this.parent = parent;
 				// 下面两个方法内部都用到了parent,所以需要在拿到parent之后调用
 				this.setLabelStyle(this.data.labelWidth);
-				 this.setLabelPosition(this.data.labelPosition);
+				this.setLabelPosition(this.data.labelPosition);
+				this.setItemDivider();
 				this.setRules();
 				this.setFieldValue(this.data.prop);
 			},
@@ -100,6 +101,10 @@ McComponent({
 				this.setData({ contentStyle: 'margin-left: 0' });
 			}
 			this.setData({ classes: `is-${position}` });	
+		},
+		setItemDivider() {
+			const showDivider = this.parent.data.divider;
+			this.setData({ classes: `${this.data.classes} ${showDivider ? 'is-divider' : ''}` });	
 		},
 		setRules() {
 			const { required } = this.data;
@@ -229,21 +234,6 @@ McComponent({
 		vertical-align: middle;
 		clear: both;
 		overflow: hidden;
-		&:after {
-			position: absolute;
-			box-sizing: border-box;
-			-webkit-transform-origin: center;
-			transform-origin: center;
-			content: " ";
-			pointer-events: none;
-			top: auto;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			border-bottom: 1px solid #F2F2F2;
-			-webkit-transform: scaleY(.5);
-			transform: scaleY(.5)
-		}
 		&.is-right {
 			.mc-form-item__label {
 				text-align: right;
@@ -254,6 +244,23 @@ McComponent({
 				float: none;
 				display: inline-block;
 				padding: 0 0 20rpx 0
+			}
+		}
+		&.is-divider {
+			&:after {
+				position: absolute;
+				box-sizing: border-box;
+				-webkit-transform-origin: center;
+				transform-origin: center;
+				content: " ";
+				pointer-events: none;
+				top: auto;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				border-bottom: 1px solid #F2F2F2;
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5)
 			}
 		}
 	}

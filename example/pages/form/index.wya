@@ -3,7 +3,7 @@
 		mc-class="g-m-t-40" 
 		border 
 		label-width="{{180}}" 
-		label-position="left"
+		label-position="top"
 		model="{{formValidate}}"
 		rules="{{ruleValidate}}"
 		bind:ready="handleReady"
@@ -39,7 +39,7 @@
 
 <script>
 import { RegEx } from '../../components/common/regex';
-import { areaData } from '../cascader/mock';
+// import { areaData } from '../cascader/mock';
 
 Page({
 	data: {

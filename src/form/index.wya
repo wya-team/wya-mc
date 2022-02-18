@@ -39,7 +39,12 @@ McComponent({
 		labelPosition: {
 			type: String,
 			value: 'left'
-		}
+		},
+		// 分割线
+		divider: {
+			type: Boolean,
+			value: true
+		},
 	},
 	lifetimes: {
 		ready() {
