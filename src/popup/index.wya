@@ -61,6 +61,7 @@ McComponent({
 			type: Number,
 			value: 1000,
 		},
+		hideTabBar: Boolean
 	},
 	data: {
 	},
@@ -73,6 +74,14 @@ McComponent({
 			if (this.preVisible !== val) {
 				this.preVisible = val;
 				TextareaHack.toggle(val);	
+			}
+			// 弹出来时隐藏/显示tab-bar
+			if (this.data.hideTabBar) {
+				if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+					this.getTabBar().setData({ showTabBar: val });
+				} else {
+					val ? wx.hideTabBar() : wx.showTabBar();
+				}	
 			}
 		}
 	},

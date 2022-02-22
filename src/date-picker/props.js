@@ -7,10 +7,6 @@ export const pickerViewProps = {
 		type: String,
 		value: ''
 	},
-	mode: {
-		type: String, // date、month、quarter
-		value: 'date',
-	},
 	minDate: {
 		type: String,
 		value: '1940/01/01 00:00'
@@ -42,4 +38,5 @@ export const pickerPopupProps = {
 		type: String,
 		value: ''
 	},
+	hideTabBar: Boolean,
 };

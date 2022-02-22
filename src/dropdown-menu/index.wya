@@ -77,7 +77,8 @@ McComponent({
 		closeOnClickOutside: {
 			type: Boolean,
 			value: true
-		}
+		},
+		hideTabBar: Boolean,
 	},
 	data: {
 		itemListData: []

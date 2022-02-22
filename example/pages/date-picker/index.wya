@@ -11,6 +11,12 @@
 	>
 	</mc-date-picker>
 	<mc-date-picker 
+		value="{{dateRangeValue}}"
+		label="日期范围"
+		mode="daterange"
+		title="选择日期范围"
+	/>
+	<mc-date-picker 
 		value="{{monthValue}}"
 		label="月份"
 		mode="month"
@@ -33,10 +39,13 @@ import Portal from '../../components/portal/index';
 Page({
 	data: {
 		dateValue: '',
+		dateRangeValue: [],
 		monthValue: '2020-09',
 		quarterValue: '2020-01',
-		maxDate: '2020-10-14',
-		pickerViewValue: [2020, 11, 10]
+		maxDate: '2030-10-14',
+		pickerViewValue: [2020, 11, 10],
+		defaultValue: '',
+		defaultRangeValue: ['2020-01-04', '2020-01-09']
 	},
 	onShow() {
 		// setTimeout(() => {

@@ -19,6 +19,7 @@
 		cancel-text="{{cancelText}}"
 		ok-text="{{okText}}"
 		show-toolbar="{{showToolbar}}"
+		hideTabBar="{{ hideTabBar }}"
 		bind:close="handleCancel"
 	>
 		<mc-picker-view

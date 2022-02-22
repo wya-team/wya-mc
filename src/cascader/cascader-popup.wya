@@ -2,6 +2,7 @@
 	<mc-popup 
 		mc-class="mc-cascader-popup"
 		visible="{{visible}}" 
+		hideTabBar="{{ hideTabBar }}"
 		bind:close="handleCancel"
 	>
 		<view wx:if="{{showToolbar}}" class="mc-cascader-popup__header">

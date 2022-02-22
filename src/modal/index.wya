@@ -7,6 +7,7 @@
 		mask-style="{{maskStyle}}"
 		mc-style="{{mcStyle}}"
 		zIndex="{{zIndex}}"
+		hideTabBar="{{ hideTabBar }}"
 		placement="center"
 		bind:close="handleCancel"
 	>
@@ -52,6 +53,7 @@ McComponent({
 			type: Number,
 			value: 1000,
 		},
+		hideTabBar: Boolean,
 		title: {
 			type: String,
 			optionalTypes: [Boolean],

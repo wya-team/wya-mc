@@ -38,4 +38,5 @@ export const pickerPopupProps = {
 		type: String,
 		value: ''
 	},
+	hideTabBar: Boolean,
 };

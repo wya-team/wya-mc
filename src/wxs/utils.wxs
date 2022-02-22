@@ -7,9 +7,13 @@ var assertTypeof = function(obj, target) {
 	return typeof obj === target;
 }
 
+var join = function(dataSource, spliter) {
+	return dataSource.join(spliter);
+}
 module.exports = {
 	bem: memoize(bem),
 	assertTypeof: assertTypeof,
 	memoize: memoize,
-	addUnit: addUnit
+	addUnit: addUnit,
+	join
 };

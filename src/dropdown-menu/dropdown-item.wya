@@ -11,6 +11,7 @@
 			mc-style="position: absolute; border-radius: 0"
 			mask-style="position: absolute;"
 			mask="{{ mask }}"
+			hideTabBar="{{ hideTabBar }}"
 			placement="{{ direction === 'down' ? 'top' : 'bottom' }}"
 			duration="{{ transition ? duration : 0 }}"
 			mask-closeable="{{ maskCloseable }}"
@@ -100,14 +101,16 @@ McComponent({
 					duration,
 					activeColor,
 					maskCloseable,
-					direction
+					direction,
+					hideTabBar
 				} = this.parent.data;
 				this.setData({
 					mask,
 					duration,
 					activeColor,
 					maskCloseable,
-					direction
+					direction,
+					hideTabBar
 				});
 			}
 		},

@@ -5,6 +5,7 @@
 		visible="{{ visible }}" 
 		round="{{ round }}"
 		mask="{{ mask }}"
+		hideTabBar="{{ hideTabBar }}"
 		maskClosable="{{ maskClosable }}"
 		maskStyle="{{ maskStyle }}"
 		bind:close="handleClose"
@@ -90,6 +91,7 @@ McComponent({
 			type: Boolean,
 			value: false
 		},
+		hideTabBar: Boolean,
 		cancelText: {
 			type: String,
 			value: '取消'

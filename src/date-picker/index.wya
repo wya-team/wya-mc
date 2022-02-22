@@ -1,4 +1,5 @@
 <template>
+	<wxs  src="../wxs/utils.wxs" module="utils"></wxs>
 	<view class="mc-date-picker mc-class" bindtap="handleClick">
 		<mc-list-item 
 			wx:if="{{!useItemSlot}}"
@@ -20,12 +21,25 @@
 		ok-text="{{okText}}"
 		show-toolbar="{{showToolbar}}"
 		mask-style="{{ maskStyle }}"
+		hideTabBar="{{ hideTabBar }}"
 		bind:close="handleCancel"
 	>
+		<view wx:if="{{ isRange }}" class="g-flex-ac mc-date-picker__range">
+			<view 
+				class="mc-date-picker__range--item {{ currentSelected === 0 ? 'is-active' : ''}}" 
+				data-index="{{ 0 }}" 
+				bind:tap="handleSelected"
+			>{{ pickValue[0] ? utils.join(pickValue[0], '-') : '请选择' }}</view>
+			<view>至</view>
+			<view 
+				class="mc-date-picker__range--item {{ currentSelected === 1 ? 'is-active' : ''}}" 
+				data-index="{{ 1 }}" 
+				bind:tap="handleSelected"
+			>{{ pickValue[1] ? utils.join(pickValue[1], '-') : '请选择' }}</view>
+		</view>
 		<mc-picker-view
-			value="{{currentValue}}"
-			dataSource="{{dataSource}}"
-			mode="{{mode}}"
+			value="{{isRange ? pickValue[currentSelected] : currentValue}}"
+			mode="{{currentMode}}"
 			maxDate="{{maxDate}}"
 			minDate="{{minDate}}"
 			indicator-style="{{indicatorStyle}}"
@@ -40,7 +54,9 @@ import { isEqualWith, hackDate, splitDateStr, preZero } from '../common/utils';
 import McComponent from '../common/component';
 import Portal from '../portal/index';
 import { pickerViewProps, pickerPopupProps } from './props';
+import { getCurrentDateString, getCurrentMonthString } from './utils.js';
 
+const RANGE_SPLITOR = '~';
 McComponent({
 	externalClasses: ['content-class'],
 	relations: {
@@ -63,34 +79,19 @@ McComponent({
 	props: {
 		...pickerViewProps,
 		...pickerPopupProps,
+		mode: {
+			type: String, // date、month、quarter daterange
+			value: 'date'
+		},
 		value: {
 			type: String,
+			optionalTypes: [Array],
 			value: '',
-			observer(val) {
-				let formatValue = splitDateStr(val);
-				if (!isEqualWith(formatValue, this.data.currentValue)) {
-					this.setData({
-						currentValue: formatValue,
-						pickValue: formatValue
-					});
-				}
-				if (!isEqualWith(val, this.data.content)) {
-					this.setData({ content: val });
-				}
-			}
 		},
 		defaultValue: {
 			type: String,
+			optionalTypes: [Array],
 			value: '',
-			observer(val) {
-				let formatValue = splitDateStr(val);
-				if (!isEqualWith(formatValue, this.data.currentValue)) {
-					this.setData({
-						currentValue: formatValue,
-						pickValue: formatValue,
-					});	
-				}
-			}
 		},
 		label: String,
 		labelWidth: {
@@ -117,7 +118,30 @@ McComponent({
 	},
 	data: {
 		currentValue: [],
-		content: ''
+		currentSelected: 0, // range模式下当前选中的哪个picker-view
+		content: '',
+		currentMode: ''
+	},
+	observers: {
+		mode(mode) {
+			if (mode.includes('range')) {
+				this.setData({
+					isRange: true,
+					currentMode: mode.replace('range', '')
+				});
+			} else {
+				this.setData({ currentMode: mode });
+			}
+		},
+		'defaultValue, value': function (defaultValue, value) {
+			const updateContent = !!(value && value.length);
+			const val = value && value.length ? value : defaultValue;
+			if (Array.isArray(val)) {
+				this.initArrayDate(val, updateContent);
+			} else {
+				this.initStringDate(val, updateContent);
+			}
+		}
 	},
 	lifetimes: {
 		attached() {
@@ -130,14 +154,66 @@ McComponent({
 	
 	},
 	methods: {
+		initStringDate(date, updateContent) {
+			let formatValue = splitDateStr(date);
+			if (!isEqualWith(formatValue, this.data.currentValue)) {
+				this.setData({
+					currentValue: formatValue,
+					pickValue: formatValue,
+				});	
+			}
+			if (updateContent && !isEqualWith(date, this.data.content)) {
+				this.setData({ content: date });
+			}
+		},
+		initArrayDate(dateRange, updateContent) {
+			const formateValueRange = [];
+			const isEqual = dateRange.every((date, index) => {
+				let formatValue = splitDateStr(date);
+				formateValueRange.push(formatValue);
+				return !isEqualWith(formatValue, this.data.currentValue[index]);
+			});
+			if (isEqual) {
+				this.setData({
+					currentValue: formateValueRange,
+					pickValue: formateValueRange,
+				});	
+			}
+			const rangeContent = dateRange.join(RANGE_SPLITOR);
+			if (updateContent && !isEqualWith(rangeContent, this.data.content)) {
+				this.setData({ content: dateRange });
+			}
+		},
 		handleViewReady(event) {
 			this.viewInstance = event.detail;
+		},
+		handleSelected(event) {
+			const { index } = event.currentTarget.dataset;
+			this.setData({
+				currentSelected: index
+			});
 		},
 		handleClick(event) {
 			if (this.Func && !this.data.disabled) {
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
-					title: this.data.title
+					title: this.data.title,
+					onBeforeSure: () => {
+						if (this.data.isRange) {
+							if (this.data.pickValue.length != 2) {
+								wx.showToast({ title: '请选择范围', icon: 'none' });
+								return false;
+							} else {
+								const startTime = new Date(...this.data.pickValue[0]).getTime();
+								const endTime = new Date(...this.data.pickValue[1]).getTime();
+								if (startTime >= endTime) {
+									wx.showToast({ title: '开始时间不能大于等于结束时间', icon: 'none' });
+									return false;
+								}
+							}
+						}
+						return true;
+					},
 				}).then((res) => {
 					this.handleOK();
 				}).catch((err) => {
@@ -147,20 +223,40 @@ McComponent({
 			}
 		},
 		handleChange(event) {
-			this.setData({
-				pickValue: event.detail || []
-			});
+			if (this.data.isRange) {
+				const array = (this.data.pickValue || []).slice();
+				array[this.data.currentSelected] = event.detail || [];
+				this.setData({
+					pickValue: array
+				});
+			} else {
+				this.setData({
+					pickValue: event.detail || []
+				});
+			}
 		},
 		parseValue(value = []) {
 			return value.map((it) => preZero(it)).join('-');
 		},
 		handleOK() {
-			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
-			const value = this.parseValue(pickValue);
-			this.setData({
-				content: value,
-				currentValue: pickValue
-			});
+			let pickValue = [];
+			let value = '';
+			if (this.data.isRange) {
+				pickValue = this.data.pickValue;
+				value = pickValue.map((val) => this.parseValue(val));
+				this.setData({
+					content: value.join(RANGE_SPLITOR),
+					currentValue: pickValue,
+					currentSelected: 0
+				});
+			} else {
+				pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
+				value = this.parseValue(pickValue);
+				this.setData({
+					content: value,
+					currentValue: pickValue
+				});
+			}
 			this.$emit('change', { value, pickValue });
 			this.parent && this.parent.fieldChange();
 		},
@@ -169,7 +265,12 @@ McComponent({
 			this.handleClose();
 		},
 		handleClose() {
-			this.viewInstance.reset(this.data.currentValue);
+			if (this.data.isRange) {
+				this.setData({ currentSelected: 0 });
+				this.viewInstance.reset(this.data.currentValue[0]);
+			} else {
+				this.viewInstance.reset(this.data.currentValue);
+			}
 			this.$emit('close');
 		}
 	}
@@ -181,6 +282,27 @@ McComponent({
 .mc-date-picker {
 	.mc-date-picker__padding-none {
 		padding: 0
+	}
+}
+.mc-date-picker__range {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10rpx 20rpx;
+	font-size: 28rpx;
+	.mc-date-picker__range--item {
+		flex: 1;
+		color: #cdcdcd;
+		line-height: 64rpx;
+		border-top: 1rpx solid #cdcdcd;
+		border-bottom: 1rpx solid #cdcdcd;
+		text-align: center;
+		margin: 0 10rpx;
+		&.is-active {
+			color: #108ee9;
+			border-top: 1rpx solid #108ee9;
+			border-bottom: 1rpx solid #108ee9;
+		}
 	}
 }
 

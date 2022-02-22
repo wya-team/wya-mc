@@ -1,5 +1,11 @@
 <template>
-	<mc-popup mc-class="mc-picker-popup" mask-style="{{ maskStyle }}" visible="{{visible}}" bind:close="handleCancel">
+	<mc-popup 
+		mc-class="mc-picker-popup" 
+		mask-style="{{ maskStyle }}" 
+		visible="{{visible}}" 
+		hideTabBar="{{ hideTabBar }}"
+		bind:close="handleCancel"
+	>
 		<view wx:if="{{showToolbar}}" class="mc-picker-popup__header">
 			<view 
 				wx:if="{{cancelText}}" 
@@ -38,17 +44,27 @@ McComponent({
 		},
 	},
 	methods: {
+		onPortalUpdate(options = {}) {
+			this.onBeforeSure = options.onBeforeSure || (() => true);
+			this.onBeforeClose = options.onBeforeClose || (() => true);
+		},
 		handleClose() {
 			this.$emit('close');
 		},
-		handleCancel() {
-			this.$emit('cancel');
-			this.handleClose();
+		async handleCancel() {
+			const result = await this.onBeforeClose();
+			if (result) {
+				this.$emit('cancel');
+				this.handleClose();
+			}
 		},
-		handleOK() {
-			this.$emit('sure');
-			this.$emit('ok');
-			this.handleClose();
+		async handleOK() {
+			const result = await this.onBeforeSure();
+			if (result) {
+				this.$emit('sure');
+				this.$emit('ok');
+				this.handleClose();
+			}
 		},
 	}
 });

@@ -26,5 +26,6 @@ export const popupProps = {
 	showToolbar: {
 		type: Boolean,
 		value: true
-	}
+	},
+	hideTabBar: Boolean,
 };

@@ -27,6 +27,10 @@ McComponent({
 			type: Array,
 			value: []
 		},
+		mode: {
+			type: String, // date、month、quarter
+			value: 'date',
+		},
 	},
 	data: {
 		currentValue: [],
