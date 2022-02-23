@@ -78,7 +78,7 @@ McComponent({
 			// 弹出来时隐藏/显示tab-bar
 			if (this.data.hideTabBar) {
 				if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-					this.getTabBar().setData({ showTabBar: val });
+					this.getTabBar().setData({ showTabBar: !val });
 				} else {
 					val ? wx.hideTabBar() : wx.showTabBar();
 				}	
