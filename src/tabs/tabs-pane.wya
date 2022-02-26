@@ -46,8 +46,7 @@ McComponent({
 			observer: 'update'
 		},
 		name: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 			value: '',
 		}
 	},

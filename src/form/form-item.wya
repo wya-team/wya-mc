@@ -68,8 +68,7 @@ McComponent({
 			value: false
 		},
 		rules: {
-			type: Array,
-			optionalTypes: [Object],
+			type: [Array, Object],
 			observer(val) {
 				this.parent && this.setRules();
 			}

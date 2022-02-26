@@ -59,8 +59,7 @@ McComponent({
 	props: {
 		label: String,
 		labelWidth: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 			observer(val) {
 				this.parent && this.setLabelStyle(val);
 			}
@@ -69,8 +68,7 @@ McComponent({
 		url: String,
 		leftIcon: String,
 		arrow: {
-			type: String,
-			optionalTypes: [Boolean],
+			type: [String, Boolean],
 			value: 'right',
 			observer(val) {
 				this.setData({

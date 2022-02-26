@@ -84,19 +84,16 @@ McComponent({
 			value: 'date'
 		},
 		value: {
-			type: String,
-			optionalTypes: [Array],
+			type: [String, Array],
 			value: '',
 		},
 		defaultValue: {
-			type: String,
-			optionalTypes: [Array],
+			type: [String, Array],
 			value: '',
 		},
 		label: String,
 		labelWidth: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 		},
 		tag: {
 			type: String,

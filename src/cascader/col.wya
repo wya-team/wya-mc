@@ -30,8 +30,7 @@ McComponent({
 			value: []
 		},
 		value: {
-			type: String,
-			optionalTypes: [Number]
+			type: [String, Number]
 		},
 		loading: {
 			type: Boolean,

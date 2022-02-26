@@ -94,8 +94,7 @@ McComponent({
 		},
 		label: String,
 		labelWidth: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 		},
 		tag: {
 			type: String,

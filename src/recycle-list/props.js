@@ -37,8 +37,7 @@ export const coreProps = {
 		value: 0,
 	},
 	current: {
-		type: String,
-		optionalTypes: [Number],
+		type: [String, Number],
 		value: '0',
 	}
 };

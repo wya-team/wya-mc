@@ -29,8 +29,7 @@ McComponent({
 	},
 	props: {
 		value: {
-			type: Boolean,
-			optionalTypes: [String, Number],
+			type: [Boolean, String, Number],
 			value: false
 		},
 		disabled: Boolean,
@@ -38,13 +37,11 @@ McComponent({
 		activeColor: String,
 		inactiveColor: String,
 		trueValue: {
-			type: Boolean,
-			optionalTypes: [String, Number],
+			type: [Boolean, String, Number],
 			value: true
 		},
 		falseValue: {
-			type: Boolean,
-			optionalTypes: [String, Number],
+			type: [Boolean, String, Number],
 			value: false
 		},
 		openText: {

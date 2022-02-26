@@ -26,8 +26,7 @@ McComponent({
 			value: true
 		},
 		labelWidth: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 		},
 	},
 });

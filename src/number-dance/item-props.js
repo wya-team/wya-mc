@@ -1,8 +1,7 @@
 export default {
 	// 数字 0-9
 	value: {
-		type: Number,
-		optionalTypes: [String],
+		type: [Number, String],
 		value: 0
 	},
 	/**

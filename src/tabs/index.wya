@@ -102,22 +102,19 @@ McComponent({
 		},
 		swipeable: Boolean,
 		lineWidth: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 			value: -1,
 			observer: 'setLine'
 		},
 		lineHeight: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 			value: -1,
 			observer: 'setLine'
 		},
 		titleActiveColor: String,
 		titleInactiveColor: String,
 		active: {
-			type: String,
-			optionalTypes: [Number],
+			type: [String, Number],
 			value: 0,
 			observer(name) {
 				if (name !== this.getCurrentName()) {

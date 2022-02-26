@@ -16,13 +16,11 @@ McComponent({
 	props: {
 		useSlot: Boolean,
 		targetTime: {
-			type: Number,
-			optionalTypes: [String, Object],
+			type: [Number, String, Object],
 			observer: 'reset'
 		},
 		serverTime: {
-			type: Number,
-			optionalTypes: [String, Object],
+			type: [Number, String, Object],
 			observer: 'reset'
 		},
 		// time: {

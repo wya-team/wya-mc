@@ -55,18 +55,15 @@ McComponent({
 		},
 		hideTabBar: Boolean,
 		title: {
-			type: String,
-			optionalTypes: [Boolean],
+			type: [String, Boolean],
 		},
 		content: String,
 		okText: {
-			type: String,
-			optionalTypes: [Boolean],
+			type: [String, Boolean],
 			value: '确定'
 		},
 		cancelText: {
-			type: String,
-			optionalTypes: [Boolean],
+			type: [String, Boolean],
 			value: '取消'
 		},
 		footer: {
