@@ -50,7 +50,7 @@ McComponent({
 			value: '#26be76'
 		},
 		name: {
-			type: String
+			type: [String, Number]
 		},
 		iconStyle: {
 			type: String
