@@ -1,4 +1,4 @@
-wx.nextTick = wx.nextTick || setTimeout;
+!wx.nextTick && (wx.nextTick = setTimeout);
 
 App({
 	$mc: { config: {} },

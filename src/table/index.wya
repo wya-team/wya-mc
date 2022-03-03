@@ -1,0 +1,334 @@
+<template>
+	<scroll-view 
+		scroll-x="{{ scrollX }}" 
+		style="width: 100%; {{ mcStyle }}"  
+		class="mc-table mc-class"
+	>
+		<!-- 表格头 start -->
+		<view 
+			class="mc-table__thead {{ border ? 'has-border' : ''}} header-row-class-name" 
+			style="width: {{ scrolWidth ? scrolWidth + 'px' : 'auto' }};"
+		>
+			<view 
+				wx:for="{{ columns }}"
+				wx:for-item="column"  
+				wx:key="headerId" 
+				class="mc-table__thead-td is-{{ column.align }}" 
+				style="{{ column.width ? 'width: ' + column.width + 'rpx' : 'flex: 1' }}; {{ column.headerStyle }}"
+			>
+				<text>{{ column.label }}</text>
+				<!-- TODO: sortable -->
+			</view>
+		</view>  
+		<!-- 表格头 end -->
+		
+		<!-- 表格体 start -->
+		<scroll-view 
+			wx:if="{{ doLayouted }}"
+			scroll-y="{{ scrollY }}" 
+			class="mc-table__tbody"
+			style="width: {{ scrolWidth ? scrolWidth + 'px' : 'auto' }}px; height:{{ height ? height : 'auto' }};" 
+		>
+			<block 
+				wx:if="{{ rebuildData.length > 0 }}" 
+				wx:for-item="row" 
+				wx:for-index="index"
+				wx:for="{{ rebuildData }}" 
+				wx:key="index" 
+			>
+				<view class="mc-table__tbody-tr {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class-name">
+					<view 
+						wx:for="{{ columns }}" 
+						wx:for-item="column" 
+						wx:for-index="$index" 
+						wx:key="columnId" 
+						class="mc-table__tbody-td is-{{ column.align }} cell-class-name" 
+						data-row="{{ dataSource[index] }}" 
+						data-row-index="{{ index }}" 
+						data-column="{{ column }}"
+						data-column-index="{{ $index }}"
+						style="width:{{ column.realWidth }}px; {{ column.cellStyle }}" 
+						bind:tap="handleRowClick"
+					>	
+						<rich-text 
+							wx:if="{{ rebuildData[index]._renders.cell[$index] }}"
+							nodes="{{ rebuildData[index]._renders.cell[$index] }}" 
+						/>
+						<!-- TODO: 如果nodes是个对象，可以支持简单vnode语法 -->
+						<text wx:else>{{ row[column.prop] }}</text>
+					</view>        
+				</view>
+			</block>
+			<!-- 列表无数据处理 -->
+			<block wx:if="{{ data.length === 0 }}">
+				<view class="mc-table__empty">{{ empty }}</view>
+				<slot name="empty" />
+			</block>
+		</scroll-view>
+		<!-- 表格体 end -->
+	</scroll-view>
+</template>
+<script>
+import McComponent from '../common/component';
+
+McComponent({
+	externalClasses: ['header-row-class-name', 'row-class-name', 'cell-class-name'], 
+	relations: {
+		'./table-column': {
+			type: 'descendant',
+			linked(child) {
+				this.children = this.children || [];
+				this.children.push(child);
+
+				const { columns } = this.data;
+				columns.push(child.data);
+				this.setData({ columns });
+				this.refreshLayout();
+				this.rebuildWidthRender();
+			},
+			unlinked(child) {
+				const index = this.children.findIndex(i => i === child);
+
+				if (index === -1) return;
+				this.children.splice(index, 1);
+
+				const { columns } = this.data;
+				columns.splice(index, 1);
+
+				this.setData({ columns });
+				this.refreshLayout();
+				this.rebuildWidthRender();
+			}
+		}
+	},
+	props: {
+		dataSource: {
+			type: Array,
+			value: [],
+			observer() {
+				this.rebuildData();
+				this.rebuildWidthRender();
+			}
+		},
+		// table的高度, 溢出可滚动
+		height: { 
+			type: String,
+			value: 'auto'
+		},
+		width: {
+			type: [Number, String],
+			value: '100%'
+		},
+		// 是否带有纵向边框
+		stripe: {
+			type: Boolean,
+			value: false
+		},
+		// 是否带有纵向边框
+		border: {
+			type: Boolean,
+			value: false
+		},
+		empty: {
+			type: String,
+			value: '暂无数据~'
+		},
+		scrollX: {
+			type: Boolean,
+			value: false
+		},
+		scrollY: {
+			type: Boolean,
+			value: false
+		},
+	},
+	data: {
+		scrolWidth: 0,
+		doLayouted: false,
+		columns: [],
+		rebuildData: []
+	},
+	lifetimes: {
+		ready() {
+			this.$emit('ready', this);
+		}
+	},
+	methods: {
+		handleRowClick(e) {
+			this.triggerEvent('row-click', e.currentTarget.dataset);
+		},
+
+		refreshColumn(child, k, v) {
+			const index = this.children.findIndex(i => i === child);
+
+			if (index === -1) return;
+
+			this.setData({
+				[`columns[${index}].${k}`]: v
+			});
+
+			this.refreshLayout();
+			this.rebuildWidthRender();
+		},
+
+		refreshLayout(columns) {
+			this.createSelectorQuery()
+				.selectAll('.mc-table__thead-td')
+				.boundingClientRect((nodes) => {
+					let scrolWidth = 0;
+					nodes.forEach((node, index) => {
+						this.setData({
+							[`columns[${index}].realWidth`]: node.width
+						});
+						scrolWidth += node.width;
+					});
+
+					this.setData({
+						doLayouted: true,
+						scrolWidth
+					});
+				})
+				.exec();
+		},
+
+		rebuildData() {
+			const { dataSource } = this.data;
+			this.setData({
+				rebuildData: dataSource
+			});
+		},
+
+		rebuildWidthRender() {
+			const { columns, rebuildData } = this.data;
+			if (!columns.some(i => (i.renderCell || i.renderHeader))) return;
+
+			rebuildData.forEach((row, rowIndex) => {
+				rebuildData[rowIndex]._renders = {
+					cell: {},
+					header: {}
+				};
+				columns.forEach((column, columnIndex) => {
+					rebuildData[rowIndex]._renders = [];
+					rebuildData[rowIndex]._renders = [];
+					if (column.renderCell) {
+						this.setData({
+							[`rebuildData[${rowIndex}]._renders.cell[${columnIndex}]`]: column.renderCell({
+								row,
+								column,
+								rowIndex,
+								columnIndex
+							}) || ''
+						});
+					}
+				});
+			});
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-table {
+	position: relative;
+	font-size: 28rpx;
+	background: #fff;  
+	border-right: none;
+	border-radius: 8rpx;  
+	overflow: hidden;
+	&__thead {
+		border-bottom: none;
+		display: flex;
+		justify-content: flex-start;
+		border-top-right-radius: 8rpx;
+		border-top-left-radius: 8rpx;
+		overflow: visible;
+		color: #909399;
+		border: 1px solid #ebeef5;
+		box-sizing: border-box;
+		&.has-border {
+			.mc-table__thead-td {
+				border-right: 1rpx solid #ebeef5;
+			}
+			.mc-table__thead-td:last-child {
+				border-right: none;
+			}
+		}
+	}
+	&__thead-td {
+		padding: 20rpx 10rpx;
+		font-weight: bold;
+		display: inline-block;   
+		
+		border-right: 1rpx solid #fff;
+		&::last-child {
+			border-right: none;
+		}
+
+		&.is-center {
+			text-align: center;
+		}
+		&.is-right {
+			text-align: right;
+		}
+	}
+
+	&__tbody {
+		box-sizing: border-box;
+		font-size: 28rpx;
+		color: #666;
+		border: 1px solid #ebeef5;
+		border-top: none;
+		border-bottom-left-radius: 8rpx;
+		border-bottom-right-radius: 8rpx;
+
+	}
+	&__tbody-tr {
+		display: flex;
+		border-bottom: 1px solid #ebeef5;
+		&::last-child {
+			border-bottom-left-radius: 8rpx;
+			border-bottom-right-radius: 8rpx;
+		}
+		&.has-stripe {
+			background: #fff;
+			border-bottom: none;
+			&:nth-child(2n) {
+				background: #F6F6F6;
+			}
+		}
+		&.has-border {
+			.mc-table__tbody-td {
+				border-right: 1rpx solid #F6F6F6;
+			}
+			.mc-table__tbody-td:last-child {  
+				border-right: none;
+			}
+		}
+	}
+	&__tbody-td {
+		white-space: wrap;
+		padding: 20rpx 10rpx;
+		&.is-center {
+			text-align: center;
+		}
+		&.is-right {
+			text-align: right;
+		}
+	}
+}
+
+.mc-table__empty {
+	display: flex;
+	padding: 50rpx;
+	color: #666;
+	justify-content: center;
+}
+
+</style>
+<config>
+{
+	"component": true
+}
+</config>

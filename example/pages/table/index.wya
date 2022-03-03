@@ -1,0 +1,66 @@
+<template>
+	<mc-table 
+		dataSource="{{ dataSource }}" 
+		bind:row-click="handleClick"
+	>
+		<mc-table-column 
+			align="center"
+			prop="id"
+			label="省市区"
+		/>
+		<mc-table-column 
+			prop="name"
+			label="城镇乡"
+			headerStyle="color: red;"
+			cellStyle="color: red;"
+		/>
+		<mc-table-column 
+			prop="address"
+			label="地址"
+			renderCell="{{ renderCell }}"
+		/>
+	</mc-table>
+</template>
+
+<script>
+
+const dataSource = Array
+	.from({
+		length: 100
+	})
+	.map((i, index) => ({
+		id: index,
+		name: '浙江省',
+		address: '啦啦啦',
+	}));
+const renderCell = ({ row, column, rowIndex, columnIndex }) => {
+	return row.address + rowIndex;
+};
+
+Page({
+	data: {
+		dataSource,
+		renderCell: () => {}
+	},
+	onLoad() {
+		setTimeout(() => {
+			this.setData({
+				renderCell
+			});
+		}, 1000);
+	},
+
+	handleClick(e) {
+		console.log(e.detail);
+	}
+});
+</script>
+
+<config>
+{
+	"usingComponents": {
+		"mc-table": "../../components/table/index",
+		"mc-table-column": "../../components/table/table-column"
+	}
+}
+</config>

@@ -1,0 +1,101 @@
+<template>
+	<view />
+</template>
+<script>
+import { getUid } from '../common/utils';
+import McComponent from '../common/component';
+
+McComponent({
+	relations: {
+		'./index': {
+			type: 'ancestor',
+			linked(parent) {
+				this.parent = parent;
+			},
+			unlinked() {
+				this.parent = null;
+			}
+		}
+	},
+	props: {
+		width: {
+			type: Number,
+			value: '',
+			observer(v) {
+				this.refresh('width', v);
+			}
+		},
+		label: {
+			type: String,
+			value: '',
+			observer(v) {
+				this.refresh('label', v);
+			}
+		},
+		prop: {
+			type: String,
+			observer(v) {
+				this.refresh('prop', v);
+			}
+		},
+		align: {
+			type: String,
+			observer(v) {
+				this.refresh('align', v);
+			}
+		},
+		headerStyle: {
+			type: String,
+			observer(v) {
+				this.refresh('headerStyle', v);
+			}
+		},
+		cellStyle: {
+			type: String,
+			observer(v) {
+				this.refresh('cellStyle', v);
+			}
+		},
+		renderCell: {
+			type: Function,
+			observer(v) {
+				this.refresh('renderCell', v);
+			}
+		},
+		renderHeader: {
+			type: Function,
+			observer(v) {
+				this.refresh('renderHeader', v);
+			}
+		}
+	},
+	data: {
+		columnId: '',
+		headerId: '',
+	},
+	lifetimes: {
+		attached() {
+			this.setData({
+				columnId: getUid('table-column'),
+				headerId: getUid('table-header')
+			});
+		}
+	},
+	methods: {
+		refresh(key, v) {
+			this.parent 
+				&& this.parent.refreshColumn(this, key, v);		
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+</style>
+<config>
+{
+	"component": true
+}
+</config>
