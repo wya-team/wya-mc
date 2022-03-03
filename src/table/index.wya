@@ -133,6 +133,8 @@ McComponent({
 			type: String,
 			value: '暂无数据~'
 		},
+
+		// TODO: 还有很多需要考虑，如固定列，固定表头，结合recycle-list分页加载
 		scrollX: {
 			type: Boolean,
 			value: false
