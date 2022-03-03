@@ -95,7 +95,7 @@ McComponent({
 		animated: {
 			type: Boolean,
 			observer() {
-				this.children.forEach((child, index) => {
+				this.children && this.children.forEach((child, index) => {
 					return child.updateRender(index === this.data.currentIndex, this);
 				});
 			}
