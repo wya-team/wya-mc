@@ -20,11 +20,12 @@ McComponent({
 	props: {
 		width: {
 			type: Number,
-			value: '',
+			value: 80,
 			observer(v) {
 				this.refresh('width', v);
 			}
 		},
+
 		label: {
 			type: String,
 			value: '',
@@ -72,6 +73,7 @@ McComponent({
 	data: {
 		columnId: '',
 		headerId: '',
+		realWidth: '',
 	},
 	lifetimes: {
 		attached() {

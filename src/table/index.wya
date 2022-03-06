@@ -1,20 +1,22 @@
 <template>
 	<scroll-view 
+		id="{{ tableId }}"
 		scroll-x="{{ scrollX }}" 
-		style="width: 100%; {{ mcStyle }}"  
+		style="{{ mcStyle }}"  
 		class="mc-table mc-class"
 	>
 		<!-- 表格头 start -->
 		<view 
+			wx:if="{{ doLayouted }}"
 			class="mc-table__thead {{ border ? 'has-border' : ''}} header-row-class-name" 
-			style="width: {{ scrolWidth ? scrolWidth + 'px' : 'auto' }};"
+			style="{{ scrollWidthStyle }}"
 		>
 			<view 
 				wx:for="{{ columns }}"
 				wx:for-item="column"  
 				wx:key="headerId" 
 				class="mc-table__thead-td is-{{ column.align }}" 
-				style="{{ column.width ? 'width: ' + column.width + 'rpx' : 'flex: 1' }}; {{ column.headerStyle }}"
+				style="width:  {{ column.realWidth || column.width }}px; {{ column.headerStyle }}"
 			>
 				<text>{{ column.label }}</text>
 				<!-- TODO: sortable -->
@@ -23,11 +25,10 @@
 		<!-- 表格头 end -->
 		
 		<!-- 表格体 start -->
-		<scroll-view 
+		<view 
 			wx:if="{{ doLayouted }}"
-			scroll-y="{{ scrollY }}" 
 			class="mc-table__tbody"
-			style="width: {{ scrolWidth ? scrolWidth + 'px' : 'auto' }}px; height:{{ height ? height : 'auto' }};" 
+			style="{{ scrollWidthStyle  }}; height:{{ height ? height : 'auto' }};" 
 		>
 			<block 
 				wx:if="{{ rebuildData.length > 0 }}" 
@@ -47,7 +48,7 @@
 						data-row-index="{{ index }}" 
 						data-column="{{ column }}"
 						data-column-index="{{ $index }}"
-						style="width:{{ column.realWidth }}px; {{ column.cellStyle }}" 
+						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}" 
 						bind:tap="handleRowClick"
 					>	
 						<rich-text 
@@ -64,12 +65,13 @@
 				<view class="mc-table__empty">{{ empty }}</view>
 				<slot name="empty" />
 			</block>
-		</scroll-view>
+		</view>
 		<!-- 表格体 end -->
 	</scroll-view>
 </template>
 <script>
 import McComponent from '../common/component';
+import { getUid } from '../common/utils';
 
 McComponent({
 	externalClasses: ['header-row-class-name', 'row-class-name', 'cell-class-name'], 
@@ -132,26 +134,34 @@ McComponent({
 		empty: {
 			type: String,
 			value: '暂无数据~'
-		},
-
-		// TODO: 还有很多需要考虑，如固定列，固定表头，结合recycle-list分页加载
-		scrollX: {
-			type: Boolean,
-			value: false
-		},
-		scrollY: {
-			type: Boolean,
-			value: false
-		},
+		}
 	},
 	data: {
-		scrolWidth: 0,
+		tableId: '',
+		containerWidth: 0,
+		scrollX: false,
+		scrollWidthStyle: 'width: auto',
 		doLayouted: false,
 		columns: [],
 		rebuildData: []
 	},
 	lifetimes: {
 		ready() {
+			this.setData({
+				tableId: getUid('table'),
+			});
+
+			this.createSelectorQuery()
+				.select(`#${this.data.tableId}`)
+				.boundingClientRect((res) => {
+					this.setData({
+						containerWidth: res.width,
+						scrollWidthStyle: `width: ${res.width}px;`
+					});
+					this.refreshLayout();
+				})
+				.exec();
+
 			this.$emit('ready', this);
 		}
 	},
@@ -173,24 +183,30 @@ McComponent({
 			this.rebuildWidthRender();
 		},
 
-		refreshLayout(columns) {
-			this.createSelectorQuery()
-				.selectAll('.mc-table__thead-td')
-				.boundingClientRect((nodes) => {
-					let scrolWidth = 0;
-					nodes.forEach((node, index) => {
-						this.setData({
-							[`columns[${index}].realWidth`]: node.width
-						});
-						scrolWidth += node.width;
-					});
+		refreshLayout() {
+			if (!this.data.containerWidth) return;
+			const width = this.data.columns.reduce((pre, cur) => {
+				 pre += cur.width;
+				 return pre;
+			}, 0);
 
+			if (width > this.data.containerWidth) {
+				this.setData({
+					scrollX: true,
+					scrollWidthStyle: `width: ${width}px;`
+				});
+			} else {
+				let levelWidth = this.data.containerWidth - width;
+				this.data.columns.forEach((item, index) => {
 					this.setData({
-						doLayouted: true,
-						scrolWidth
+						[`columns[${index}].realWidth`]: (item.width) + levelWidth * (item.width / this.data.containerWidth) 
 					});
-				})
-				.exec();
+				});
+			}
+
+			this.setData({
+				doLayouted: true
+			});
 		},
 
 		rebuildData() {
@@ -236,9 +252,7 @@ McComponent({
 	position: relative;
 	font-size: 28rpx;
 	background: #fff;  
-	border-right: none;
-	border-radius: 8rpx;  
-	overflow: hidden;
+	width: 100%; 
 	&__thead {
 		border-bottom: none;
 		display: flex;
