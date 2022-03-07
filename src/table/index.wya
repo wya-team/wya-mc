@@ -14,12 +14,32 @@
 			<view 
 				wx:for="{{ columns }}"
 				wx:for-item="column"  
+				wx:for-index="index"  
 				wx:key="headerId" 
-				class="mc-table__thead-td is-{{ column.align }}" 
-				style="width:  {{ column.realWidth || column.width }}px; {{ column.headerStyle }}"
+				class="mc-table__thead-td" 
+				style="width:  {{ column.realWidth || column.width }}px;"
 			>
-				<text>{{ column.label }}</text>
-				<!-- TODO: sortable -->
+				<view 
+					class="mc-table__header is-{{ column.align }}" 
+					style="{{ column.headerStyle }}"
+					data-index="{{ index }}"
+					data-order="{{ defaultSort.order }}"
+					bind:tap="handleHeaderClick"
+				>
+					<text>{{ column.label }}</text>
+					<view class="mc-table__sortable">
+						<mc-icon 
+							type="triangle-up" 
+							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#999' }}" 
+							style="margin-bottom: -12rpx"
+						/>
+						<mc-icon 
+							type="triangle-down" 
+							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'descending' ? '#000' : '#999' }}" 
+							style="margin-top: -12rpx" 
+						/>
+					</view>
+				</view>
 			</view>
 		</view>  
 		<!-- 表格头 end -->
@@ -134,6 +154,13 @@ McComponent({
 		empty: {
 			type: String,
 			value: '暂无数据~'
+		},
+		defaultSort: {
+			type: Object,
+			value: {
+				prop: '',
+				order: ''
+			}
 		}
 	},
 	data: {
@@ -168,6 +195,33 @@ McComponent({
 	methods: {
 		handleRowClick(e) {
 			this.triggerEvent('row-click', e.currentTarget.dataset);
+		},
+
+		handleHeaderClick(e) {
+			let { index, order } = e.currentTarget.dataset;
+			const { prop } = this.data.columns[index];
+
+			if (this.data.defaultSort.prop !== prop) {
+				order = '';
+			}
+
+			if (!order) {
+				order = 'ascending';
+			} else if (order === 'ascending') {
+				order = 'descending';
+			} else {
+				order = '';
+			} 
+
+			// TODO: 内部提取，修改了父层
+			this.setData({
+				defaultSort: {
+					prop,
+					order
+				}
+			});
+
+			this.triggerEvent('sort-change', { prop, order });
 		},
 
 		refreshColumn(child, k, v) {
@@ -281,13 +335,6 @@ McComponent({
 		&::last-child {
 			border-right: none;
 		}
-
-		&.is-center {
-			text-align: center;
-		}
-		&.is-right {
-			text-align: right;
-		}
 	}
 
 	&__tbody {
@@ -323,6 +370,7 @@ McComponent({
 			}
 		}
 	}
+
 	&__tbody-td {
 		white-space: wrap;
 		padding: 20rpx 10rpx;
@@ -333,18 +381,40 @@ McComponent({
 			text-align: right;
 		}
 	}
-}
 
-.mc-table__empty {
-	display: flex;
-	padding: 50rpx;
-	color: #666;
-	justify-content: center;
+	&__header {
+		display: flex;
+		align-items: center;
+		&.is-center {
+			justify-content: center;
+		}
+		&.is-right {
+			justify-content: flex-end;
+		}
+	}
+
+	&__sortable {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: -5rpx;
+	}
+
+	&__empty {
+		display: flex;
+		padding: 50rpx;
+		color: #666;
+		justify-content: center;
+	}
+
 }
 
 </style>
 <config>
 {
-	"component": true
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
 }
 </config>

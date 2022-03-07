@@ -15,6 +15,7 @@
 			cellStyle="color: red;"
 		/>
 		<mc-table-column 
+			align="right"
 			prop="address"
 			label="地址"
 			renderCell="{{ renderCell }}"
