@@ -259,7 +259,7 @@ McComponent({
 				}
 				this.$emit('change', currentValueBak);
 			} catch (e) {
-				throw new VcError('vc-cascader', e);
+				throw new Error('mc-cascader', e);
 			} finally {
 				// this.data.rebuildData[colIndex][rowIndex].loading 
 				// && this.setData({

@@ -98,7 +98,7 @@ McComponent({
 		getField(prop) {
 			const field = this.children.find(child => child.prop === prop);
 
-			if (!field) throw new VcError('form', '请选择有用的prop值');
+			if (!field) throw new Error('form', '请选择有用的prop值');
 
 			return field;
 		},
