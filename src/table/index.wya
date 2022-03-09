@@ -89,14 +89,14 @@
 					</view>        
 				</view>
 			</block>
-			<!-- 列表无数据处理 -->
-			<block wx:if="{{ dataSource.length === 0 }}">
-				<view class="mc-table__empty">{{ empty }}</view>
-				<slot name="empty" />
-			</block>
 		</view>
 		<!-- 表格体 end -->
 	</scroll-view>
+	<!-- 列表无数据处理 -->
+	<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
+		<slot name="empty" />
+		<view wx:if="{{ empty }}">{{ empty }}</view>
+	</view>
 </template>
 <script>
 import McComponent from '../common/component';
@@ -409,11 +409,13 @@ McComponent({
 
 	&__empty {
 		display: flex;
+		flex-direction: column;
 		padding: 50rpx;
+		background: #fff;  
 		color: #666;
 		justify-content: center;
+		align-items: center;
 	}
-
 }
 
 </style>
