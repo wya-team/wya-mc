@@ -18,6 +18,12 @@
 			align="right"
 			prop="address"
 			label="地址"
+			renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
+		/>
+		<mc-table-column 
+			align="right"
+			prop="address"
+			label="地址"
 			renderCell="{{ renderCell }}"
 		/>
 	</mc-table>
@@ -32,7 +38,7 @@ const dataSource = Array
 	.map((i, index) => ({
 		id: index,
 		name: '浙江省',
-		address: '啦啦啦',
+		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {
 	return row.address + rowIndex;

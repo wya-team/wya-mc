@@ -1,0 +1,13 @@
+function isVNodes(v) {
+	return v && (typeof v === 'string' || v.constructor === 'Array');
+}
+
+function isArray(v) {
+	return v && (v.constructor === 'Array');
+}
+
+
+module.exports = {
+	isVNodes: isVNodes,
+	isArray: isArray
+};

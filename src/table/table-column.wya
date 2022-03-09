@@ -58,25 +58,31 @@ McComponent({
 			}
 		},
 		renderCell: {
-			type: Function,
+			type: String,
+			optionalTypes: [Function, Array],
 			observer(v) {
-				this.refresh('renderCell', v);
+				this.setCellNodes(v);
 			}
 		},
 		renderHeader: {
-			type: Function,
+			type: String,
+			optionalTypes: [Function, Array],
 			observer(v) {
-				this.refresh('renderHeader', v);
+				this.setHeaderNodes(v);
 			}
 		}
 	},
 	data: {
 		columnId: '',
 		headerId: '',
-		realWidth: '',
+		cellNodes: [],
+		headerNodes: [],
 	},
 	lifetimes: {
 		attached() {
+			this.setCellNodes(true);
+			this.setHeaderNodes(true);
+			
 			this.setData({
 				columnId: getUid('table-column'),
 				headerId: getUid('table-header')
@@ -87,6 +93,70 @@ McComponent({
 		refresh(key, v) {
 			this.parent 
 				&& this.parent.refreshColumn(this, key, v);		
+		},
+
+		setCellNodes(isInit) {
+			let v = this.data.renderCell;
+
+			if (typeof v === 'function') {
+				this.refresh('renderCell', v);
+			} else if (typeof v === 'object') {
+				this.refresh('cellNodes', v);
+			} else if (typeof v === 'string') {
+				v = this.jsx2vnode(v);
+				isInit && this.setData({
+					cellNodes: v
+				});
+				this.refresh('cellNodes', v);
+			}
+
+			return v;
+		},
+
+		setHeaderNodes(isInit) {
+			let v = this.data.renderHeader;
+			if (typeof v === 'function') {
+				this.refresh('renderHeader', v);
+			} else if (typeof v === 'object') {
+				this.refresh('headerNodes', v);
+			} else if (typeof v === 'string') {
+				v = this.jsx2vnode(v);
+				isInit && this.setData({
+					headerNodes: v
+				});
+				this.refresh('headerNodes', v);
+			}
+
+			return v;
+		},
+
+		jsx2vnode(v) {
+			return [];
+			// return [
+			// 	{
+			// 		type: 'text',
+			// 		attrs: {
+
+			// 		},
+			// 		children: '2222'
+			// 	},
+			// 	{
+			// 		type: 'view',
+			// 		attrs: {
+
+			// 		},
+			// 		children: [
+			// 			{
+			// 				type: 'text',
+			// 				children: '1111'
+			// 			},
+			// 			{
+			// 				type: 'text',
+			// 				children: '2222'
+			// 			}
+			// 		]
+			// 	}
+			// ];
 		}
 	}
 });

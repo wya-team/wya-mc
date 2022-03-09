@@ -1,0 +1,76 @@
+<template>
+	<wxs src="./helper.wxs" module="helper" />
+	<block wx:for="{{ nodes }}" wx:key="index">
+		<view wx:if="{{ item.type === 'view' }}">
+			<mc-table-cell 
+				wx:if="{{ helper.isArray(item.children) }}" 
+				nodes="{{ item.children }}" 
+				row="{{ row }}"
+				rowIndex="{{ rowIndex }}"
+				columnIndex="{{ columnIndex }}"
+				level="{{ level + 1 }}"
+			/>
+			<block wx:elif="{{ item.children }}">{{ item.children }}</block>
+		</view>
+		<text wx:elif="{{ item.type === 'text' }}">
+			<mc-table-cell 
+				wx:if="{{ helper.isArray(item.children) }}" 
+				nodes="{{ item.children }}" 
+				row="{{ row }}"
+				rowIndex="{{ rowIndex }}"
+				columnIndex="{{ columnIndex }}"
+				level="{{ level + 1 }}"
+			/>
+			<block wx:elif="{{ item.children }}">{{ item.children }}</block>
+		</text>
+		<image wx:elif="{{ item.type === 'image' }}" />
+	</block>
+</template>
+<script>
+import { getUid } from '../common/utils';
+import McComponent from '../common/component';
+
+McComponent({
+	props: {
+		nodes: {
+			type: Array,
+			value: {}
+		},
+		row: {
+			type: Object
+		},
+		rowIndex: {
+			type: Number
+		},
+		columnIndex: {
+			type: Number
+		},
+		level: {
+			type: Number
+		}
+	},
+	data: {
+		cellId: '',
+	},
+	lifetimes: {
+		attached() {
+			this.setData({
+				cellId: getUid('table-cell'),
+			});
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-table-cell": "./table-cell"
+	}
+}
+</config>

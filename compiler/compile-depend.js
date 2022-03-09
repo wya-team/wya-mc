@@ -31,6 +31,10 @@ module.exports = (callback) => {
 		const PORTAL_REGEX = /\/portal\/index/;
 
 		const fn = (content, filePath) => {
+			if (filePath.includes('/table/table-cell.wya')) {
+				return [];
+			}
+
 			let $ = htmldom(content);
 			const script = $('script').html();
 			const config = JSON.parse($('config').html());
@@ -49,6 +53,7 @@ module.exports = (callback) => {
 						relyOnCompPath += '.wya';
 					}
 					const data = fs.readFileSync(relyOnCompPath, 'utf8');
+
 					let childDependComps = fn(data, relyOnCompPath);
 					pre.push(...childDependComps);
 
@@ -62,6 +67,7 @@ module.exports = (callback) => {
 	
 		let extName = extname(file.path);
 		let content = file.contents.toString();
+
 		// 编译wya文件
 		if (extName === '.wya') {
 			dependComps = unique(dependComps, fn(content, file.path));

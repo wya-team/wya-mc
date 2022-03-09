@@ -1,4 +1,5 @@
 <template>
+	<wxs src="./helper.wxs" module="helper" />
 	<scroll-view 
 		id="{{ tableId }}"
 		scroll-x="{{ scrollX }}" 
@@ -71,11 +72,19 @@
 						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}" 
 						bind:tap="handleRowClick"
 					>	
+						<!-- 目前wxs和template不支持传递func -->
 						<rich-text 
 							wx:if="{{ rebuildData[index]._renders.cell[$index] }}"
 							nodes="{{ rebuildData[index]._renders.cell[$index] }}" 
 						/>
-						<!-- TODO: 如果nodes是个对象，可以支持简单vnode语法 -->
+						<mc-table-cell 
+							wx:elif="{{ helper.isVNodes(column.renderCell) }}" 
+							nodes="{{ column.cellNodes }}"
+							row="{{ dataSource[index] }}"
+							rowIndex="{{ index }}"
+							columnIndex="{{ $index }}"
+							level="{{ 1 }}"
+						/>
 						<text wx:else>{{ row[column.prop] }}</text>
 					</view>        
 				</view>
@@ -272,7 +281,7 @@ McComponent({
 
 		rebuildWidthRender() {
 			const { columns, rebuildData } = this.data;
-			if (!columns.some(i => (i.renderCell || i.renderHeader))) return;
+			if (!columns.some(i => (typeof i.renderCell == 'function' || typeof i.renderHeader == 'function'))) return;
 
 			rebuildData.forEach((row, rowIndex) => {
 				rebuildData[rowIndex]._renders = {
@@ -280,9 +289,7 @@ McComponent({
 					header: {}
 				};
 				columns.forEach((column, columnIndex) => {
-					rebuildData[rowIndex]._renders = [];
-					rebuildData[rowIndex]._renders = [];
-					if (column.renderCell) {
+					if (typeof column.renderCell === 'function') {
 						this.setData({
 							[`rebuildData[${rowIndex}]._renders.cell[${columnIndex}]`]: column.renderCell({
 								row,
@@ -414,7 +421,8 @@ McComponent({
 {
 	"component": true,
 	"usingComponents": {
-		"mc-icon": "../icon/index"
+		"mc-icon": "../icon/index",
+		"mc-table-cell": "./table-cell"
 	}
 }
 </config>
