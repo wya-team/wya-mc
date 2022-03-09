@@ -90,7 +90,7 @@
 				</view>
 			</block>
 			<!-- 列表无数据处理 -->
-			<block wx:if="{{ data.length === 0 }}">
+			<block wx:if="{{ dataSource.length === 0 }}">
 				<view class="mc-table__empty">{{ empty }}</view>
 				<slot name="empty" />
 			</block>
