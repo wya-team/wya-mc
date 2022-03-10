@@ -45,11 +45,11 @@ McComponent({
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-xuanze:before {
+.icon-checkbox:before {
   content: "\e607";
 }
 
-.icon-xuanzhong:before {
+.icon-checkbox-checked:before {
   content: "\e605";
 }
 

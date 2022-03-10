@@ -68,14 +68,14 @@ McComponent({
 	},
 	data: {
 		currentValue: false,
-		activeIcon: 'xuanzhong',
-		icon: 'xuanze'
+		activeIcon: 'checkbox-checked',
+		icon: 'checkbox'
 	},
 	observers: {
 		'shape': function (val) {
 			this.setData({
-				activeIcon: val === 'square' ? 'xuanzhong' : 'select-checked',
-				icon: val === 'square' ? 'xuanze' : 'select'
+				activeIcon: val === 'square' ? 'checkbox-checked' : 'select-checked',
+				icon: val === 'square' ? 'checkbox' : 'select'
 			});
 		}
 	},
