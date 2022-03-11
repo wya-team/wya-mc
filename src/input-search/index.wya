@@ -26,6 +26,7 @@
 			bind:blur="handleBlur"
 			bind:focus="handleFocus"
 			bind:confirm="handleConfirm"
+			bind:clear="handleClear"
 			bind:keyboardheightchange="handleKeyboardHeightChange"
 		>
 			<view slot="prepend">
@@ -77,6 +78,9 @@ McComponent({
 		},
 		handleConfirm(event) {
 			this.$emit('confirm', event.detail);
+		},
+		handleClear(event) {
+			this.$emit('clear', event.detail);
 		},
 		handleKeyboardHeightChange(event) {
 			this.$emit('keyboardheightchange', event.detail);

@@ -3,12 +3,12 @@
 		<view class="mc-radio-icon" >
 			<mc-icon
 				type="{{ value === name ? 'select-checked' : 'select' }}"
-				style="color: {{ disabled ? '#999' : color}}"
+				style="color: {{ disabled ? '#999' : value === name ? activeColor : color }}"
 				mcStyle="{{ iconStyle }}"
 			>
 			</mc-icon>
 		</view>
-		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e'}}">{{ label }}</text>
+		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e' }}">{{ label }}</text>
 		<slot wx:else />
 	</view>
 </template>
@@ -46,6 +46,10 @@ McComponent({
 			type: [Boolean, String, Number],
 		},
 		color: {
+			type: String,
+			value: '#26be76'
+		},
+		activeColor: {
 			type: String,
 			value: '#26be76'
 		},

@@ -3,11 +3,11 @@
 		<view class="mc-checkbox-icon">
 			<mc-icon
 				type="{{ currentValue ? activeIcon : icon }}"
-				style="color: {{ disabled ? '#999' : color}}"
+				style="color: {{ disabled ? '#999' : currentValue ? activeColor : color}}"
 			>
 			</mc-icon>
 		</view>
-		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e'}}">{{ label }}</text>
+		<text wx:if="{{label}}" style="color: {{ disabled ? '#999' : '#515a6e' }}">{{ label }}</text>
 		<slot wx:else />
 	</view>
 </template>
@@ -52,6 +52,10 @@ McComponent({
 			value: 'square', // round, square,
 		},
 		color: {
+			type: String,
+			value: '#26be76'
+		},
+		activeColor: {
 			type: String,
 			value: '#26be76'
 		},
