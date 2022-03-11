@@ -28,7 +28,7 @@
 					bind:tap="handleHeaderClick"
 				>
 					<text>{{ column.label }}</text>
-					<view class="mc-table__sortable">
+					<view wx:if="{{ column.sortable }}" class="mc-table__sortable">
 						<mc-icon 
 							type="triangle-up" 
 							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#999' }}" 
@@ -187,18 +187,20 @@ McComponent({
 				tableId: getUid('table'),
 			});
 
+			this.$emit('ready', this);
+		},
+		attached() {
 			this.createSelectorQuery()
 				.select(`#${this.data.tableId}`)
 				.boundingClientRect((res) => {
+					const width = res.width || wx.getSystemInfoSync().windowWidth;
 					this.setData({
-						containerWidth: res.width,
-						scrollWidthStyle: `width: ${res.width}px;`
+						containerWidth: width,
+						scrollWidthStyle: `width: ${width}px;`
 					});
 					this.refreshLayout();
 				})
 				.exec();
-
-			this.$emit('ready', this);
 		}
 	},
 	methods: {
