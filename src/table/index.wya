@@ -193,7 +193,7 @@ McComponent({
 			this.createSelectorQuery()
 				.select(`#${this.data.tableId}`)
 				.boundingClientRect((res) => {
-					const width = res.width || wx.getSystemInfoSync().windowWidth;
+					const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
 					this.setData({
 						containerWidth: width,
 						scrollWidthStyle: `width: ${width}px;`
