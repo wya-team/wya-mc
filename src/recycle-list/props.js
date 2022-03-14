@@ -39,5 +39,13 @@ export const coreProps = {
 	current: {
 		type: [String, Number],
 		value: '0',
+	},
+	pullDownStyle: {
+		type: String,
+		value: '',
+	},
+	pullUpStyle: {
+		type: String,
+		value: '',
 	}
 };

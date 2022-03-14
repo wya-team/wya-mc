@@ -11,7 +11,11 @@
 	>
 		<slot />
 
-		<view wx:if="{{ showScrollStatus }}" class="mc-recycle-list-core__pull-up pull-up-class">
+		<view 
+			wx:if="{{ showScrollStatus }}" 
+			class="mc-recycle-list-core__pull-up pull-up-class"
+			style="{{ pullUpStyle }}"
+		>
 			<text class="mc-recycle-list-core__text">{{ SCROLL_STATUS[scrollStatus] }}</text>
 		</view>
 		<block wx:if="{{ scrollStatus !== 0 && scrollStatus !== 1 }}">
@@ -144,8 +148,8 @@ McComponent({
 		align-items: center;
 		justify-content: center;
 		height: 60rpx;
+		color: #333;
 		.mc-recycle-list-core__text {
-			color: #333;
 			line-height: 60rpx;
 			font-size: 24rpx;
 		}

@@ -20,6 +20,7 @@
 				showScrollStatus="{{ showScrollStatus }}"
 				disabled="{{ disabled }}"
 				scrollTop="{{ scrollTop }}"
+				pullUpStyle="{{ pullUpStyle }}"
 				lower-threshold="{{ lowerThreshold }}"
 				listen-scroll="{{ listenScroll }}"
 				height="100%"
@@ -31,7 +32,7 @@
 					wx:if="{{ pull }}"
 					id="mc-refresh-view"
 					class="mc-recycle-list__pull-down pull-down-class" 
-					style="height: {{ refreshHeight }}rpx;"
+					style="height: {{ refreshHeight }}rpx; {{ pullDownStyle }}"
 				>
 					<text class="mc-recycle-list__text">{{ PULL_DOWN_STATUS[pullDownStatus] }}</text>
 				</view>
@@ -63,7 +64,7 @@ McComponent({
 		pull: {
 			type: Boolean,
 			value: true
-		},
+		}
 	},
 	data: {
 		y: -60,
