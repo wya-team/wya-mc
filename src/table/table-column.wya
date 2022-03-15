@@ -58,15 +58,14 @@ McComponent({
 			}
 		},
 		renderCell: {
-			type: String,
-			optionalTypes: [Function, Array],
+			type: Function,
+			// optionalTypes: [String, Array], ~声明后会异常， 如： iOS真机Page中data初始值不能为() => {}, 否者会报t.constructor ...
 			observer(v) {
 				this.setCellNodes(v);
 			}
 		},
 		renderHeader: {
-			type: String,
-			optionalTypes: [Function, Array],
+			type: Function,
 			observer(v) {
 				this.setHeaderNodes(v);
 			}
