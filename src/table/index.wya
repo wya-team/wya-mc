@@ -10,7 +10,7 @@
 		<view 
 			wx:if="{{ doLayouted }}"
 			class="mc-table__thead {{ border ? 'has-border' : ''}} header-row-class-name" 
-			style="{{ scrollWidthStyle }}"
+			style="{{ scrollWidthStyle }};{{ tHeadStyle }}"
 		>
 			<view 
 				wx:for="{{ columns }}"
@@ -58,7 +58,10 @@
 				wx:for="{{ rebuildData }}" 
 				wx:key="index" 
 			>
-				<view class="mc-table__tbody-tr {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class-name">
+				<view 
+					class="mc-table__tbody-tr {{ rowCenter ? 'is-center' : '' }} {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class-name"
+					style="{{ tBodyTrStyle  }}"
+				>
 					<view 
 						wx:for="{{ columns }}" 
 						wx:for-item="column" 
@@ -170,6 +173,14 @@ McComponent({
 				prop: '',
 				order: ''
 			}
+		},
+		tHeadStyle: {
+			type: String,
+			value: ''
+		},
+		tBodyTrStyle: {
+			type: String,
+			value: ''
 		}
 	},
 	data: {
@@ -316,16 +327,20 @@ McComponent({
 	font-size: 28rpx;
 	background: #fff;  
 	width: 100%; 
+
 	&__thead {
 		border-bottom: none;
 		display: flex;
 		justify-content: flex-start;
+		align-items: center;
 		border-top-right-radius: 8rpx;
 		border-top-left-radius: 8rpx;
 		overflow: visible;
-		color: #909399;
+		color: #666;
 		border: 1px solid #ebeef5;
 		box-sizing: border-box;
+		font-size: 24rpx;
+		font-weight: 400;
 		&.has-border {
 			.mc-table__thead-td {
 				border-right: 1rpx solid #ebeef5;
@@ -335,6 +350,7 @@ McComponent({
 			}
 		}
 	}
+
 	&__thead-td {
 		padding: 20rpx 10rpx;
 		font-weight: bold;
@@ -348,17 +364,18 @@ McComponent({
 
 	&__tbody {
 		box-sizing: border-box;
-		font-size: 28rpx;
-		color: #666;
+		font-size: 24rpx;
+		color: #000;
 		border: 1px solid #ebeef5;
 		border-top: none;
 		border-bottom-left-radius: 8rpx;
 		border-bottom-right-radius: 8rpx;
-
 	}
+
 	&__tbody-tr {
 		display: flex;
 		border-bottom: 1px solid #ebeef5;
+		align-items: center;
 		&::last-child {
 			border-bottom-left-radius: 8rpx;
 			border-bottom-right-radius: 8rpx;

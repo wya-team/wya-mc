@@ -6,7 +6,8 @@
 		<mc-table-column 
 			align="center"
 			prop="id"
-			label="省市区"
+			label="省市区 省市区 省市区 省市区 省市区 省"
+			headerStyle="text-align: center"
 		/>
 		<mc-table-column 
 			prop="name"
@@ -37,7 +38,7 @@ const dataSource = Array
 	})
 	.map((i, index) => ({
 		id: index,
-		name: '浙江省',
+		name: '浙江省浙江省浙江省浙江省',
 		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {
