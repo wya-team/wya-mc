@@ -54,6 +54,37 @@ McComponent({
 				this.refresh('align', v);
 			}
 		},
+		prefix: {
+			type: String,
+			value: '',
+			observer(v) {
+				this.refresh('prefix', v);
+			}
+		},
+		suffix: {
+			type: String,
+			value: '',
+			observer(v) {
+				this.refresh('suffix', v);
+			}
+		},
+
+		prefixStyle: {
+			type: String,
+			value: '',
+			observer(v) {
+				this.refresh('prefixStyle', v);
+			}
+		},
+		
+		suffixStyle: {
+			type: String,
+			value: '',
+			observer(v) {
+				this.refresh('suffixStyle', v);
+			}
+		},
+
 		headerStyle: {
 			type: String,
 			observer(v) {

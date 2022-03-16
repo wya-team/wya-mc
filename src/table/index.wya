@@ -18,7 +18,7 @@
 				wx:for-index="index"  
 				wx:key="headerId" 
 				class="mc-table__thead-td" 
-				style="width:  {{ column.realWidth || column.width }}px;"
+				style="width:  {{ column.realWidth || column.width }}px; {{ tHeadTdStyle }}"
 			>
 				<view 
 					class="mc-table__header is-{{ column.align }}" 
@@ -49,7 +49,7 @@
 		<view 
 			wx:if="{{ doLayouted }}"
 			class="mc-table__tbody"
-			style="{{ scrollWidthStyle  }}; height:{{ height ? height : 'auto' }};" 
+			style="{{ scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
 		>
 			<block 
 				wx:if="{{ rebuildData.length > 0 }}" 
@@ -72,9 +72,10 @@
 						data-row-index="{{ index }}" 
 						data-column="{{ column }}"
 						data-column-index="{{ $index }}"
-						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}" 
+						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}; {{ tBodyTdStyle }}" 
 						bind:tap="handleRowClick"
 					>	
+						<text wx:if="{{ column.prefix }}" style="{{ column.prefixStyle }}">{{ column.prefix }}</text>
 						<!-- 目前wxs和template不支持传递func -->
 						<rich-text 
 							wx:if="{{ rebuildData[index]._renders.cell[$index] }}"
@@ -89,6 +90,7 @@
 							level="{{ 1 }}"
 						/>
 						<text wx:else>{{ row[column.prop] }}</text>
+						<text wx:if="{{ column.suffix }}" style="{{ column.suffixStyle }}">{{ column.suffix }}</text>
 					</view>        
 				</view>
 			</block>
@@ -178,7 +180,15 @@ McComponent({
 			type: String,
 			value: ''
 		},
+		tHeadTdStyle: {
+			type: String,
+			value: ''
+		},
 		tBodyTrStyle: {
+			type: String,
+			value: ''
+		},
+		tBodyTdStyle: {
 			type: String,
 			value: ''
 		}
@@ -352,7 +362,7 @@ McComponent({
 	}
 
 	&__thead-td {
-		padding: 20rpx 10rpx;
+		padding: 20rpx;
 		font-weight: bold;
 		display: inline-block;   
 		
@@ -399,12 +409,14 @@ McComponent({
 
 	&__tbody-td {
 		white-space: wrap;
-		padding: 20rpx 10rpx;
+		padding: 20rpx;
+		display: flex;
+		align-items: center;
 		&.is-center {
-			text-align: center;
+			justify-content: center;
 		}
 		&.is-right {
-			text-align: right;
+			justify-content: flex-end;
 		}
 	}
 

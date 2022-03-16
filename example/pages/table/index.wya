@@ -7,6 +7,7 @@
 			align="center"
 			prop="id"
 			label="省市区 省市区 省市区 省市区 省市区 省"
+			sortable="{{ true }}"
 			headerStyle="text-align: center"
 		/>
 		<mc-table-column 
@@ -19,12 +20,15 @@
 			align="right"
 			prop="address"
 			label="地址"
+			sortable="{{ true }}"
 			renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
 		/>
 		<mc-table-column 
 			align="right"
 			prop="address"
 			label="地址"
+			prefix="*"
+			suffix="#"
 			renderCell="{{ renderCell }}"
 		/>
 	</mc-table>
