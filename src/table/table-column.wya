@@ -33,6 +33,15 @@ McComponent({
 				this.refresh('label', v);
 			}
 		},
+
+		sortable: {
+			type: Boolean,
+			value: false,
+			observer(v) {
+				this.refresh('sortable', v);
+			}
+		},
+
 		prop: {
 			type: String,
 			observer(v) {

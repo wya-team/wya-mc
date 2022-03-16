@@ -31,13 +31,13 @@
 					<view wx:if="{{ column.sortable }}" class="mc-table__sortable">
 						<mc-icon 
 							type="triangle-up" 
-							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#999' }}" 
-							style="margin-bottom: -12rpx"
+							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#c8c8c8' }}" 
+							style="margin-bottom: -10rpx"
 						/>
 						<mc-icon 
 							type="triangle-down" 
-							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'descending' ? '#000' : '#999' }}" 
-							style="margin-top: -12rpx" 
+							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'descending' ? '#000' : '#c8c8c8' }}" 
+							style="margin-top: -10rpx" 
 						/>
 					</view>
 				</view>
@@ -424,6 +424,7 @@ McComponent({
 		flex-direction: column;
 		align-items: center;
 		margin-top: -5rpx;
+		padding: 0 10rpx;
 	}
 
 	&__empty {
