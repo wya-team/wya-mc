@@ -99,8 +99,8 @@
 	</scroll-view>
 	<!-- 列表无数据处理 -->
 	<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
-		<slot name="empty" />
-		<view wx:if="{{ empty }}">{{ empty }}</view>
+		<slot wx:if="{{ useEmptySlot }}" name="empty" />
+		<view wx:elif="{{ empty }}">{{ empty }}</view>
 	</view>
 </template>
 <script>
@@ -191,6 +191,10 @@ McComponent({
 		tBodyTdStyle: {
 			type: String,
 			value: ''
+		},
+		useEmptySlot: {
+			type: Boolean,
+			value: false
 		}
 	},
 	data: {
