@@ -186,11 +186,9 @@ McComponent({
 		align-items: center;
 		justify-content: center;
 		overflow: hidden;
-		.mc-recycle-list__text {
-			color: #333;
-			line-height: 60rpx;
-			font-size: 24rpx;
-		}
+		color: #333;
+		line-height: 60rpx;
+		font-size: 24rpx;
 	}
 }
 </style>

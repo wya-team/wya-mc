@@ -148,11 +148,9 @@ McComponent({
 		align-items: center;
 		justify-content: center;
 		height: 60rpx;
+		line-height: 60rpx;
+		font-size: 24rpx;
 		color: #333;
-		.mc-recycle-list-core__text {
-			line-height: 60rpx;
-			font-size: 24rpx;
-		}
 	}
 }
 </style>
