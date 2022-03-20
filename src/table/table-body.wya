@@ -1,0 +1,175 @@
+<template>
+	<wxs src="./helper.wxs" module="helper" />
+	<view 
+		class="mc-table__tbody"
+		style="{{ scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
+	>
+		<block 
+			wx:if="{{ dataSource.length > 0 }}" 
+			wx:for-item="row" 
+			wx:for-index="index"
+			wx:for="{{ dataSource }}" 
+			wx:key="index" 
+		>
+			<view 
+				class="mc-table__tbody-tr {{ rowCenter ? 'is-center' : '' }} {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class"
+				style="{{ tBodyTrStyle  }}"
+			>
+				<view 
+					wx:for="{{ columns }}" 
+					wx:for-item="column" 
+					wx:for-index="$index" 
+					wx:key="columnId" 
+					class="mc-table__tbody-td is-{{ column.align }} cell-class" 
+					data-row="{{ dataSource[index] }}" 
+					data-row-index="{{ index }}" 
+					data-column="{{ column }}"
+					data-column-index="{{ $index }}"
+					style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}; {{ tBodyTdStyle }}" 
+					bind:tap="handleRowClick"
+				>	
+					<text wx:if="{{ column.prefix }}" style="{{ column.prefixStyle }}">{{ column.prefix }}</text>
+					<!-- 目前wxs和template不支持传递func -->
+					<rich-text 
+						wx:if="{{ dataSource[index]._renders.cell[$index] }}"
+						nodes="{{ dataSource[index]._renders.cell[$index] }}" 
+					/>
+					<mc-table-cell 
+						wx:elif="{{ helper.isVNodes(column.renderCell) }}" 
+						nodes="{{ column.cellNodes }}"
+						row="{{ dataSource[index] }}"
+						rowIndex="{{ index }}"
+						columnIndex="{{ $index }}"
+						level="{{ 1 }}"
+					/>
+					<text wx:else>{{ row[column.prop] }}</text>
+					<text wx:if="{{ column.suffix }}" style="{{ column.suffixStyle }}">{{ column.suffix }}</text>
+				</view>        
+			</view>
+		</block>
+	</view>
+</template>
+<script>
+import McComponent from '../common/component';
+import { getUid } from '../common/utils';
+
+McComponent({
+	externalClasses: ['row-class', 'cell-class'],  
+	props: {
+		dataSource: {
+			type: Array,
+			value: []
+		},
+		stripe: {
+			type: Boolean,
+			value: false
+		},
+		border: {
+			type: Boolean,
+			value: false
+		},
+		columns: {
+			type: Array,
+			value: []
+		},
+		scrollWidthStyle: {
+			type: String,
+			value: ''
+		},
+		tBodyTrStyle: {
+			type: String,
+			value: ''
+		},
+		tBodyTdStyle: {
+			type: String,
+			value: ''
+		},
+	},
+	methods: {
+		handleHeaderClick(e) {
+			let { index, order } = e.currentTarget.dataset;
+			const { prop } = this.data.columns[index];
+
+			if (this.data.defaultSort.prop !== prop) {
+				order = '';
+			}
+
+			if (!order) {
+				order = 'ascending';
+			} else if (order === 'ascending') {
+				order = 'descending';
+			} else {
+				order = '';
+			} 
+
+			this.triggerEvent('header-click', { prop, order });
+		},
+
+		handleRowClick(e) {
+			this.triggerEvent('row-click', e.currentTarget.dataset);
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-table__tbody {
+	box-sizing: border-box;
+	font-size: 24rpx;
+	color: #000;
+	border: 1px solid #ebeef5;
+	border-top: none;
+	border-bottom-left-radius: 8rpx;
+	border-bottom-right-radius: 8rpx;
+
+	&-tr {
+		display: flex;
+		border-bottom: 1px solid #ebeef5;
+		align-items: center;
+		&::last-child {
+			border-bottom-left-radius: 8rpx;
+			border-bottom-right-radius: 8rpx;
+		}
+		&.has-stripe {
+			background: #fff;
+			border-bottom: none;
+			&:nth-child(2n) {
+				background: #F6F6F6;
+			}
+		}
+		&.has-border {
+			.mc-table__tbody-td {
+				border-right: 1rpx solid #F6F6F6;
+			}
+			.mc-table__tbody-td:last-child {  
+				border-right: none;
+			}
+		}
+	}
+
+	&-td {
+		white-space: wrap;
+		padding: 20rpx;
+		display: flex;
+		align-items: center;
+		&.is-center {
+			justify-content: center;
+		}
+		&.is-right {
+			justify-content: flex-end;
+		}
+	}
+}
+
+
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-table-cell": "./table-cell"
+	}
+}
+</config>

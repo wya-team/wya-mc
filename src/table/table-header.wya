@@ -1,0 +1,157 @@
+<template>
+	<view 
+		class="mc-table__thead {{ border ? 'has-border' : ''}} header-class" 
+		style="{{ scrollWidthStyle }};{{ tHeadStyle }}"
+	>
+		<view 
+			wx:for="{{ columns }}"
+			wx:for-item="column"  
+			wx:for-index="index"  
+			wx:key="headerId" 
+			class="mc-table__thead-tr" 
+			style="width:  {{ column.realWidth || column.width }}px; {{ tHeadTrStyle }}"
+		>
+			<view 
+				class="mc-table__thead-th is-{{ column.align }}" 
+				style="{{ column.headerStyle }}"
+				data-index="{{ index }}"
+				data-order="{{ defaultSort.order }}"
+				bind:tap="handleHeaderClick"
+			>
+				<text>{{ column.label }}</text>
+				<view wx:if="{{ column.sortable }}" class="mc-table__thead-sortable">
+					<mc-icon 
+						type="triangle-up" 
+						mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#c8c8c8' }}" 
+						style="margin-bottom: -10rpx"
+					/>
+					<mc-icon 
+						type="triangle-down" 
+						mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'descending' ? '#000' : '#c8c8c8' }}" 
+						style="margin-top: -10rpx" 
+					/>
+				</view>
+			</view>
+		</view>
+	</view> 
+</template>
+<script>
+import McComponent from '../common/component';
+import { getUid } from '../common/utils';
+
+McComponent({
+	externalClasses: ['header-row-class-name'], 
+	props: {
+		border: {
+			type: Boolean,
+			value: false
+		},
+		columns: {
+			type: Array,
+			value: []
+		},
+		defaultSort: {
+			type: Object,
+			value: {
+				prop: '',
+				order: ''
+			}
+		},
+		scrollWidthStyle: {
+			type: String,
+			value: ''
+		},
+		tHeadStyle: {
+			type: String,
+			value: ''
+		},
+		tHeadTrStyle: {
+			type: String,
+			value: ''
+		}
+	},
+	methods: {
+		handleHeaderClick(e) {
+			let { index, order } = e.currentTarget.dataset;
+			const { prop } = this.data.columns[index];
+
+			if (this.data.defaultSort.prop !== prop) {
+				order = '';
+			}
+
+			if (!order) {
+				order = 'ascending';
+			} else if (order === 'ascending') {
+				order = 'descending';
+			} else {
+				order = '';
+			} 
+
+			this.triggerEvent('header-click', { prop, order });
+		},
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-table__thead {
+	border-bottom: none;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	border-top-right-radius: 8rpx;
+	border-top-left-radius: 8rpx;
+	overflow: visible;
+	color: #666;
+	border: 1px solid #ebeef5;
+	box-sizing: border-box;
+	font-size: 24rpx;
+	font-weight: 400;
+	&.has-border {
+		.mc-table__thead-tr {
+			border-right: 1rpx solid #ebeef5;
+		}
+		.mc-table__thead-tr:last-child {
+			border-right: none;
+		}
+	}
+
+	&-sortable {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: -5rpx;
+		padding: 0 10rpx;
+	}
+
+	&-tr {
+		padding: 20rpx;
+		font-weight: bold;
+		display: inline-block;   
+		
+		border-right: 1rpx solid #fff;
+		&::last-child {
+			border-right: none;
+		}
+	}
+
+	&-th {
+		display: flex;
+		align-items: center;
+		&.is-center {
+			justify-content: center;
+		}
+		&.is-right {
+			justify-content: flex-end;
+		}
+	}
+}
+
+</style>
+<config>
+{
+	"component": true
+}
+</config>

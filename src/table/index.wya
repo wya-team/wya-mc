@@ -1,100 +1,40 @@
 <template>
-	<wxs src="./helper.wxs" module="helper" />
 	<scroll-view 
 		id="{{ tableId }}"
 		scroll-x="{{ scrollX }}" 
+		scroll-left="{{ scrollLeft }}"
 		style="{{ mcStyle }}"  
 		class="mc-table mc-class"
+		bindscroll="handleScroll"
 	>
 		<!-- 表格头 start -->
-		<view 
+		<mc-table-header 
 			wx:if="{{ doLayouted }}"
-			class="mc-table__thead {{ border ? 'has-border' : ''}} header-row-class-name" 
-			style="{{ scrollWidthStyle }};{{ tHeadStyle }}"
-		>
-			<view 
-				wx:for="{{ columns }}"
-				wx:for-item="column"  
-				wx:for-index="index"  
-				wx:key="headerId" 
-				class="mc-table__thead-td" 
-				style="width:  {{ column.realWidth || column.width }}px; {{ tHeadTdStyle }}"
-			>
-				<view 
-					class="mc-table__header is-{{ column.align }}" 
-					style="{{ column.headerStyle }}"
-					data-index="{{ index }}"
-					data-order="{{ defaultSort.order }}"
-					bind:tap="handleHeaderClick"
-				>
-					<text>{{ column.label }}</text>
-					<view wx:if="{{ column.sortable }}" class="mc-table__sortable">
-						<mc-icon 
-							type="triangle-up" 
-							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'ascending' ? '#000' : '#c8c8c8' }}" 
-							style="margin-bottom: -10rpx"
-						/>
-						<mc-icon 
-							type="triangle-down" 
-							mcStyle="font-size: 20rpx; color: {{ defaultSort.prop === column.prop && defaultSort.order && defaultSort.order === 'descending' ? '#000' : '#c8c8c8' }}" 
-							style="margin-top: -10rpx" 
-						/>
-					</view>
-				</view>
-			</view>
-		</view>  
+			header-class="header-class"
+			border="{{ border }}"
+			columns="{{ columns }}"
+			defaultSort="{{ defaultSort }}"
+			scrollWidthStyle="{{ scrollWidthStyle }}"
+			tHeadStyle="{{ tHeadStyle }}"
+			tHeadTrStyle="{{ tHeadTrStyle }}"
+			bind:header-click="handleHeaderClick"
+		/>
 		<!-- 表格头 end -->
-		
+
 		<!-- 表格体 start -->
-		<view 
+		<mc-table-body 
 			wx:if="{{ doLayouted }}"
-			class="mc-table__tbody"
-			style="{{ scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
-		>
-			<block 
-				wx:if="{{ rebuildData.length > 0 }}" 
-				wx:for-item="row" 
-				wx:for-index="index"
-				wx:for="{{ rebuildData }}" 
-				wx:key="index" 
-			>
-				<view 
-					class="mc-table__tbody-tr {{ rowCenter ? 'is-center' : '' }} {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class-name"
-					style="{{ tBodyTrStyle  }}"
-				>
-					<view 
-						wx:for="{{ columns }}" 
-						wx:for-item="column" 
-						wx:for-index="$index" 
-						wx:key="columnId" 
-						class="mc-table__tbody-td is-{{ column.align }} cell-class-name" 
-						data-row="{{ dataSource[index] }}" 
-						data-row-index="{{ index }}" 
-						data-column="{{ column }}"
-						data-column-index="{{ $index }}"
-						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}; {{ tBodyTdStyle }}" 
-						bind:tap="handleRowClick"
-					>	
-						<text wx:if="{{ column.prefix }}" style="{{ column.prefixStyle }}">{{ column.prefix }}</text>
-						<!-- 目前wxs和template不支持传递func -->
-						<rich-text 
-							wx:if="{{ rebuildData[index]._renders.cell[$index] }}"
-							nodes="{{ rebuildData[index]._renders.cell[$index] }}" 
-						/>
-						<mc-table-cell 
-							wx:elif="{{ helper.isVNodes(column.renderCell) }}" 
-							nodes="{{ column.cellNodes }}"
-							row="{{ dataSource[index] }}"
-							rowIndex="{{ index }}"
-							columnIndex="{{ $index }}"
-							level="{{ 1 }}"
-						/>
-						<text wx:else>{{ row[column.prop] }}</text>
-						<text wx:if="{{ column.suffix }}" style="{{ column.suffixStyle }}">{{ column.suffix }}</text>
-					</view>        
-				</view>
-			</block>
-		</view>
+			row-class="row-class"
+			cell-class="cell-class"
+			dataSource="{{ rebuildData }}"
+			border="{{ border }}"
+			stripe="{{ stripe }}"
+			columns="{{ columns }}"
+			scrollWidthStyle="{{ scrollWidthStyle }}"
+			tBodyTrStyle="{{ tBodyTrStyle }}"
+			tBodyTdStyle="{{ tBodyTdStyle }}"
+			bind:row-click="handleRowClick"
+		/>
 		<!-- 表格体 end -->
 	</scroll-view>
 	<!-- 列表无数据处理 -->
@@ -108,7 +48,7 @@ import McComponent from '../common/component';
 import { getUid } from '../common/utils';
 
 McComponent({
-	externalClasses: ['header-row-class-name', 'row-class-name', 'cell-class-name'], 
+	externalClasses: ['header-class', 'row-class', 'cell-class'], 
 	relations: {
 		'./table-column': {
 			type: 'descendant',
@@ -180,7 +120,7 @@ McComponent({
 			type: String,
 			value: ''
 		},
-		tHeadTdStyle: {
+		tHeadTrStyle: {
 			type: String,
 			value: ''
 		},
@@ -201,6 +141,7 @@ McComponent({
 		tableId: '',
 		containerWidth: 0,
 		scrollX: false,
+		scrollLeft: 0,
 		scrollWidthStyle: 'width: auto',
 		doLayouted: false,
 		columns: [],
@@ -230,24 +171,11 @@ McComponent({
 	},
 	methods: {
 		handleRowClick(e) {
-			this.triggerEvent('row-click', e.currentTarget.dataset);
+			this.triggerEvent('row-click', e.detail);
 		},
 
 		handleHeaderClick(e) {
-			let { index, order } = e.currentTarget.dataset;
-			const { prop } = this.data.columns[index];
-
-			if (this.data.defaultSort.prop !== prop) {
-				order = '';
-			}
-
-			if (!order) {
-				order = 'ascending';
-			} else if (order === 'ascending') {
-				order = 'descending';
-			} else {
-				order = '';
-			} 
+			const { prop, order } = e.detail;
 
 			// TODO: 内部提取，修改了父层
 			this.setData({
@@ -258,6 +186,12 @@ McComponent({
 			});
 
 			this.triggerEvent('sort-change', { prop, order });
+		},
+
+		handleScroll(e) {
+			this.setData({
+				scrollLeft: e.detail.scrollLeft
+			});
 		},
 
 		refreshColumn(child, k, v) {
@@ -342,107 +276,6 @@ McComponent({
 	background: #fff;  
 	width: 100%; 
 
-	&__thead {
-		border-bottom: none;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		border-top-right-radius: 8rpx;
-		border-top-left-radius: 8rpx;
-		overflow: visible;
-		color: #666;
-		border: 1px solid #ebeef5;
-		box-sizing: border-box;
-		font-size: 24rpx;
-		font-weight: 400;
-		&.has-border {
-			.mc-table__thead-td {
-				border-right: 1rpx solid #ebeef5;
-			}
-			.mc-table__thead-td:last-child {
-				border-right: none;
-			}
-		}
-	}
-
-	&__thead-td {
-		padding: 20rpx;
-		font-weight: bold;
-		display: inline-block;   
-		
-		border-right: 1rpx solid #fff;
-		&::last-child {
-			border-right: none;
-		}
-	}
-
-	&__tbody {
-		box-sizing: border-box;
-		font-size: 24rpx;
-		color: #000;
-		border: 1px solid #ebeef5;
-		border-top: none;
-		border-bottom-left-radius: 8rpx;
-		border-bottom-right-radius: 8rpx;
-	}
-
-	&__tbody-tr {
-		display: flex;
-		border-bottom: 1px solid #ebeef5;
-		align-items: center;
-		&::last-child {
-			border-bottom-left-radius: 8rpx;
-			border-bottom-right-radius: 8rpx;
-		}
-		&.has-stripe {
-			background: #fff;
-			border-bottom: none;
-			&:nth-child(2n) {
-				background: #F6F6F6;
-			}
-		}
-		&.has-border {
-			.mc-table__tbody-td {
-				border-right: 1rpx solid #F6F6F6;
-			}
-			.mc-table__tbody-td:last-child {  
-				border-right: none;
-			}
-		}
-	}
-
-	&__tbody-td {
-		white-space: wrap;
-		padding: 20rpx;
-		display: flex;
-		align-items: center;
-		&.is-center {
-			justify-content: center;
-		}
-		&.is-right {
-			justify-content: flex-end;
-		}
-	}
-
-	&__header {
-		display: flex;
-		align-items: center;
-		&.is-center {
-			justify-content: center;
-		}
-		&.is-right {
-			justify-content: flex-end;
-		}
-	}
-
-	&__sortable {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-top: -5rpx;
-		padding: 0 10rpx;
-	}
-
 	&__empty {
 		display: flex;
 		flex-direction: column;
@@ -460,7 +293,8 @@ McComponent({
 	"component": true,
 	"usingComponents": {
 		"mc-icon": "../icon/index",
-		"mc-table-cell": "./table-cell"
+		"mc-table-header": "./table-header",
+		"mc-table-body": "./table-body"
 	}
 }
 </config>

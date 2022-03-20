@@ -13,6 +13,11 @@
 		<mc-table-column 
 			prop="name"
 			label="城镇乡"
+			width="200"
+		/>
+		<mc-table-column 
+			prop="name"
+			label="城镇乡"
 			headerStyle="color: red;"
 			cellStyle="color: red;"
 		/>
@@ -36,13 +41,13 @@
 
 <script>
 
-const dataSource = Array
+const getFakeData = () => Array
 	.from({
 		length: 100
 	})
 	.map((i, index) => ({
 		id: index,
-		name: '浙江省浙江省浙江省浙江省',
+		name: Math.random(),
 		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {
@@ -51,7 +56,7 @@ const renderCell = ({ row, column, rowIndex, columnIndex }) => {
 
 Page({
 	data: {
-		dataSource,
+		dataSource: getFakeData(),
 		renderCell: () => {}
 	},
 	onLoad() {
@@ -63,7 +68,9 @@ Page({
 	},
 
 	handleClick(e) {
-		console.log(e.detail);
+		this.setData({
+			dataSource: getFakeData(),
+		});
 	}
 });
 </script>
