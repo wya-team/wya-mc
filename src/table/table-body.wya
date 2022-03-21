@@ -2,7 +2,7 @@
 	<wxs src="./helper.wxs" module="helper" />
 	<view 
 		class="mc-table__tbody"
-		style="{{ scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
+		style="{{ fixed ? '' : scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
 	>
 		<block 
 			wx:if="{{ dataSource.length > 0 }}" 
@@ -15,36 +15,40 @@
 				class="mc-table__tbody-tr {{ rowCenter ? 'is-center' : '' }} {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class"
 				style="{{ tBodyTrStyle  }}"
 			>
-				<view 
+				<block
 					wx:for="{{ columns }}" 
 					wx:for-item="column" 
 					wx:for-index="$index" 
 					wx:key="columnId" 
-					class="mc-table__tbody-td is-{{ column.align }} cell-class" 
-					data-row="{{ dataSource[index] }}" 
-					data-row-index="{{ index }}" 
-					data-column="{{ column }}"
-					data-column-index="{{ $index }}"
-					style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}; {{ tBodyTdStyle }}" 
-					bind:tap="handleRowClick"
-				>	
-					<text wx:if="{{ column.prefix }}" style="{{ column.prefixStyle }}">{{ column.prefix }}</text>
-					<!-- 目前wxs和template不支持传递func -->
-					<rich-text 
-						wx:if="{{ dataSource[index]._renders.cell[$index] }}"
-						nodes="{{ dataSource[index]._renders.cell[$index] }}" 
-					/>
-					<mc-table-cell 
-						wx:elif="{{ helper.isVNodes(column.renderCell) }}" 
-						nodes="{{ column.cellNodes }}"
-						row="{{ dataSource[index] }}"
-						rowIndex="{{ index }}"
-						columnIndex="{{ $index }}"
-						level="{{ 1 }}"
-					/>
-					<text wx:else>{{ row[column.prop] }}</text>
-					<text wx:if="{{ column.suffix }}" style="{{ column.suffixStyle }}">{{ column.suffix }}</text>
-				</view>        
+				>
+					<view 
+						wx:if="{{ !fixed || column.fixed }}"
+						class="mc-table__tbody-td is-{{ column.align }} cell-class" 
+						data-row="{{ dataSource[index] }}" 
+						data-row-index="{{ index }}" 
+						data-column="{{ column }}"
+						data-column-index="{{ $index }}"
+						style="width: {{ column.realWidth || column.width }}px; {{ column.cellStyle }}; {{ tBodyTdStyle }}; {{ !fixed && column.fixed ? 'opacity: 0;' : '' }} {{  dataSource[index].heightStyle }}" 
+						bind:tap="handleRowClick"
+					>	
+						<text wx:if="{{ column.prefix }}" style="{{ column.prefixStyle }}">{{ column.prefix }}</text>
+						<!-- 目前wxs和template不支持传递func -->
+						<rich-text 
+							wx:if="{{ dataSource[index]._renders.cell[$index] }}"
+							nodes="{{ dataSource[index]._renders.cell[$index] }}" 
+						/>
+						<mc-table-cell 
+							wx:elif="{{ helper.isVNodes(column.renderCell) }}" 
+							nodes="{{ column.cellNodes }}"
+							row="{{ dataSource[index] }}"
+							rowIndex="{{ index }}"
+							columnIndex="{{ $index }}"
+							level="{{ 1 }}"
+						/>
+						<text wx:else>{{ row[column.prop] }}</text>
+						<text wx:if="{{ column.suffix }}" style="{{ column.suffixStyle }}">{{ column.suffix }}</text>
+					</view> 
+				</block>
 			</view>
 		</block>
 	</view>
@@ -84,6 +88,15 @@ McComponent({
 			type: String,
 			value: ''
 		},
+		fixed: {
+			type: Boolean,
+			value: false
+		}
+	},
+	lifetimes: {
+		ready() {
+			this.$emit('ready', this);
+		}
 	},
 	methods: {
 		handleHeaderClick(e) {
@@ -107,6 +120,17 @@ McComponent({
 
 		handleRowClick(e) {
 			this.triggerEvent('row-click', e.currentTarget.dataset);
+		},
+
+		getRowsHeight() {
+			return new Promise((resolve => {
+				this.createSelectorQuery()
+					.selectAll(`.mc-table__tbody-tr`)
+					.boundingClientRect((res) => {
+						resolve(res.map(i => i.height));
+					})
+					.exec();
+			}));
 		}
 	}
 });
@@ -116,18 +140,19 @@ McComponent({
 @import '../common/index.scss';
 
 .mc-table__tbody {
-	box-sizing: border-box;
 	font-size: 24rpx;
 	color: #000;
-	border: 1px solid #ebeef5;
+	// border: 1px solid #ebeef5;
 	border-top: none;
 	border-bottom-left-radius: 8rpx;
 	border-bottom-right-radius: 8rpx;
-
+	box-sizing: border-box;
 	&-tr {
 		display: flex;
 		border-bottom: 1px solid #ebeef5;
 		align-items: center;
+		background: white;
+		box-sizing: border-box;
 		&::last-child {
 			border-bottom-left-radius: 8rpx;
 			border-bottom-right-radius: 8rpx;
@@ -151,9 +176,11 @@ McComponent({
 
 	&-td {
 		white-space: wrap;
+		word-break: break-all; // 允许换行
 		padding: 20rpx;
 		display: flex;
 		align-items: center;
+		box-sizing: border-box;
 		&.is-center {
 			justify-content: center;
 		}

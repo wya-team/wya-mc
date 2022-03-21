@@ -3,6 +3,7 @@
 		height="calc(100vh)"
 		total="{{ listInfo.total }}"
 		current="{{ listInfo.current }}"
+		showScrollStatus="{{ !!listInfo.data.length }}"
 		bind:loadData="loadListData" 
 	>
 		<mc-table 
@@ -21,13 +22,14 @@
 			<mc-table-column 
 				prop="name"
 				label="城镇乡"
-				width="200"
-			/>
-			<mc-table-column 
-				prop="name"
-				label="城镇乡"
 				headerStyle="color: red;"
 				cellStyle="color: red;"
+				width="120"
+			/>
+			<mc-table-column 
+				prop=""
+				label="占位"
+				width="200"
 			/>
 			<mc-table-column 
 				align="right"
@@ -57,7 +59,7 @@ const getFakeData = () => Array
 	})
 	.map((i, index) => ({
 		id: index,
-		name: Math.random(),
+		name: String(Math.random()),
 		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {
@@ -67,9 +69,9 @@ const renderCell = ({ row, column, rowIndex, columnIndex }) => {
 Page({
 	data: {
 		listInfo: {
-			current: 1,
-			total: 1,
-			data: getFakeData()
+			current: 0,
+			total: 0,
+			data: []
 		},
 		renderCell
 	},
@@ -92,13 +94,15 @@ Page({
 	},
 
 	handleClick(e) {
-		this.setData({
-			listInfo: {
-				current: 1,
-				total: 0,
-				data: []
-			}
-		});
+		if (e.detail.columnIndex === 0) {
+			this.setData({
+				listInfo: {
+					current: 0,
+					total: 0,
+					data: []
+				}
+			});
+		}
 	}
 });
 </script>

@@ -34,6 +34,15 @@ McComponent({
 			}
 		},
 
+		// 目前未进行排序，且不支持right
+		fixed: {
+			type: String,
+			value: '', // left, right
+			observer(v) {
+				this.refresh('fixed', v);
+			}
+		},
+
 		sortable: {
 			type: Boolean,
 			value: false,

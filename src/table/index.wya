@@ -1,45 +1,81 @@
 <template>
-	<scroll-view 
-		id="{{ tableId }}"
-		scroll-x="{{ scrollX }}" 
-		scroll-left="{{ scrollLeft }}"
-		style="{{ mcStyle }}"  
-		class="mc-table mc-class"
-		bindscroll="handleScroll"
-	>
-		<!-- 表格头 start -->
-		<mc-table-header 
-			wx:if="{{ doLayouted }}"
-			header-class="header-class"
-			border="{{ border }}"
-			columns="{{ columns }}"
-			defaultSort="{{ defaultSort }}"
-			scrollWidthStyle="{{ scrollWidthStyle }}"
-			tHeadStyle="{{ tHeadStyle }}"
-			tHeadTrStyle="{{ tHeadTrStyle }}"
-			bind:header-click="handleHeaderClick"
-		/>
-		<!-- 表格头 end -->
-		<!-- 表格体 start -->
-		<mc-table-body 
-			wx:if="{{ doLayouted }}"
-			row-class="row-class"
-			cell-class="cell-class"
-			dataSource="{{ rebuildData }}"
-			border="{{ border }}"
-			stripe="{{ stripe }}"
-			columns="{{ columns }}"
-			scrollWidthStyle="{{ scrollWidthStyle }}"
-			tBodyTrStyle="{{ tBodyTrStyle }}"
-			tBodyTdStyle="{{ tBodyTdStyle }}"
-			bind:row-click="handleRowClick"
-		/>
-		<!-- 表格体 end -->
-	</scroll-view>
-	<!-- 列表无数据处理 -->
-	<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
-		<slot wx:if="{{ useEmptySlot }}" name="empty" />
-		<view wx:elif="{{ empty }}">{{ empty }}</view>
+	<view class="mc-table mc-class {{ border ? 'has-border' : ''}}">
+		<view 
+			wx:if="{{ headerHeightStyle }}"
+			class="mc-table__fixed"
+		>
+			<!-- 表格头 start -->
+			<mc-table-header 
+				wx:if="{{ doLayouted }}"
+				header-class="header-class"
+				border="{{ border }}"
+				columns="{{ columns }}"
+				defaultSort="{{ defaultSort }}"
+				tHeadStyle="{{ tHeadStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				fixed
+				bind:header-click="handleHeaderClick"
+			/>
+			<!-- 表格头 end -->
+			<!-- 表格体 start -->
+			<mc-table-body 
+				wx:if="{{ doLayouted }}"
+				row-class="row-class"
+				cell-class="cell-class"
+				dataSource="{{ rebuildData }}"
+				border="{{ border }}"
+				stripe="{{ stripe }}"
+				columns="{{ columns }}"
+				tBodyTrStyle="{{ tBodyTrStyle }}"
+				tBodyTdStyle="{{ tBodyTdStyle }}"
+				fixed
+				bind:row-click="handleRowClick"
+			/>
+		</view>
+		<scroll-view 
+			id="{{ tableId }}"
+			scroll-x="{{ scrollX }}" 
+			scroll-left="{{ scrollLeft }}"
+			style="{{ mcStyle }}"  
+			class="mc-table__content"
+			bindscroll="handleScroll"
+		>
+			<!-- 表格头 start -->
+			<mc-table-header 
+				wx:if="{{ doLayouted }}"
+				header-class="header-class"
+				border="{{ border }}"
+				columns="{{ columns }}"
+				defaultSort="{{ defaultSort }}"
+				scrollWidthStyle="{{ scrollWidthStyle }}"
+				tHeadStyle="{{ tHeadStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				bind:ready="handleHeaderReady"
+				bind:header-click="handleHeaderClick"
+			/>
+			<!-- 表格头 end -->
+			<!-- 表格体 start -->
+			<mc-table-body 
+				wx:if="{{ doLayouted }}"
+				row-class="row-class"
+				cell-class="cell-class"
+				dataSource="{{ rebuildData }}"
+				border="{{ border }}"
+				stripe="{{ stripe }}"
+				columns="{{ columns }}"
+				scrollWidthStyle="{{ scrollWidthStyle }}"
+				tBodyTrStyle="{{ tBodyTrStyle }}"
+				tBodyTdStyle="{{ tBodyTdStyle }}"
+				bind:ready="handleBodyReady"
+				bind:row-click="handleRowClick"
+			/>
+			<!-- 表格体 end -->
+		</scroll-view>
+		<!-- 列表无数据处理 -->
+		<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
+			<slot wx:if="{{ useEmptySlot }}" name="empty" />
+			<view wx:elif="{{ empty }}">{{ empty }}</view>
+		</view>
 	</view>
 </template>
 <script>
@@ -58,8 +94,12 @@ McComponent({
 				const { columns } = this.data;
 				columns.push(child.data);
 				this.setData({ columns });
-				this.refreshLayout();
 				this.rebuildWidthRender();
+
+				// size
+				this.refreshLayout();
+				this.refreshHeaderHeight();
+				this.refreshRowsHeight();
 			},
 			unlinked(child) {
 				const index = this.children.findIndex(i => i === child);
@@ -71,8 +111,12 @@ McComponent({
 				columns.splice(index, 1);
 
 				this.setData({ columns });
-				this.refreshLayout();
 				this.rebuildWidthRender();
+
+				// size
+				this.refreshLayout();
+				this.refreshHeaderHeight();
+				this.refreshRowsHeight();
 			}
 		}
 	},
@@ -83,6 +127,9 @@ McComponent({
 			observer() {
 				this.rebuildData();
 				this.rebuildWidthRender();
+
+				// row的高度
+				this.refreshRowsHeight();
 			}
 		},
 		// table的高度, 溢出可滚动
@@ -142,6 +189,8 @@ McComponent({
 		scrollX: false,
 		scrollLeft: 0,
 		scrollWidthStyle: 'width: auto',
+		headerHeightStyle: '',
+		rowsHeight: [],
 		doLayouted: false,
 		columns: [],
 		rebuildData: []
@@ -149,6 +198,7 @@ McComponent({
 	lifetimes: {
 		ready() {
 			this.scrollLeft = this.data.scrollLeft;
+			this.header = null;
 
 			this.setData({
 				tableId: getUid('table'),
@@ -175,6 +225,16 @@ McComponent({
 			this.triggerEvent('row-click', e.detail);
 		},
 
+		handleHeaderReady(e) {
+			this.header = e.detail;
+			this.refreshHeaderHeight();
+		},
+
+		handleBodyReady(e) {
+			this.body = e.detail;
+			this.refreshRowsHeight();
+		},
+
 		handleHeaderClick(e) {
 			const { prop, order } = e.detail;
 
@@ -190,7 +250,7 @@ McComponent({
 		},
 
 		/**
-		 * 暂时用不到，这个值不能实时设置，iOS真机会抖动
+		 * 这个值不能实时设置，iOS真机会抖动
 		 */
 		handleScroll(e) {
 			this.scrollLeft = e.detail.scrollLeft;
@@ -205,8 +265,11 @@ McComponent({
 				[`columns[${index}].${k}`]: v
 			});
 
-			this.refreshLayout();
 			this.rebuildWidthRender();
+
+			this.refreshLayout();
+			this.refreshHeaderHeight();
+			this.refreshRowsHeight();
 		},
 
 		refreshLayout() {
@@ -233,6 +296,28 @@ McComponent({
 			this.setData({
 				doLayouted: true
 			});
+		},
+
+		async refreshHeaderHeight() {
+			if (!this.header) return;
+			const height = await this.header.getHeight();
+			this.setData({
+				headerHeightStyle: `height: ${height}px;`
+			});
+		},
+
+
+		async refreshRowsHeight() {
+			if (!this.body) return;
+			const rowsHeight = await this.body.getRowsHeight();
+
+			const states = rowsHeight.reduce((pre, currentHeight, index) => {
+				pre[`rebuildData[${index}].heightStyle`] = `height: ${currentHeight ? `${currentHeight}px` : 'auto'};`;
+				return pre;
+			}, {});
+
+
+			this.setData(states);
 		},
 
 		rebuildData() {
@@ -283,8 +368,15 @@ McComponent({
 .mc-table {
 	position: relative;
 	font-size: 28rpx;
-	background: #fff;  
-	width: 100%; 
+	background: #fff;
+	box-sizing: border-box;
+	&.has-border {
+		border: 1px solid #ebeef5;
+	}
+	&__content {
+		position: relative;
+		width: 100%; 
+	}
 
 	&__empty {
 		display: flex;
@@ -294,6 +386,18 @@ McComponent({
 		color: #666;
 		justify-content: center;
 		align-items: center;
+	}
+
+	&__fixed {
+		position: absolute; 
+		left: 0; 
+		top: 0;
+		z-index: 1;
+		box-sizing: border-box;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+		.is-scrolling-none {
+			box-shadow: none;
+		}
 	}
 }
 
