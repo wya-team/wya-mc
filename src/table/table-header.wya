@@ -73,8 +73,12 @@ McComponent({
 	methods: {
 		handleHeaderClick(e) {
 			let { index, order } = e.currentTarget.dataset;
-			const { prop } = this.data.columns[index];
+			const { prop, sortable } = this.data.columns[index];
 
+			if (!sortable) {
+				return;
+			}
+			
 			if (this.data.defaultSort.prop !== prop) {
 				order = '';
 			}

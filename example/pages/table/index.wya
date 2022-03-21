@@ -1,43 +1,52 @@
 <template>
-	<mc-table 
-		dataSource="{{ dataSource }}" 
-		bind:row-click="handleClick"
+	<mc-recycle-list
+		height="calc(100vh)"
+		total="{{ listInfo.total }}"
+		current="{{ listInfo.current }}"
+		bind:loadData="loadListData" 
 	>
-		<mc-table-column 
-			align="center"
-			prop="id"
-			label="省市区 省市区 省市区 省市区 省市区 省"
-			sortable="{{ true }}"
-			headerStyle="text-align: center"
-		/>
-		<mc-table-column 
-			prop="name"
-			label="城镇乡"
-			width="200"
-		/>
-		<mc-table-column 
-			prop="name"
-			label="城镇乡"
-			headerStyle="color: red;"
-			cellStyle="color: red;"
-		/>
-		<mc-table-column 
-			align="right"
-			prop="address"
-			label="地址"
-			sortable="{{ true }}"
-			renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
-		/>
-		<mc-table-column 
-			align="right"
-			prop="address"
-			label="地址"
-			prefix="*"
-			suffix="#"
-			sortable
-			renderCell="{{ renderCell }}"
-		/>
-	</mc-table>
+		<mc-table 
+			dataSource="{{ listInfo.data }}" 
+			bind:row-click="handleClick"
+			bind:sort-change="handleClick"
+		>
+			<mc-table-column 
+				fixed="left"
+				align="center"
+				prop="id"
+				label="省市区 省市区 省市区 省市区 省市区 省"
+				sortable="{{ true }}"
+				headerStyle="text-align: center"
+			/>
+			<mc-table-column 
+				prop="name"
+				label="城镇乡"
+				width="200"
+			/>
+			<mc-table-column 
+				prop="name"
+				label="城镇乡"
+				headerStyle="color: red;"
+				cellStyle="color: red;"
+			/>
+			<mc-table-column 
+				align="right"
+				prop="name"
+				label="地址"
+				sortable="{{ true }}"
+				renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
+			/>
+			<mc-table-column 
+				align="right"
+				prop="address"
+				label="地址"
+				prefix="*"
+				suffix="#"
+				sortable
+				renderCell="{{ renderCell }}"
+			/>
+		</mc-table>
+	</mc-recycle-list>
 </template>
 
 <script>
@@ -57,20 +66,38 @@ const renderCell = ({ row, column, rowIndex, columnIndex }) => {
 
 Page({
 	data: {
-		dataSource: getFakeData(),
-		renderCell: () => {}
+		listInfo: {
+			current: 1,
+			total: 1,
+			data: getFakeData()
+		},
+		renderCell
 	},
-	onLoad() {
+
+	async loadListData(e) {
+		const { page, refresh, done } = e.detail;
+		wx.showLoading();
 		setTimeout(() => {
 			this.setData({
-				renderCell
+				listInfo: {
+					data: refresh ? getFakeData() : this.data.listInfo.data.concat(getFakeData()),
+					current: 1,
+					total: 1,
+				}
 			});
-		}, 1000);
+
+			done();
+			wx.hideLoading();
+		}, 100);
 	},
 
 	handleClick(e) {
 		this.setData({
-			dataSource: getFakeData(),
+			listInfo: {
+				current: 1,
+				total: 0,
+				data: []
+			}
 		});
 	}
 });
@@ -79,6 +106,7 @@ Page({
 <config>
 {
 	"usingComponents": {
+		"mc-recycle-list": "../../components/recycle-list/index",
 		"mc-table": "../../components/table/index",
 		"mc-table-column": "../../components/table/table-column"
 	}

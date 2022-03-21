@@ -148,6 +148,8 @@ McComponent({
 	},
 	lifetimes: {
 		ready() {
+			this.scrollLeft = this.data.scrollLeft;
+
 			this.setData({
 				tableId: getUid('table'),
 			});
@@ -187,10 +189,11 @@ McComponent({
 			this.triggerEvent('sort-change', { prop, order });
 		},
 
+		/**
+		 * 暂时用不到，这个值不能实时设置，iOS真机会抖动
+		 */
 		handleScroll(e) {
-			this.setData({
-				scrollLeft: e.detail.scrollLeft
-			});
+			this.scrollLeft = e.detail.scrollLeft;
 		},
 
 		refreshColumn(child, k, v) {
@@ -235,7 +238,14 @@ McComponent({
 		rebuildData() {
 			const { dataSource } = this.data;
 			this.setData({
-				rebuildData: dataSource
+				rebuildData: dataSource,
+			});
+
+			// 让滚动条回到原来的位置
+			wx.nextTick(() => {
+				this.scrollLeft && this.setData({
+					scrollLeft: this.scrollLeft
+				});
 			});
 		},
 
