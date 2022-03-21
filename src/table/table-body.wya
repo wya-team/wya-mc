@@ -1,7 +1,7 @@
 <template>
 	<wxs src="./helper.wxs" module="helper" />
 	<view 
-		class="mc-table__tbody"
+		class="mc-table__tbody {{ border ? 'has-border' : ''}} {{ stripe ? 'has-stripe' : '' }} is-fixed-{{ fixed }}"
 		style="{{ fixed ? '' : scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
 	>
 		<block 
@@ -12,7 +12,7 @@
 			wx:key="index" 
 		>
 			<view 
-				class="mc-table__tbody-tr {{ rowCenter ? 'is-center' : '' }} {{ stripe ? 'has-stripe' : '' }} {{ border ? 'has-border' : ''}} row-class"
+				class="mc-table__tbody-tr row-class"
 				style="{{ tBodyTrStyle  }}"
 			>
 				<block
@@ -142,7 +142,6 @@ McComponent({
 .mc-table__tbody {
 	font-size: 24rpx;
 	color: #000;
-	// border: 1px solid #ebeef5;
 	border-top: none;
 	border-bottom-left-radius: 8rpx;
 	border-bottom-right-radius: 8rpx;
@@ -156,21 +155,6 @@ McComponent({
 		&::last-child {
 			border-bottom-left-radius: 8rpx;
 			border-bottom-right-radius: 8rpx;
-		}
-		&.has-stripe {
-			background: #fff;
-			border-bottom: none;
-			&:nth-child(2n) {
-				background: #F6F6F6;
-			}
-		}
-		&.has-border {
-			.mc-table__tbody-td {
-				border-right: 1rpx solid #F6F6F6;
-			}
-			.mc-table__tbody-td:last-child {  
-				border-right: none;
-			}
 		}
 	}
 
@@ -186,6 +170,31 @@ McComponent({
 		}
 		&.is-right {
 			justify-content: flex-end;
+		}
+	}
+
+	&.has-stripe {
+		background: #fff;
+		border-bottom: none;
+		.mc-table__tbody-tr:nth-child(2n) {
+			background: #ebeef5;
+		}
+	}
+
+	&.has-border {
+		.mc-table__tbody-td {
+			border-left: 1rpx solid #ebeef5;
+		}
+		.mc-table__tbody-td:last-child {  
+			border-right: 1rpx solid #ebeef5;
+		}
+	}
+
+	&.is-fixed-left {
+		&.has-border {
+			.mc-table__tbody-td:last-child {
+				border-right: none;
+			}
 		}
 	}
 }

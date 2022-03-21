@@ -8,6 +8,7 @@
 	>
 		<mc-table 
 			border
+			stripe
 			dataSource="{{ listInfo.data }}" 
 			bind:row-click="handleClick"
 			bind:sort-change="handleClick"
@@ -24,7 +25,7 @@
 				label="标签1"
 				headerStyle="color: red;"
 				cellStyle="color: red;"
-				width="90"
+				width="80"
 			/>
 			<mc-table-column 
 				prop="name2"
@@ -35,6 +36,11 @@
 				prop="name3"
 				label="标签3"
 				width="110"
+			/>
+			<mc-table-column 
+				prop=""
+				label="标签4"
+				width="140"
 			/>
 			<!-- 
 				TODO: jsx

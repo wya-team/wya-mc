@@ -12,7 +12,8 @@
 				columns="{{ columns }}"
 				defaultSort="{{ defaultSort }}"
 				tHeadStyle="{{ tHeadStyle }}"
-				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }};"
+				tHeadThStyle="{{ tHeadThStyle }}; {{ headerHeightStyle }}"
 				bind:header-click="handleHeaderClick"
 			/>
 			<mc-table-body 
@@ -44,7 +45,8 @@
 				defaultSort="{{ defaultSort }}"
 				scrollWidthStyle="{{ scrollWidthStyle }}"
 				tHeadStyle="{{ tHeadStyle }}"
-				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }};"
+				tHeadThStyle="{{ tHeadThStyle }}; {{ headerHeightStyle }}"
 				bind:ready="handleHeaderReady"
 				bind:header-click="handleHeaderClick"
 			/>
@@ -75,7 +77,8 @@
 				columns="{{ columns }}"
 				defaultSort="{{ defaultSort }}"
 				tHeadStyle="{{ tHeadStyle }}"
-				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }}"
+				tHeadThStyle="{{ tHeadThStyle }}; {{ headerHeightStyle }}"
 				bind:header-click="handleHeaderClick"
 			/>
 			<mc-table-body 
@@ -187,6 +190,10 @@ McComponent({
 			value: ''
 		},
 		tHeadTrStyle: {
+			type: String,
+			value: ''
+		},
+		tHeadThStyle: {
 			type: String,
 			value: ''
 		},
@@ -349,7 +356,6 @@ McComponent({
 				return pre;
 			}, {});
 
-
 			this.setData(states);
 		},
 
@@ -404,7 +410,8 @@ McComponent({
 	background: #fff;
 	box-sizing: border-box;
 	&.has-border {
-		border: 1px solid #ebeef5;
+		border-top: 1rpx solid #ebeef5;
+		border-bottom: 1rpx solid #ebeef5;
 	}
 	&.is-scrolling-none {
 		.mc-table__fixed {

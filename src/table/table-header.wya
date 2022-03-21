@@ -1,22 +1,22 @@
 <template>
 	<view 
-		class="mc-table__thead {{ border ? 'has-border' : ''}} header-class" 
+		class="mc-table__thead {{ border ? 'has-border' : ''}} header-class is-fixed-{{ fixed }}" 
 		style="{{ fixed ? '' : scrollWidthStyle }};{{ tHeadStyle }}"
 	>
-		<block
-			wx:for="{{ columns }}"
-			wx:for-item="column"  
-			wx:for-index="index"  
-			wx:key="headerId" 
+		<view 
+			class="mc-table__thead-tr" 
+			style="{{ tHeadTrStyle }};"
 		>
-			<view 
-				wx:if="{{ !fixed || column.fixed === fixed }}"
-				class="mc-table__thead-tr" 
-				style="width:  {{ column.realWidth || column.width }}px; {{ tHeadTrStyle }};"
+			<block
+				wx:for="{{ columns }}"
+				wx:for-item="column"  
+				wx:for-index="index"  
+				wx:key="headerId" 
 			>
 				<view 
+					wx:if="{{ !fixed || column.fixed === fixed }}"
 					class="mc-table__thead-th is-{{ column.align }}" 
-					style="{{ column.headerStyle }}; {{ !fixed && column.fixed ? 'opacity: 0;' : '' }}"
+					style="width:  {{ column.realWidth || column.width }}px; {{ column.headerStyle }}; {{ !fixed && column.fixed ? 'opacity: 0;' : '' }}; {{ tHeadThStyle }}"
 					data-index="{{ index }}"
 					data-order="{{ defaultSort.order }}"
 					bind:tap="handleHeaderClick"
@@ -35,8 +35,8 @@
 						/>
 					</view>
 				</view>
-			</view>
-		</block>
+			</block>
+		</view>
 	</view> 
 </template>
 <script>
@@ -70,6 +70,10 @@ McComponent({
 			value: ''
 		},
 		tHeadTrStyle: {
+			type: String,
+			value: ''
+		},
+		tHeadThStyle: {
 			type: String,
 			value: ''
 		},
@@ -138,30 +142,19 @@ McComponent({
 	box-sizing: border-box;
 	font-size: 24rpx;
 	font-weight: 400;
-	&.has-border {
-		.mc-table__thead-tr {
-			border-right: 1rpx solid #ebeef5;
-		}
-		.mc-table__thead-tr:last-child {
-			border-right: none;
-		}
-	}
-
 	&-sortable {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		margin-top: -5rpx;
-		padding: 0 10rpx;
+		padding-left: 10rpx;
 	}
 
 	&-tr {
 		display: flex;
 		align-items: center;
-		
 		font-weight: bold;
 		box-sizing: border-box;
-		border-right: 1rpx solid #fff;
 		background: white;
 		&::last-child {
 			border-right: none;
@@ -173,11 +166,30 @@ McComponent({
 		align-items: center;
 		padding: 20rpx;
 		box-sizing: border-box;
+		border-right: 1rpx solid #fff;
 		&.is-center {
 			justify-content: center;
 		}
 		&.is-right {
 			justify-content: flex-end;
+		}
+	}
+
+	&.has-border {
+		.mc-table__thead-th {
+			border-left: 1rpx solid #ebeef5;
+		}
+		
+		.mc-table__thead-th:last-child {
+			border-right: 1rpx solid #ebeef5;
+		}
+	}
+
+	&.is-fixed-left {
+		&.has-border {
+			.mc-table__thead-th:last-child {
+				border-right: none;
+			}
 		}
 	}
 }
