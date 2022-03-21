@@ -152,6 +152,9 @@ McComponent({
 </style>
 <config>
 {
-	"component": true
+	"component": true,
+	"usingComponents": {
+		"mc-icon": "../icon/index"
+	}
 }
 </config>

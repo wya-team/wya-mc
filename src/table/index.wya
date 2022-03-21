@@ -20,7 +20,6 @@
 			bind:header-click="handleHeaderClick"
 		/>
 		<!-- 表格头 end -->
-
 		<!-- 表格体 start -->
 		<mc-table-body 
 			wx:if="{{ doLayouted }}"
@@ -221,11 +220,11 @@ McComponent({
 				});
 			} else {
 				let levelWidth = this.data.containerWidth - width;
+				let states = {};
 				this.data.columns.forEach((item, index) => {
-					this.setData({
-						[`columns[${index}].realWidth`]: (item.width) + levelWidth * (item.width / this.data.containerWidth) 
-					});
+					states[`columns[${index}].realWidth`] = (item.width) + levelWidth * (item.width / this.data.containerWidth);
 				});
+				this.setData(states);
 			}
 
 			this.setData({
@@ -293,7 +292,6 @@ McComponent({
 {
 	"component": true,
 	"usingComponents": {
-		"mc-icon": "../icon/index",
 		"mc-table-header": "./table-header",
 		"mc-table-body": "./table-body"
 	}
