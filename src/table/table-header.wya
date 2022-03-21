@@ -10,7 +10,7 @@
 			wx:key="headerId" 
 		>
 			<view 
-				wx:if="{{ !fixed || column.fixed }}"
+				wx:if="{{ !fixed || column.fixed === fixed }}"
 				class="mc-table__thead-tr" 
 				style="width:  {{ column.realWidth || column.width }}px; {{ tHeadTrStyle }};"
 			>
@@ -74,8 +74,8 @@ McComponent({
 			value: ''
 		},
 		fixed: {
-			type: Boolean,
-			value: false
+			type: String,
+			value: ''
 		}
 	},
 	lifetimes: {
@@ -156,8 +156,10 @@ McComponent({
 	}
 
 	&-tr {
+		display: flex;
+		align-items: center;
+		
 		font-weight: bold;
-		display: inline-block;   
 		box-sizing: border-box;
 		border-right: 1rpx solid #fff;
 		background: white;

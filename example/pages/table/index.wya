@@ -15,8 +15,7 @@
 				fixed="left"
 				align="center"
 				prop="id"
-				label="省市区 省市区 省市区 省市区 省市区 省"
-				sortable="{{ true }}"
+				label="序号"
 				headerStyle="text-align: center"
 			/>
 			<mc-table-column 
@@ -24,7 +23,7 @@
 				label="城镇乡"
 				headerStyle="color: red;"
 				cellStyle="color: red;"
-				width="120"
+				width="90"
 			/>
 			<mc-table-column 
 				prop=""
@@ -39,6 +38,7 @@
 				renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
 			/>
 			<mc-table-column 
+				fixed="right"
 				align="right"
 				prop="address"
 				label="地址"
@@ -59,7 +59,7 @@ const getFakeData = () => Array
 	})
 	.map((i, index) => ({
 		id: index,
-		name: String(Math.random()),
+		name: '占位'.repeat(Math.ceil(Math.random() * 10)),
 		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {

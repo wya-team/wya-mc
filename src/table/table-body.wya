@@ -22,7 +22,7 @@
 					wx:key="columnId" 
 				>
 					<view 
-						wx:if="{{ !fixed || column.fixed }}"
+						wx:if="{{ !fixed || column.fixed === fixed }}"
 						class="mc-table__tbody-td is-{{ column.align }} cell-class" 
 						data-row="{{ dataSource[index] }}" 
 						data-row-index="{{ index }}" 
@@ -89,8 +89,8 @@ McComponent({
 			value: ''
 		},
 		fixed: {
-			type: Boolean,
-			value: false
+			type: String,
+			value: ''
 		}
 	},
 	lifetimes: {

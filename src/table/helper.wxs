@@ -6,8 +6,21 @@ function isArray(v) {
 	return v && (v.constructor === 'Array');
 }
 
+function hasFixed(v) {
+	return v.some(function(i) {
+		return i.fixed === 'left'
+	})
+}
+
+function hasRightFixed(v) {
+	return v.some(function(i) {
+		return i.fixed === 'right'
+	})
+}
 
 module.exports = {
 	isVNodes: isVNodes,
-	isArray: isArray
+	isArray: isArray,
+	hasFixed: hasFixed,
+	hasRightFixed: hasRightFixed
 };

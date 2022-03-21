@@ -1,25 +1,22 @@
 <template>
-	<view class="mc-table mc-class {{ border ? 'has-border' : ''}}">
+	<wxs src="./helper.wxs" module="helper" />
+	<view class="mc-table mc-class {{ border ? 'has-border' : ''}} {{ isScrolling ? '' : 'is-scrolling-none' }} {{ !allowScroll || isScrollingEnd ? 'is-scrolling-right-none' : ''}}">
 		<view 
-			wx:if="{{ headerHeightStyle }}"
+			wx:if="{{ doLayouted && headerHeightStyle && helper.hasFixed(columns) }}"
 			class="mc-table__fixed"
 		>
-			<!-- 表格头 start -->
 			<mc-table-header 
-				wx:if="{{ doLayouted }}"
+				fixed="left"
 				header-class="header-class"
 				border="{{ border }}"
 				columns="{{ columns }}"
 				defaultSort="{{ defaultSort }}"
 				tHeadStyle="{{ tHeadStyle }}"
 				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
-				fixed
 				bind:header-click="handleHeaderClick"
 			/>
-			<!-- 表格头 end -->
-			<!-- 表格体 start -->
 			<mc-table-body 
-				wx:if="{{ doLayouted }}"
+				fixed="left"
 				row-class="row-class"
 				cell-class="cell-class"
 				dataSource="{{ rebuildData }}"
@@ -28,19 +25,17 @@
 				columns="{{ columns }}"
 				tBodyTrStyle="{{ tBodyTrStyle }}"
 				tBodyTdStyle="{{ tBodyTdStyle }}"
-				fixed
 				bind:row-click="handleRowClick"
 			/>
 		</view>
 		<scroll-view 
 			id="{{ tableId }}"
-			scroll-x="{{ scrollX }}" 
+			scroll-x="{{ allowScroll }}" 
 			scroll-left="{{ scrollLeft }}"
 			style="{{ mcStyle }}"  
 			class="mc-table__content"
 			bindscroll="handleScroll"
 		>
-			<!-- 表格头 start -->
 			<mc-table-header 
 				wx:if="{{ doLayouted }}"
 				header-class="header-class"
@@ -53,8 +48,6 @@
 				bind:ready="handleHeaderReady"
 				bind:header-click="handleHeaderClick"
 			/>
-			<!-- 表格头 end -->
-			<!-- 表格体 start -->
 			<mc-table-body 
 				wx:if="{{ doLayouted }}"
 				row-class="row-class"
@@ -69,8 +62,35 @@
 				bind:ready="handleBodyReady"
 				bind:row-click="handleRowClick"
 			/>
-			<!-- 表格体 end -->
 		</scroll-view>
+
+		<view 
+			wx:if="{{ doLayouted && headerHeightStyle && helper.hasRightFixed(columns) }}"
+			class="mc-table__fixed-right"
+		>
+			<mc-table-header 
+				fixed="right"
+				header-class="header-class"
+				border="{{ border }}"
+				columns="{{ columns }}"
+				defaultSort="{{ defaultSort }}"
+				tHeadStyle="{{ tHeadStyle }}"
+				tHeadTrStyle="{{ tHeadTrStyle }}; {{ headerHeightStyle }}"
+				bind:header-click="handleHeaderClick"
+			/>
+			<mc-table-body 
+				fixed="right"
+				row-class="row-class"
+				cell-class="cell-class"
+				dataSource="{{ rebuildData }}"
+				border="{{ border }}"
+				stripe="{{ stripe }}"
+				columns="{{ columns }}"
+				tBodyTrStyle="{{ tBodyTrStyle }}"
+				tBodyTdStyle="{{ tBodyTdStyle }}"
+				bind:row-click="handleRowClick"
+			/>
+		</view>
 		<!-- 列表无数据处理 -->
 		<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
 			<slot wx:if="{{ useEmptySlot }}" name="empty" />
@@ -186,14 +206,19 @@ McComponent({
 	data: {
 		tableId: '',
 		containerWidth: 0,
-		scrollX: false,
+		contentWidth: 0,
 		scrollLeft: 0,
 		scrollWidthStyle: 'width: auto',
-		headerHeightStyle: '',
-		rowsHeight: [],
-		doLayouted: false,
+		headerHeightStyle: '', // 表头的高度
+		rowsHeight: [], // 每行的高度
 		columns: [],
-		rebuildData: []
+		rebuildData: [],
+
+		allowScroll: false,
+		isScrolling: false,
+		isScrollingEnd: false,
+		doLayouted: false,
+		hasFixed: false
 	},
 	lifetimes: {
 		ready() {
@@ -254,6 +279,11 @@ McComponent({
 		 */
 		handleScroll(e) {
 			this.scrollLeft = e.detail.scrollLeft;
+
+			this.setData({
+				isScrolling: e.detail.scrollLeft != 0,
+				isScrollingEnd: this.data.contentWidth - this.data.containerWidth === e.detail.scrollLeft
+			});
 		},
 
 		refreshColumn(child, k, v) {
@@ -281,7 +311,8 @@ McComponent({
 
 			if (width > this.data.containerWidth) {
 				this.setData({
-					scrollX: true,
+					allowScroll: true,
+					contentWidth: width,
 					scrollWidthStyle: `width: ${width}px;`
 				});
 			} else {
@@ -290,6 +321,8 @@ McComponent({
 				this.data.columns.forEach((item, index) => {
 					states[`columns[${index}].realWidth`] = (item.width) + levelWidth * (item.width / this.data.containerWidth);
 				});
+
+				states.contentWidth = this.data.containerWidth;
 				this.setData(states);
 			}
 
@@ -373,6 +406,16 @@ McComponent({
 	&.has-border {
 		border: 1px solid #ebeef5;
 	}
+	&.is-scrolling-none {
+		.mc-table__fixed {
+			box-shadow: none;
+		}
+	}
+	&.is-scrolling-right-none {
+		.mc-table__fixed-right {
+			box-shadow: none;
+		}
+	}
 	&__content {
 		position: relative;
 		width: 100%; 
@@ -395,9 +438,16 @@ McComponent({
 		z-index: 1;
 		box-sizing: border-box;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
-		.is-scrolling-none {
-			box-shadow: none;
-		}
+		transition: box-shadow 0.25s ease;
+	}
+	&__fixed-right {
+		position: absolute; 
+		right: 0; 
+		top: 0;
+		z-index: 1;
+		box-sizing: border-box;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+		transition: box-shadow 0.25s ease;
 	}
 }
 
