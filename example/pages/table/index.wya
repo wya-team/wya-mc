@@ -7,6 +7,7 @@
 		bind:loadData="loadListData" 
 	>
 		<mc-table 
+			border
 			dataSource="{{ listInfo.data }}" 
 			bind:row-click="handleClick"
 			bind:sort-change="handleClick"
@@ -19,29 +20,37 @@
 				headerStyle="text-align: center"
 			/>
 			<mc-table-column 
-				prop="name"
-				label="城镇乡"
+				prop="name1"
+				label="标签1"
 				headerStyle="color: red;"
 				cellStyle="color: red;"
 				width="90"
 			/>
 			<mc-table-column 
-				prop=""
-				label="占位"
-				width="200"
+				prop="name2"
+				label="标签2"
+				width="100"
 			/>
 			<mc-table-column 
-				align="right"
-				prop="name"
-				label="地址"
-				sortable="{{ true }}"
-				renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
+				prop="name3"
+				label="标签3"
+				width="110"
 			/>
+			<!-- 
+				TODO: jsx
+				<mc-table-column 
+					align="right"
+					prop="name"
+					label="jsx"
+					sortable="{{ true }}"
+					renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
+				/> 
+			-->
 			<mc-table-column 
 				fixed="right"
 				align="right"
 				prop="address"
-				label="地址"
+				label="富文本"
 				prefix="*"
 				suffix="#"
 				sortable
@@ -59,7 +68,9 @@ const getFakeData = () => Array
 	})
 	.map((i, index) => ({
 		id: index,
-		name: '占位'.repeat(Math.ceil(Math.random() * 10)),
+		name1: '占位'.repeat(Math.ceil(Math.random() * 10)),
+		name2: '占位'.repeat(Math.ceil(Math.random() * 12)),
+		name3: '占位'.repeat(Math.ceil(Math.random() * 14)),
 		address: 'xxxx'
 	}));
 const renderCell = ({ row, column, rowIndex, columnIndex }) => {
