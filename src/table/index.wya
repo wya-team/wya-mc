@@ -244,6 +244,7 @@ McComponent({
 			const { columns, rebuildData } = this.data;
 			if (!columns.some(i => (typeof i.renderCell == 'function' || typeof i.renderHeader == 'function'))) return;
 
+			const states = {};
 			rebuildData.forEach((row, rowIndex) => {
 				rebuildData[rowIndex]._renders = {
 					cell: {},
@@ -251,17 +252,17 @@ McComponent({
 				};
 				columns.forEach((column, columnIndex) => {
 					if (typeof column.renderCell === 'function') {
-						this.setData({
-							[`rebuildData[${rowIndex}]._renders.cell[${columnIndex}]`]: column.renderCell({
-								row,
-								column,
-								rowIndex,
-								columnIndex
-							}) || ''
-						});
+						states[`rebuildData[${rowIndex}]._renders.cell[${columnIndex}]`] = column.renderCell({
+							row,
+							column,
+							rowIndex,
+							columnIndex
+						}) || '';
 					}
 				});
 			});
+
+			this.setData(states);
 		}
 	}
 });
