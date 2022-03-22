@@ -2,7 +2,7 @@
 	<wxs src="./helper.wxs" module="helper" />
 	<view 
 		class="mc-table__tbody {{ border ? 'has-border' : ''}} {{ stripe ? 'has-stripe' : '' }} is-fixed-{{ fixed }}"
-		style="{{ fixed ? '' : scrollWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
+		style="{{ fixed ? '' : containerWidthStyle  }}; height: {{ height ? height : 'auto' }};" 
 	>
 		<block 
 			wx:if="{{ dataSource.length > 0 }}" 
@@ -76,7 +76,7 @@ McComponent({
 			type: Array,
 			value: []
 		},
-		scrollWidthStyle: {
+		containerWidthStyle: {
 			type: String,
 			value: ''
 		},

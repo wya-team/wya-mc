@@ -3,6 +3,11 @@ export const coreProps = {
 		type: String,
 		value: '100vh'
 	},
+	/**
+	 * 注意，如果使用mc-tabs, 一开始为display: none, 所有高宽计算均为0;
+	 * 可以通过该字段来触发布局刷新
+	 * 同recycle-list
+	 */
 	show: {
 		type: Boolean,
 		value: true

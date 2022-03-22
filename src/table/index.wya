@@ -43,7 +43,7 @@
 				border="{{ border }}"
 				columns="{{ columns }}"
 				defaultSort="{{ defaultSort }}"
-				scrollWidthStyle="{{ scrollWidthStyle }}"
+				containerWidthStyle="{{ containerWidthStyle }}"
 				tHeadStyle="{{ tHeadStyle }}"
 				tHeadTrStyle="{{ tHeadTrStyle }};"
 				tHeadThStyle="{{ tHeadThStyle }}; {{ headerHeightStyle }}"
@@ -58,7 +58,7 @@
 				border="{{ border }}"
 				stripe="{{ stripe }}"
 				columns="{{ columns }}"
-				scrollWidthStyle="{{ scrollWidthStyle }}"
+				containerWidthStyle="{{ containerWidthStyle }}"
 				tBodyTrStyle="{{ tBodyTrStyle }}"
 				tBodyTdStyle="{{ tBodyTdStyle }}"
 				bind:ready="handleBodyReady"
@@ -118,11 +118,7 @@ McComponent({
 				columns.push(child.data);
 				this.setData({ columns });
 				this.rebuildWidthRender();
-
-				// size
 				this.refreshLayout();
-				this.refreshHeaderHeight();
-				this.refreshRowsHeight();
 			},
 			unlinked(child) {
 				const index = this.children.findIndex(i => i === child);
@@ -135,15 +131,23 @@ McComponent({
 
 				this.setData({ columns });
 				this.rebuildWidthRender();
-
-				// size
 				this.refreshLayout();
-				this.refreshHeaderHeight();
-				this.refreshRowsHeight();
 			}
 		}
 	},
 	props: {
+		/**
+		 * 注意，如果使用mc-tabs, 一开始为display: none, 所有高宽计算均为0;
+		 * 可以通过该字段来触发布局刷新
+		 * 同recycle-list
+		 */
+		show: {
+			type: Boolean,
+			value: true,
+			observer(v) {
+				v && this.refreshLayout();
+			}
+		},
 		dataSource: {
 			type: Array,
 			value: [],
@@ -212,10 +216,11 @@ McComponent({
 	},
 	data: {
 		tableId: '',
-		containerWidth: 0,
-		contentWidth: 0,
 		scrollLeft: 0,
-		scrollWidthStyle: 'width: auto',
+		containerWidth: 0,
+		containerWidthStyle: 'width: auto',
+		contentWidth: 0,
+		headerHeight: 0,
 		headerHeightStyle: '', // 表头的高度
 		rowsHeight: [], // 每行的高度
 		columns: [],
@@ -245,9 +250,9 @@ McComponent({
 					const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
 					this.setData({
 						containerWidth: width,
-						scrollWidthStyle: `width: ${width}px;`
+						containerWidthStyle: `width: ${width}px;`
 					});
-					this.refreshLayout();
+					this.refreshColumnsWidth();
 				})
 				.exec();
 		}
@@ -303,60 +308,7 @@ McComponent({
 			});
 
 			this.rebuildWidthRender();
-
 			this.refreshLayout();
-			this.refreshHeaderHeight();
-			this.refreshRowsHeight();
-		},
-
-		refreshLayout() {
-			if (!this.data.containerWidth) return;
-			const width = this.data.columns.reduce((pre, cur) => {
-				 pre += cur.width;
-				 return pre;
-			}, 0);
-
-			if (width > this.data.containerWidth) {
-				this.setData({
-					allowScroll: true,
-					contentWidth: width,
-					scrollWidthStyle: `width: ${width}px;`
-				});
-			} else {
-				let levelWidth = this.data.containerWidth - width;
-				let states = {};
-				this.data.columns.forEach((item, index) => {
-					states[`columns[${index}].realWidth`] = (item.width) + levelWidth * (item.width / this.data.containerWidth);
-				});
-
-				states.contentWidth = this.data.containerWidth;
-				this.setData(states);
-			}
-
-			this.setData({
-				doLayouted: true
-			});
-		},
-
-		async refreshHeaderHeight() {
-			if (!this.header) return;
-			const height = await this.header.getHeight();
-			this.setData({
-				headerHeightStyle: `height: ${height}px;`
-			});
-		},
-
-
-		async refreshRowsHeight() {
-			if (!this.body) return;
-			const rowsHeight = await this.body.getRowsHeight();
-
-			const states = rowsHeight.reduce((pre, currentHeight, index) => {
-				pre[`rebuildData[${index}].heightStyle`] = `height: ${currentHeight ? `${currentHeight}px` : 'auto'};`;
-				return pre;
-			}, {});
-
-			this.setData(states);
 		},
 
 		rebuildData() {
@@ -396,7 +348,75 @@ McComponent({
 			});
 
 			this.setData(states);
-		}
+		},
+
+		/**
+		 * 刷新布局
+		 */
+		refreshLayout() {
+			this.refreshColumnsWidth();
+			this.refreshHeaderHeight();
+			this.refreshRowsHeight();
+		},
+
+		/**
+		 * 计算每列的宽度
+		 */
+		refreshColumnsWidth() {
+			if (!this.data.containerWidth) return;
+			const width = this.data.columns.reduce((pre, cur) => {
+				 pre += cur.width;
+				 return pre;
+			}, 0);
+
+			if (width > this.data.containerWidth) {
+				this.setData({
+					allowScroll: true,
+					contentWidth: width,
+					containerWidthStyle: `width: ${width}px;`
+				});
+			} else {
+				let levelWidth = this.data.containerWidth - width;
+				let states = {};
+				this.data.columns.forEach((item, index) => {
+					states[`columns[${index}].realWidth`] = (item.width) + levelWidth * (item.width / this.data.containerWidth);
+				});
+
+				states.contentWidth = this.data.containerWidth;
+				this.setData(states);
+			}
+
+			this.setData({ doLayouted: true });
+		},
+
+		/**
+		 * 计算表头高度
+		 */
+		async refreshHeaderHeight() {
+			if (!this.header) return;
+			const height = await this.header.getHeight();
+
+			if (this.data.headerHeight === height) return;
+			this.setData({
+				headerHeight: height,
+				headerHeightStyle: `height: ${height ? `${height}px` : 'auto'};`
+			});
+		},
+
+		/**
+		 * 计算每行高度
+		 */
+		async refreshRowsHeight() {
+			if (!this.body) return;
+			const rowsHeight = await this.body.getRowsHeight();
+
+			const states = rowsHeight.reduce((pre, currentHeight, index) => {
+				pre[`rebuildData[${index}].heightStyle`] = `height: ${currentHeight ? `${currentHeight}px` : 'auto'};`;
+				return pre;
+			}, {});
+
+			this.setData(states);
+		},
 	}
 });
 

@@ -1,7 +1,7 @@
 <template>
 	<view 
 		class="mc-table__thead {{ border ? 'has-border' : ''}} header-class is-fixed-{{ fixed }}" 
-		style="{{ fixed ? '' : scrollWidthStyle }};{{ tHeadStyle }}"
+		style="{{ fixed ? '' : containerWidthStyle }};{{ tHeadStyle }}"
 	>
 		<view 
 			class="mc-table__thead-tr" 
@@ -61,7 +61,7 @@ McComponent({
 				order: ''
 			}
 		},
-		scrollWidthStyle: {
+		containerWidthStyle: {
 			type: String,
 			value: ''
 		},

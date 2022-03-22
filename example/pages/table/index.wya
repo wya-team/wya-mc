@@ -1,69 +1,74 @@
 <template>
-	<mc-recycle-list
-		height="calc(100vh)"
-		total="{{ listInfo.total }}"
-		current="{{ listInfo.current }}"
-		showScrollStatus="{{ !!listInfo.data.length }}"
-		bind:loadData="loadListData" 
-	>
-		<mc-table 
-			border
-			stripe
-			dataSource="{{ listInfo.data }}" 
-			bind:row-click="handleClick"
-			bind:sort-change="handleClick"
+	<!-- 一开始如果是display: none的场景 -->
+	<view style="{{ isNone ? 'display: none' : '' }}">
+		<mc-recycle-list
+			show="{{ !isNone }}"
+			height="calc(100vh)"
+			total="{{ listInfo.total }}"
+			current="{{ listInfo.current }}"
+			showScrollStatus="{{ !!listInfo.data.length }}"
+			bind:loadData="loadListData" 
 		>
-			<mc-table-column 
-				fixed="left"
-				align="center"
-				prop="id"
-				label="序号"
-				headerStyle="text-align: center"
-			/>
-			<mc-table-column 
-				prop="name1"
-				label="标签1"
-				headerStyle="color: red;"
-				cellStyle="color: red;"
-				width="80"
-			/>
-			<mc-table-column 
-				prop="name2"
-				label="标签2"
-				width="100"
-			/>
-			<mc-table-column 
-				prop="name3"
-				label="标签3"
-				width="110"
-			/>
-			<mc-table-column 
-				prop=""
-				label="标签4"
-				width="140"
-			/>
-			<!-- 
-				TODO: jsx
+			<mc-table 
+				border
+				stripe
+				show="{{ !isNone }}"
+				dataSource="{{ listInfo.data }}" 
+				bind:row-click="handleClick"
+				bind:sort-change="handleClick"
+			>
 				<mc-table-column 
+					fixed="left"
+					align="center"
+					prop="id"
+					label="序号"
+					headerStyle="text-align: center"
+				/>
+				<mc-table-column 
+					prop="name1"
+					label="标签1"
+					headerStyle="color: red;"
+					cellStyle="color: red;"
+					width="80"
+				/>
+				<mc-table-column 
+					prop="name2"
+					label="标签2"
+					width="100"
+				/>
+				<mc-table-column 
+					prop="name3"
+					label="标签3"
+					width="110"
+				/>
+				<mc-table-column 
+					prop=""
+					label="标签4"
+					width="140"
+				/>
+				<!-- 
+					TODO: jsx
+					<mc-table-column 
+						align="right"
+						prop="name"
+						label="jsx"
+						sortable="{{ true }}"
+						renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
+					/> 
+				-->
+				<mc-table-column 
+					fixed="right"
 					align="right"
-					prop="name"
-					label="jsx"
-					sortable="{{ true }}"
-					renderCell="<text class='g-c-red'>{ row.address }</text><text class='g-c-red'>{ row.address }</text>"
-				/> 
-			-->
-			<mc-table-column 
-				fixed="right"
-				align="right"
-				prop="address"
-				label="富文本"
-				prefix="*"
-				suffix="#"
-				sortable
-				renderCell="{{ renderCell }}"
-			/>
-		</mc-table>
-	</mc-recycle-list>
+					prop="address"
+					label="富文本"
+					prefix="*"
+					suffix="#"
+					sortable
+					renderCell="{{ renderCell }}"
+				/>
+			</mc-table>
+		</mc-recycle-list>
+	</view>
 </template>
 
 <script>
@@ -85,6 +90,7 @@ const renderCell = ({ row, column, rowIndex, columnIndex }) => {
 
 Page({
 	data: {
+		isNone: true,
 		listInfo: {
 			current: 0,
 			total: 0,
@@ -92,7 +98,11 @@ Page({
 		},
 		renderCell
 	},
-
+	onLoad() {
+		setTimeout(() => {
+			this.setData({ isNone: false });
+		}, 300);
+	},
 	async loadListData(e) {
 		const { page, refresh, done } = e.detail;
 		wx.showLoading();
