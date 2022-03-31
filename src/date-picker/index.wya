@@ -201,8 +201,10 @@ McComponent({
 								wx.showToast({ title: '请选择范围', icon: 'none' });
 								return false;
 							} else {
-								const startTime = new Date(...this.data.pickValue[0]).getTime();
-								const endTime = new Date(...this.data.pickValue[1]).getTime();
+								const [startYear, startMonth, startDay] = this.data.pickValue[0];
+								const startTime = new Date(startYear, startMonth - 1, startDay).getTime();
+								const [endYear, endMonth, endDay] = this.data.pickValue[1];
+								const endTime = new Date(endYear, endMonth - 1, endDay).getTime();
 								if (startTime >= endTime) {
 									wx.showToast({ title: '开始时间不能大于等于结束时间', icon: 'none' });
 									return false;
