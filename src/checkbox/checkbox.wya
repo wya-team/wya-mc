@@ -67,7 +67,7 @@ McComponent({
 			value: false
 		},
 		name: {
-			type: String
+			type: [String, Number]
 		},
 	},
 	data: {
