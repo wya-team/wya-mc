@@ -27,7 +27,7 @@
 							wx:key="index"
 							data-index="{{ index }}"
 							class="{{ getters.tabClass(index === currentIndex, ellipsis) }} {{ utils.bem('tab', { active: index === currentIndex, disabled: item.disabled, complete: !ellipsis }) }}"
-							style="{{ getters.tabStyle(index === currentIndex, ellipsis, color, type, item.disabled, titleActiveColor, titleInactiveColor, swipeThreshold, scrollable) }}"
+							style="{{ getters.tabStyle(index === currentIndex, ellipsis, color, type, item.disabled, titleActiveColor, titleInactiveColor, swipeThreshold, scrollable) }}; {{ item.tabStyle || '' }}"
 							bind:tap="onTap"
 						>
 							<view class="{{ ellipsis ? 'mc-ellipsis' : '' }}" style="{{ item.titleStyle }}">
