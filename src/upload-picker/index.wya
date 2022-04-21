@@ -445,6 +445,10 @@ McComponent({
 					this.sync(currentValue[type], type);
 				};
 
+				override.onError = (res) => {
+					wx.showToast({ title: res.msg, icon: 'none' });
+				};
+
 				override.onFileError = (res, file, cycle, type = 'image') => {
 					const { currentValue } = this.data;
 					// 内部保存上传失败的文件，不传递给外层

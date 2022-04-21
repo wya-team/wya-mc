@@ -317,6 +317,11 @@ McComponent({
 			const onAfter = onPostAfter || $onPostAfter || (() => {});
 
 			const { uid } = file;
+
+			if (size && file.size > size * 1024 * 1024) {
+				this.$fns.onError({ msg: `上传失败，大小限制为${size}MB` });
+				return;
+			}
 			
 			// onFileStart, onFileProgress, onFileSuccess, onFileError, onComplete 
 			this.$fns.onFileStart(file, $mode);
@@ -373,11 +378,6 @@ McComponent({
 				}
 
 			};
-
-
-			if (size && file.size > size * 1024 * 1024) {
-				onError({ status: 0, msg: `上传失败，大小限制为${size}MB` });
-			}
 
 			let createRequest = () => {
 				let request = wx.uploadFile({
