@@ -29,7 +29,7 @@
 						controls="{{ false }}"
 						showPlayBtn="{{ false }}"
 						showCenterPlayBtn="{{ false }}"
-						bind:tap="handlePreviewVideo"
+						catchtap="handlePreviewVideo"
 					/>
 					<view
 						wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
@@ -47,19 +47,32 @@
 						mc-class="mc-upload-picker__preview-delete"
 						data-index="{{ index }}"
 						data-type="video"
-						bind:tap="handleDeleteItem"
+						catchtap="handleDeleteItem"
 					/>
 				</view>
 
 				<!-- 上传样式 -->
 				<block wx:if="{{!disabled && currentMultiple.video}}">
-					<!-- fns="{{ uploadOpts.fns }}" -->
+					<!-- fns="{{ currentUploadOptions.fns }}" -->
 					<mc-upload 
+						mode="video"
 						max="{{currentMax.video}}"
 						multiple="{{currentMultiple.video}}"
+						disabled="{{ currentUploadOptions.disabled }}"
+						url="{{ currentUploadOptions.url }}"
+						headers="{{ currentUploadOptions.headers }}"
+						name="{{ currentUploadOptions.name }}"
+						accept="{{ currentUploadOptions.accept }}"
+						size="{{ currentUploadOptions.size }}"
+						sizeType="{{ currentUploadOptions.sizeType }}"
+						sourceType="{{ currentUploadOptions.sourceType }}"
+						compressed="{{ currentUploadOptions.compressed }}"
+						maxDuration="{{ currentUploadOptions.maxDuration }}"
+						camera="{{ currentUploadOptions.camera }}"
+						parallel="{{ currentUploadOptions.parallel }}"
+						fns="{{ currentUploadOptions.fns }}"
 						class="mc-upload-picker__slot"
 						bind:ready="handleReady"
-						mode="video"
 					>
 						<view
 							class="mc-upload-picker__upload {{ disabled ? 'mc-upload-picker__upload--disabled': ''}}"
@@ -91,7 +104,7 @@
 						height="{{ previewSize }}rpx"
 						data-index="{{ index }}"
 						data-src="{{ item }}"
-						bind:tap="handlePreviewImage"
+						catchtap="handlePreviewImage"
 					/>
 					<view
 						wx:elif="{{ item.status === 'uploading' || item.status === 'failed' }}"
@@ -109,16 +122,30 @@
 						mc-class="mc-upload-picker__preview-delete"
 						data-index="{{ index }}"
 						data-type="image"
-						bind:tap="handleDeleteItem"
+						catchtap="handleDeleteItem"
 					/>
 				</view>
 
 				<!-- 上传样式 -->
 				<block wx:if="{{!disabled && currentMultiple.image}}">
-					<!-- fns="{{ uploadOpts.fns }}" -->
+					<!-- fns="{{ currentUploadOptions.fns }}" -->
 					<mc-upload 
+						mode="image"
 						max="{{currentMax.image}}"
 						multiple="{{currentMultiple.image}}"
+						disabled="{{ currentUploadOptions.disabled }}"
+						url="{{ currentUploadOptions.url }}"
+						headers="{{ currentUploadOptions.headers }}"
+						name="{{ currentUploadOptions.name }}"
+						accept="{{ currentUploadOptions.accept }}"
+						size="{{ currentUploadOptions.size }}"
+						sizeType="{{ currentUploadOptions.sizeType }}"
+						sourceType="{{ currentUploadOptions.sourceType }}"
+						compressed="{{ currentUploadOptions.compressed }}"
+						maxDuration="{{ currentUploadOptions.maxDuration }}"
+						camera="{{ currentUploadOptions.camera }}"
+						parallel="{{ currentUploadOptions.parallel }}"
+						fns="{{ currentUploadOptions.fns }}"
 						class="mc-upload-picker__slot"
 						bind:ready="handleReady"
 					>
@@ -143,6 +170,20 @@ import { isImageFile, recognizer } from './utils';
 let app = getApp();
 app.$mc = app.$mc || { config: {} };
 
+const DEFAULT_UPLOAD_OPTIONS = {
+	disabled: false,
+	url: '',
+	name: '',
+	accept: '',
+	size: Number.MAX_VALUE,
+	sizeType: ['original', 'compressed'],
+	sourceType: ['album', 'camera'],
+	compressed: true,
+	maxDuration: 60,
+	camera: 'back',
+	parallel: true,
+	fns: null
+};
 McComponent({
 	relations: {
 		'../form/form-item': {
@@ -167,8 +208,7 @@ McComponent({
 			value: 150,
 		},
 		name: {
-			type: Number,
-			optionalTypes: [String],
+			type: [String, Number],
 			value: '',
 		},
 		dataSource: {
@@ -200,28 +240,38 @@ McComponent({
 		},
 		uploadOpts: {
 			type: Object,
-			value: {
-			}
+			value: DEFAULT_UPLOAD_OPTIONS
 		},
 		useReady: Boolean
 	},
-	lifetimes: {
-		ready() {
-			this.rebuild(this.data.dataSource);
-		}
-	},
 	data: {
-
 		currentValue: {
 			image: [],
 			video: [],
 			file: []
 		},
-
 		currentMax: {},
 		currentMultiple: {},
-
 		isInCount: true,
+	},
+	observers: {
+		'uploadOpts': function (uploadOpts) {
+			this.setData({
+				currentUploadOptions: {
+					...DEFAULT_UPLOAD_OPTIONS,
+					...uploadOpts
+				}
+			});
+			console.log(this.data.currentUploadOptions);
+		},
+	},
+	lifetimes: {
+		attached() {
+			this.setData({ currentUploadOptions: this.data.uploadOpts });
+		},
+		ready() {
+			this.rebuild(this.data.dataSource);
+		}
 	},
 	methods: {
 		rebuild(val) {
@@ -279,23 +329,22 @@ McComponent({
 		},
 
 		parseDataSource(dataSource) {
-			const initialData = { image: [], video: [], file: [] };
 			const fn = (app.$mc.config.UploadPicker || {}).recognizer || recognizer;
 			return dataSource.reduce((pre, cur) => {
 				switch (recognizer(cur)) {
 					case 'image':
-						pre.image.push(cur);
+						!pre.image.includes(cur) && pre.image.push(cur);
 						return pre;
 					case 'video':
-						pre.video.push(cur);
+						!pre.video.includes(cur) && pre.video.push(cur);
 						return pre;
 					case 'file':
-						pre.file.push(cur);
+						!pre.file.includes(cur) && pre.file.push(cur);
 						return pre;
 					default:
 						return pre;
 				}
-			}, initialData);
+			}, this.data.currentValue);
 		},
 
 		getUrl(res) {
@@ -350,7 +399,7 @@ McComponent({
 					res.title = res.name;
 
 					currentValue[type].push(res);
-					this.setData(this.computed());
+					this.setData(this.computed(currentValue));
 					fns.onFileStart && fns.onFileStart(res, type);
 				};
 

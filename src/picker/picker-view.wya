@@ -5,7 +5,9 @@
 		indicator-style="{{indicatorStyle}}" 
 		indicator-class="{{indicatorClass}}" 
 		style="width: 100%"
-		bindchange="handleChange" 
+		bindchange="handleChange"
+		bindpickstart="handlePickStart"
+		bindpickend="handlePickEnd"
 	>
 		<picker-view-column wx:for="{{currentData}}" wx:for-item="column" wx:key="index">
 			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
@@ -101,8 +103,12 @@ McComponent({
 			for (let i = 0, length = dataSource.length; i < length; i++) {
 				data[col].push(dataSource[i]);
 				/* eslint-disable */
-				if ((i === currentValue[col] && dataSource[i].children instanceof Array 
-					|| (i === 0 && (currentValue[col] === undefined || currentValue[col] === null) && (dataSource[0] || {}).children instanceof Array)) // 如果当前列没有选中的值，默认拿第一个
+				if (
+					((dataSource[i] || {}).children instanceof Array && dataSource[i].children.length)
+					&& (
+						i === currentValue[col]
+						|| (i === 0 && (currentValue[col] === undefined || currentValue[col] === null))
+					) // 如果当前列没有选中的值，默认拿第一个
 					&& (col < this.data.cols - 1 || !this.data.cols)) {
 					this.parseData(dataSource[i].children, { currentValue, data, col: col + 1 });
 				}
@@ -168,6 +174,12 @@ McComponent({
 				pre.push(item.value);
 				return pre;
 			}, []);
+		},
+		handlePickStart(event) {
+			this.isTouching = true;
+		},
+		handlePickEnd(event) {
+			this.isTouching = false;
 		},
 		handleChange(event) {
 			const { currentData, dataSource } = this.data;

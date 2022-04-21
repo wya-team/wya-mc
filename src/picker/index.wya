@@ -115,7 +115,10 @@ McComponent({
 				// TODO 异步获取dataSource
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
-					title: this.data.title
+					title: this.data.title,
+					onBeforeSure: () => {
+						return !this.viewInstance.isTouching;
+					}
 				}).then((res) => {
 					this.handleOK();
 				}).catch((err) => {
