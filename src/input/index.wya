@@ -132,6 +132,33 @@ McComponent({
 		viewPlaceholder: {
 			type: Boolean,
 			value: true
+		},
+
+		/**
+		 * 以下属性，在type=number|digit 生效，
+		 */
+		// 输入框内是否必须有值
+		required: {
+			type: Boolean,
+			value: false
+		},
+		// 小数点位数
+		precision: {
+			type: Number,
+			value: 0,
+		},
+		min: {
+			type: Number,
+			value: 0,
+		},
+		max: {
+			type: Number,
+			value: Number.MAX_SAFE_INTEGER,
+		},
+		// 可接受function
+		output: {
+			type: null,
+			value: 'number'
 		}
 	},
 	data: {
@@ -177,9 +204,22 @@ McComponent({
 		},
 		handleInput(event) {
 			let value = event.detail.value;
-			const { maxlength } = this.data;
+			const { maxlength, type, precision } = this.data;
 			if (maxlength > -1) {
 				value = value.length > maxlength ? value.substring(0, maxlength) : value;
+			}
+			if (/[-]{2,}/.test(value)) { // `--` -> `-`
+				value = '-';
+			}
+			if (value !== '' && ['number', 'digit'].includes(type)) {
+				let regex = precision
+					? new RegExp(`(-*)(\\d*(?:\\.\\d{0,${precision}})?).*$`)
+					: new RegExp(`(.*)\\.`);
+				value = value.replace(regex, '$1$2');
+				// 0002 -> 2, 0.2 -> .2
+				value = value === '0' ? '0' : value.replace(/^[0]{1,}/, '0');
+				// '0.' -> '.' -> '0.'
+				value = value.charAt(0) === '.' ? `0${value}` : value;
 			}
 			this.setData({
 				currentValue: value
@@ -190,8 +230,12 @@ McComponent({
 			setTimeout(() => {
 				this.setData({ isFocus: false });
 			}, 100);
-			this.$emit('blur', this.data.currentValue);
-			this.parent && this.parent.fieldBlur();
+			const value = this.composeValue(this.data.currentValue);
+			this.sync(value);
+			wx.nextTick(() => {
+				this.$emit('blur', value);
+				this.parent && this.parent.fieldBlur();
+			});
 		},
 		handleFocus(event) {
 			this.setData({ isFocus: true });
@@ -218,7 +262,28 @@ McComponent({
 				this.$emit('clear', '');
 			});
 		},
+		// 最大最小值比较
+		compareWithBoundary(value) {
+			const { min, max } = this.data;
+			if (value > max) {
+				value = max;
+			} else if (value < min) {
+				value = min;
+			}
+			return value;
+		},
+		composeValue(value) {
+			const { type, min, required, output } = this.data;
+			if (!['number', 'digit'].includes(type)) return value;
+
+			value = /^(-|)$/.test(value) ? '' : this.compareWithBoundary(value);
+			value = required && !value ? String(min) : value;
+			return typeof output === 'function' 
+				? output(value)
+				: output === 'number' && value !== '' ? Number(value) : value;
+		},
 		sync(v) {
+			if (v === this.data.value) return;
 			wx.nextTick(() => {
 				this.$emit('input', v);
 				this.$emit('change', v);
