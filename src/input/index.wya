@@ -212,10 +212,14 @@ McComponent({
 				value = '-';
 			}
 			if (value !== '' && ['number', 'digit'].includes(type)) {
-				let regex = precision
-					? new RegExp(`(-*)(\\d*(?:\\.\\d{0,${precision}})?).*$`)
-					: new RegExp(`(.*)\\.`);
-				value = value.replace(regex, '$1$2');
+				let regex;
+				if (precision) {
+					regex = new RegExp(`(-*)(\\d*(?:\\.\\d{0,${precision}})?).*$`);
+					value = value.replace(regex, '$1$2');
+				} else {
+					regex = new RegExp(`(.*)\\.`);
+					value = value.replace(regex, '$1');
+				}
 				// 0002 -> 2, 0.2 -> .2
 				value = value === '0' ? '0' : value.replace(/^[0]{1,}/, '0');
 				// '0.' -> '.' -> '0.'
