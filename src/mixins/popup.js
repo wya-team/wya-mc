@@ -10,7 +10,7 @@ export const popup = Behavior({
 			value: true
 		},
 		maskClosable: {
-			type: Boolean,
+			type: null,
 			value: true
 		},
 		maskStyle: {

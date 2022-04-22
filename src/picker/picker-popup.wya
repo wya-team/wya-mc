@@ -3,6 +3,7 @@
 		mc-class="mc-picker-popup" 
 		mask-style="{{ maskStyle }}" 
 		visible="{{visible}}" 
+		mask-closable="{{ maskClosable }}"
 		hideTabBar="{{ hideTabBar }}"
 		bind:close="handleCancel"
 	>
@@ -47,6 +48,9 @@ McComponent({
 		onPortalUpdate(options = {}) {
 			this.onBeforeSure = options.onBeforeSure || (() => true);
 			this.onBeforeClose = options.onBeforeClose || (() => true);
+			this.setData({
+				maskClosable: this.onBeforeClose
+			});
 		},
 		handleClose() {
 			this.$emit('close');

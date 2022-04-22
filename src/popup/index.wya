@@ -87,7 +87,8 @@ McComponent({
 	},
 	methods: {
 		handleClose() {
-			if (!this.data.maskClosable) return;
+			const { maskClosable } = this.data;
+			if (typeof maskClosable === 'function' ? !maskClosable() : !maskClosable) return;
 			if (!this['@@PORTAL']) {
 				this.setData({
 					visible: false

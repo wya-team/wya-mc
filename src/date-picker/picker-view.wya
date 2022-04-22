@@ -6,6 +6,8 @@
 		indicator-class="{{indicatorClass}}" 
 		style="width: 100%"
 		bindchange="handleChange" 
+		bindpickstart="handlePickStart"
+		bindpickend="handlePickEnd"
 	>
 		<picker-view-column wx:for="{{dataSource}}" wx:for-item="column" wx:key="index">
 			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
@@ -47,6 +49,7 @@ McComponent({
 	lifetimes: {
 		attached() {
 			this.$emit('ready', this);
+			// 在observer之后执行的
 			this.createDataSource(this.data.mode);
 		},
 	},
@@ -60,6 +63,9 @@ McComponent({
 					}),
 				});
 				this.setData({ currentValue: this.formatValue(this.data.value) });
+				if (mode === 'date') {
+					this.rebuildDataSource(this.data.value);
+				}
 			}
 		},
 		// 根据外部的值，返回列中数据对应的index
@@ -77,7 +83,14 @@ McComponent({
 		},
 		rebuildDataSource(value) {
 			const { dataSource } = this.data;
-			const [year, month, day] = value;
+			const [yearColumn, monthColumn, dayColumn] = dataSource;
+
+			const defaultYear = (yearColumn[0] || {}).value;
+			const defaultMonth = (monthColumn[0] || {}).value;
+			const defaultDay = (dayColumn[0] || {}).value;
+
+			const [year = defaultYear, month = defaultMonth, day = defaultDay] = value;
+
 			const limitInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 			const isLeap = new Date(year, 1, 29).getDate() === 29; // 是否为闰年
 			if (isLeap) limitInMonth[1] = 29;
@@ -90,6 +103,12 @@ McComponent({
 			}
 			if (day > monthDay) return [year, month, monthDay];
 			return [year, month, day];
+		},
+		handlePickStart(event) {
+			this.isTouching = true;
+		},
+		handlePickEnd(event) {
+			this.isTouching = false;
 		},
 		handleChange(event) {
 			const { dataSource } = this.data;

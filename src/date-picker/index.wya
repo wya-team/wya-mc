@@ -196,6 +196,7 @@ McComponent({
 					context: this.selectComponent(`#${this.data.tag}`),
 					title: this.data.title,
 					onBeforeSure: () => {
+						if (this.viewInstance.isTouching) return false;
 						if (this.data.isRange) {
 							if (this.data.pickValue.length != 2) {
 								wx.showToast({ title: '请选择范围', icon: 'none' });
@@ -213,6 +214,9 @@ McComponent({
 						}
 						return true;
 					},
+					onBeforeClose: () => {
+						return !this.viewInstance.isTouching;
+					}
 				}).then((res) => {
 					this.handleOK();
 				}).catch((err) => {
