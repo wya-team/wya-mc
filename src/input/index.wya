@@ -36,7 +36,7 @@
 			/>
 			<!-- 将当前的textarea样式copy出来用view展示，需拿到textarea当前的高度 -->
 			<view
-				hidden="{{ !shouldHide || !viewPlaceholder }}"
+				hidden="{{ !shouldHide }}"
 				class="mc-input__textarea {{!currentValue ? placeholderClass : ''}}"
 				style="{{ textareaStyle }}; height: {{textareaHeight}}px; overflow-y: auto; box-sizing: border-box; word-break: break-all;  {{!currentValue ? placeholderStyle : ''}}"
 			>

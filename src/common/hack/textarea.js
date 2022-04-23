@@ -26,14 +26,14 @@ class TextareaHack {
 				data = [data];
 			}
 			data.forEach(instance => {
-				instance.setData({
+				instance.data.viewPlaceholder && instance.setData({
 					shouldHide: visible
 				});
 			});
 		} else {
 			this.instanceList.forEach((instance) => {
 				if (instance.collaspeItem && !instance.collaspeItem.data.isActive && !visible) return;
-				instance.setData({
+				instance.data.viewPlaceholder && instance.setData({
 					shouldHide: visible
 				});
 			});
