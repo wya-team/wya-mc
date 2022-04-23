@@ -158,7 +158,7 @@ McComponent({
 		// 可接受function
 		output: {
 			type: null,
-			value: 'number'
+			value: 'string'
 		}
 	},
 	data: {
