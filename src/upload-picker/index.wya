@@ -262,12 +262,16 @@ McComponent({
 					...uploadOpts
 				}
 			});
-			console.log(this.data.currentUploadOptions);
 		},
 	},
 	lifetimes: {
 		attached() {
-			this.setData({ currentUploadOptions: this.data.uploadOpts });
+			this.setData({ 
+				currentUploadOptions: {
+					...DEFAULT_UPLOAD_OPTIONS,
+					...this.data.uploadOpts 
+				}
+			});
 		},
 		ready() {
 			this.rebuild(this.data.dataSource);
