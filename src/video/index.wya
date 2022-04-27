@@ -15,23 +15,24 @@
 			showPlayBtn="{{ showPlayBtn }}"
 			showFullscreenBtn="{{ showFullscreenBtn }}"
 			pictureInPictureMode="{{ pictureInPictureMode }}"
-			binderror="handleError" 
+			binderror="handleError"
 			bindloadedmetadata="handleLoadMetaData"
+			bind:play="handleStartPlay"
 		/>
-		<view 
+		<view
 			wx:else
-			class="mc-video__placeholder" 
+			class="mc-video__placeholder"
 			bind:tap="handlePlay"
 		>
-			<mc-spin 
-				wx:if="{{ !hasLoadFail }}" 
-				color="#ffffff" 
+			<mc-spin
+				wx:if="{{ !hasLoadFail }}"
+				color="#ffffff"
 				size="{{ spinOpts.size }}"
 			/>
-			<view 
+			<view
 				wx:else
-				class="is-tag-div" 
-				style="{{ playStyle }}" 
+				class="is-tag-div"
+				style="{{ playStyle }}"
 			/>
 		</view>
 	</view>
@@ -134,9 +135,6 @@ McComponent({
 	},
 
 	pageLifetimes: {
-		show() {
-			
-		},
 		// 避免点击太快的问题, 切换页面时，调度没有完成的情况
 		hide() {
 			this.schedule.complete();
@@ -206,6 +204,10 @@ McComponent({
 			this.setData({
 				hasClick: true
 			});
+		},
+
+		handleStartPlay(e) {
+			this.$emit('play', e);
 		}
 
 	}
