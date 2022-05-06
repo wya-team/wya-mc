@@ -7,6 +7,10 @@
 		<mc-list-item label="中间弹窗" bind:click="handleOpenCenter" />
 	</mc-list>
 
+	<mc-list>
+		<mc-list-item label="底部弹窗(可上下滑动)" bind:click="handleOpenSwiper" />
+	</mc-list>
+
 	<mc-popup id="popup-top" mc-style="height: 30%" placement="top" closeable close-icon-position="bottom-right">
 		<view>顶部弹窗</view>
 	</mc-popup>
@@ -19,12 +23,19 @@
 	<mc-popup id="popup-left" mc-style="width: 30%; height: 100%" placement="left">
 		<view>左部弹窗</view>
 	</mc-popup>
-	<mc-popup  id="popup-center" mc-style="height: 30%; width: 80%" placement="center">
+	<mc-popup id="popup-center" mc-style="height: 30%; width: 80%" placement="center">
 		<view>中间弹窗</view>
 	</mc-popup>
+
+	<mc-popup-swiper id="popup-swiper" mc-style="height: 80vh" closeable>
+		<view>
+			TODO: 集成recycle-list 或将其分离
+		</view>
+		<view wx:for="{{ 200 }}" wx:key="*this">底部弹出，上下可滑动 {{ item }}</view>
+	</mc-popup-swiper>
 </template>
 <script>
-import { PopupTop, PopupBottom, PopupLeft, PopupRight, PopupCenter } from './popup/portal';
+import { PopupTop, PopupBottom, PopupLeft, PopupRight, PopupCenter, PopupSwiper } from './popup/portal';
 
 Page({
 	handleOpenTop() {
@@ -80,6 +91,15 @@ Page({
 	},
 	handleClose() {
 		Popup.destroy();
+	},
+	handleOpenSwiper() {
+		PopupSwiper.popup({
+
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
 	}
 });
 
@@ -88,6 +108,7 @@ Page({
 {
 	"usingComponents": {
 		"mc-popup": "../../components/popup/index",
+		"mc-popup-swiper": "../../components/popup/popup-swiper",
 		"mc-list": "../../components/list/index",
 		"mc-list-item": "../../components/list/list-item"
 	}

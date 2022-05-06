@@ -15,3 +15,7 @@ export const PopupRight = new Portal({
 export const PopupCenter = new Portal({ 
 	el: "#popup-center" 
 });
+
+export const PopupSwiper = new Portal({ 
+	el: "#popup-swiper" 
+});

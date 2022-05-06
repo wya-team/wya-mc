@@ -1,0 +1,210 @@
+<template>
+	<mc-transition 
+		wx:if="{{ mask }}" 
+		visible="{{ mask && visible }}" 
+		duration="{{ duration }}"
+		mc-class="mc-popup-swiper__mask" 
+		mc-style="{{ maskStyle }}"
+		catch:touchmove="preventToucheMove" 
+	/>
+	<mc-movable-bottom 
+		wx:if="{{ visible }}"
+		
+		zIndex="{{ zIndex }}"
+		scrollable="{{ scrollable }}"
+		closeable="{{ closeable }}"
+		contentHeight="{{ originalContentHeight }}"
+
+		bind:scroll="handleScroll"
+		bind:scrolltolower="handleEndReached"
+
+		bind:close="handleClose"
+		bind:fullscreen="handleFullscreen"
+		bind:recover="handleRecover"
+	>
+		<view 
+			wx:if="{{ inited }}" 
+			class="mc-popup-swiper {{ classes }} mc-class"
+			style="-webkit-transition-duration: {{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{ mcStyle }}; {{ popupForceStyle }}"
+		>
+			<slot />
+		</view>
+	</mc-movable-bottom>
+</template>
+<script>
+import McComponent from '../common/component';
+import { transition } from '../mixins/transition';
+import { popup } from '../mixins/popup';
+import TextareaHack from '../common/hack/textarea';
+
+McComponent({
+	mixins: [transition(false), popup],
+	externalClasses: [
+		'enter-class',
+		'enter-active-class',
+		'enter-to-class',
+		'leave-class',
+		'leave-active-class',
+		'leave-to-class'
+	],
+	props: {
+		placement: {
+			type: String,
+			value: 'bottom',
+		},
+		closeable: {
+			type: Boolean,
+			value: false
+		},
+		maskStyle: String,
+		zIndex: {
+			type: Number,
+			value: 1001,
+		},
+		scrollable: {
+			type: Boolean,
+			value: true
+		}
+	},
+	data: {
+		originalContentHeight: ''
+	},
+	attached() {
+		this.setData({ name: this.data.placement });
+	},
+	observers: {
+		visible(val) {
+			// this.preVisible 未变化前的visible值，visible属性的监听在mixins transition 中，重写导致弹窗出不来，所以采用本地做标记
+			if (this.preVisible !== val) {
+				this.preVisible = val;
+				TextareaHack.toggle(val);	
+			}
+		},
+		inited(val) {
+			if (!val) return;
+			wx.nextTick(() => {
+				this.createSelectorQuery()
+					.select(`.mc-popup-swiper`)
+					.boundingClientRect((res) => {
+						if (!res || !res.height) return;
+						let { height } = res;
+						const { windowHeight } = wx.getSystemInfoSync();
+						if (height > windowHeight) {
+							height = windowHeight;
+							console.error('[@wya/mc]: 高度不能超高整屏');
+						}
+						this.setData({
+							originalContentHeight: height,
+							popupForceStyle: `;height: ${windowHeight}px!important;`
+						});
+					})
+					.exec();
+			});
+		}
+	},
+	methods: {
+		handleClose() {
+			const { maskClosable } = this.data;
+			if (typeof maskClosable === 'function' ? !maskClosable() : !maskClosable) return;
+			if (!this['@@PORTAL']) {
+				this.setData({
+					visible: false
+				});
+			}
+			this.setData({ popupForceStyle: '' });
+			this.$emit('close');
+		},
+		preventToucheMove() {},
+
+		handleMovableMove(e) {
+			// any
+		},
+
+		handleFullscreen() {
+			this.setData({
+				popupForceStyle: `;min-height: ${wx.getSystemInfoSync().windowHeight}px!important; height: unset!important;`
+			});
+		},
+
+		handleRecover() {
+			this.setData({
+				popupForceStyle: `;height: ${wx.getSystemInfoSync().windowHeight}px!important;`
+			});
+		},
+
+		handleScroll(e) {
+			this.triggerEvent('scroll', e.detail);
+		},
+		handleEndReached(e) {
+			this.triggerEvent('scrolltolower', e.detail);
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+.mc-popup-swiper__mask {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, .5);
+	height: 100%;
+	z-index: 1001;
+}
+
+.mc-popup-swiper {
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
+	transition-timing-function: ease;
+	-webkit-animation: ease both;
+	animation: ease both;
+	-webkit-overflow-scrolling: touch;
+	background-color: #fff;
+}
+.mc-popup-swiper__close {
+	position: absolute;
+	bottom: 20rpx;
+	right: 20rpx;
+	&-icon {
+		color: #666;
+	}
+}
+
+.mc-fade-enter-active,
+.mc-fade-leave-active {
+	transition-property: opacity
+}
+
+.mc-fade-enter,
+.mc-fade-leave-to {
+	opacity: 0
+}
+
+.mc-bottom-enter-active,
+.mc-bottom-leave-active {
+	transition-property: -webkit-transform;
+	transition-property: transform;
+	transition-property: transform, -webkit-transform
+}
+
+.mc-bottom-enter,
+.mc-bottom-leave-to {
+	-webkit-transform: translate3d(0, 100%, 0);
+	transform: translate3d(0, 100%, 0)
+}
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {
+		"mc-transition": "../transition/index",
+		"mc-icon": "../icon/index",
+		"mc-movable-bottom": "./movable-bottom"
+	}
+}
+</config>

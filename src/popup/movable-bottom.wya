@@ -1,0 +1,240 @@
+<template>
+	<movable-area 
+		class="mc-popup-movable"
+		style="z-index: {{ zIndex }}; {{ areaStyle  }}"
+	>
+		<movable-view 
+			class="mc-popup-movable__view"
+			style="{{ viewStyle }}"
+			y="{{ y }}"
+			damping="{{ damping }}"
+			direction="vertical"
+			bind:tap="handleMovableViewTap"
+			bind:change="handleMovableViewChange"
+			bind:touchstart="handleMovableViewTouchStart"
+			bind:touchend="handleMovableViewTouchEnd"
+		>
+			<!-- TODO: 关闭的按钮 -->
+			<scroll-view 
+				style="position: relative; height: 100%;"
+				scrollY="{{ scrollable }}"
+				enhanced
+				show-scrollbar="{{ false }}"
+				bind:scroll="handleScroll"
+				bind:scrolltolower="handleEndReached"
+			>
+				<view style="height: {{ placeTopHeight }}px" />
+				<slot />
+			</scroll-view>
+		</movable-view>
+	</movable-area>
+</template>
+<script>
+import McComponent from '../common/component';
+
+const initStyle = (originH = 0) => {
+	const systemInfo = wx.getSystemInfoSync();
+	const { windowWidth: w, windowHeight: h } = systemInfo;
+	return {
+		// areaStyle: `width: ${w}px; height: ${2 * h}px; top: ${-(h - originH)}px`,
+		areaStyle: `width: ${w}px; height: ${h}px;`,
+		viewStyle: `width: ${w}px; height: ${2 * h}px;`,
+		placeTopHeight: h,
+		y: -originH
+	};
+};
+McComponent({
+	props: {
+		// 注意这个值必须和内容的层级保持一致
+		zIndex: {
+			type: Number,
+			value: 1001,
+		},
+
+		contentHeight: {
+			type: Number,
+			value: 0,
+			observer() {
+				this.setData({
+					...initStyle(this.data.contentHeight)
+				});
+			}
+		},
+
+		threshold: {
+			type: Number,
+			value: 100
+		},
+
+		damping: {
+			type: Number,
+			value: 50
+		},
+		scrollable: {
+			type: Boolean,
+			value: true
+		}
+	},
+	data: {
+		...initStyle()
+	},
+	lifetimes: {
+		attached() {
+			this._tagStart = false;
+
+			this._tagStartH = 0;
+			this._tagEndH = 0;
+		}
+	},
+	methods: {
+		getSize() {
+			if (!this.w || !this.h) {
+				const systemInfo = wx.getSystemInfoSync();
+				const { windowWidth, windowHeight } = systemInfo;
+
+				this.w = windowWidth;
+				this.h = windowHeight;
+			}
+			
+			return {
+				w: this.w,
+				h: this.h,
+				originH: this.data.contentHeight
+			};
+		},
+
+		/**
+		 * 关闭
+		 */
+		close(e) {
+			const { h, originH } = this.getSize();
+			this.setData({
+				y: h
+			});
+
+			setTimeout(() => {
+				this.triggerEvent('close', e);
+
+				this.setData({
+					y: -originH
+				});
+
+				this._tagEndH = this.data.contentHeight;
+			}, 300);
+		},
+
+		/**
+		 * 全屏
+		 */
+		fullsceen(e) {
+			const { h } = this.getSize();
+			this.setData({
+				y: -h
+			});
+
+			this._tagEndH = h;
+
+			this.triggerEvent('fullscreen', e);
+		},
+
+		/**
+		 * 恢复到原来大小
+		 */
+		recover(e) {
+			const { h, originH } = this.getSize();
+			this.setData({
+				y: -originH
+			});
+
+			this._tagEndH = this.data.contentHeight;
+
+			this.triggerEvent('recover', e);
+		},
+
+		handleMovableViewTap(e) {
+			const { h, originH } = this.getSize();
+
+			if (h !== this._tagEndH && h - e.detail.y > originH) {
+				this.close(e);
+			}
+		},
+
+		handleMovableViewTouchStart() {
+			const { originH } = this.getSize();
+
+			this._tagStartH = this._tagEndH || originH;
+			this._tagStart = true;
+		},
+
+		// TODO: 确定是上移还是下移
+		handleMovableViewChange(e) {
+			if (!this._tagStart) return;
+			let diff = e.detail.y;
+			const { h } = this.getSize();
+
+			const height = -e.detail.y;
+
+			this._tagEndH = height;
+		},
+
+		handleMovableViewTouchEnd(e) {
+			const { threshold } = this.data;
+			if (this._tagStart) {
+				const { h, originH } = this.getSize();
+				// 距底部
+				let lowerThreshold = threshold || originH / 2;
+				lowerThreshold = Math.min(originH / 2, threshold);
+
+				// 距顶部
+				let upperThreshold = threshold || (h - originH) / 2;
+				upperThreshold = Math.min((h - originH) / 2, threshold);
+
+				let methodKey = (this._tagEndH < originH && (originH - this._tagEndH) > lowerThreshold)
+					? 'close'
+					: (
+						this._tagEndH > originH 
+						&& (
+							this._tagStartH < this._tagEndH 
+								? this._tagEndH - originH > upperThreshold
+								: this._tagStartH - this._tagEndH < upperThreshold
+						)
+					)
+						? 'fullsceen'
+						: 'recover';
+
+				this[methodKey](e);
+			}
+			this._tagStart = false;
+		},
+
+		handleScroll(e) {
+			this.triggerEvent('scroll', e.detail);
+		},
+		handleEndReached(e) {
+			this.triggerEvent('scrolltolower', e.detail);
+		}
+	}
+});
+
+</script>
+<style lang="scss">
+@import '../common/index.scss';
+
+$opacity: 0;
+
+.mc-popup-movable {
+	position: fixed; 
+	background-color: rgba(0, 255, 0, $opacity); 
+	top: 0;
+	&__view {
+		background-color: rgba(0, 0, 255, $opacity);
+	}
+}
+
+</style>
+<config>
+{
+	"component": true,
+	"usingComponents": {}
+}
+</config>
