@@ -292,6 +292,15 @@ McComponent({
 		useEmptySlot: {
 			type: Boolean,
 			value: false
+		},
+
+		// 仅用于父层display: none变化的场景
+		show: {
+			type: Boolean,
+			value: true,
+			observer(v) {
+				v && this.refreshContainerWidth();
+			}
 		}
 	},
 	data: {
@@ -328,17 +337,7 @@ McComponent({
 				tableBodyId: getUid('table-body'),
 			});
 
-			this.createSelectorQuery()
-				.select(`#${this.data.sticky ? this.data.tableHeaderId : this.data.tableBodyId}`)
-				.boundingClientRect((res) => {
-					const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
-					this.setData({
-						containerWidth: width,
-						containerWidthStyle: `width: ${width}px;`
-					});
-					this.refreshColumnsWidth();
-				})
-				.exec();
+			this.refreshContainerWidth();
 		},
 		ready() {
 			this.$emit('ready', this);
@@ -455,6 +454,23 @@ McComponent({
 			this.refreshColumnsWidth();
 			this.refreshHeaderHeight();
 			this.refreshRowsHeight();
+		},
+
+		/**
+		 * 刷新初始化显示隐藏宽度的变化（父层display:none时，res是null的问题）
+		 */
+		refreshContainerWidth() {
+			this.createSelectorQuery()
+				.select(`#${this.data.sticky ? this.data.tableHeaderId : this.data.tableBodyId}`)
+				.boundingClientRect((res) => {
+					const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
+					this.setData({
+						containerWidth: width,
+						containerWidthStyle: `width: ${width}px;`
+					});
+					this.refreshColumnsWidth();
+				})
+				.exec();
 		},
 
 		/**
