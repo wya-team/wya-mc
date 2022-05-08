@@ -12,6 +12,7 @@
 			<mc-table 
 				border
 				stripe
+				sticky="{{ false }}"
 				show="{{ !isNone }}"
 				dataSource="{{ listInfo.data }}" 
 				bind:row-click="handleClick"
