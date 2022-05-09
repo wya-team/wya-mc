@@ -1,10 +1,10 @@
 <template>
 	<view style="padding-left: {{indent}}rpx" class="mc-form-item mc-class">
 		<view class="mc-form-item__wrapper {{classes}}">
-			<view wx:if="{{label || !useLabelSlot}}" for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label label-class">
-				{{label}}
+			<view for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label  label-class">
+				<block wx:if="{{label || !useLabelSlot}}">{{ label }}</block>
+				<slot name="label"></slot>
 			</view>
-			<slot name="label"></slot>
 			<view style="{{contentStyle}}" class="mc-form-item__content content-class">
 				<slot />
 			</view>
@@ -276,6 +276,12 @@ McComponent({
 		font-size: 32rpx;
 		line-height: 48rpx;
 		box-sizing: border-box;
+		&.is-required {
+			&::before {
+				content: '*';
+				color: #BC4444;
+			}
+		}
 	}
 	.mc-list-item__wrapper {
 		padding: 0 !important;
