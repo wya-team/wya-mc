@@ -4,9 +4,9 @@
 		class="mc-table mc-class {{ border ? 'has-border' : ''}} {{ isScrolling ? '' : 'is-scrolling-none' }} {{ !allowScroll || isScrollingEnd ? 'is-scrolling-right-none' : ''}}"
 		id="{{ tableId }}"
 	>
-		<!-- TODO: stickyĞèÒªmc-stickyÖ§³Öplaceholder -->
-		<!-- sticky ´úÀí»¬¶¯ÓĞÑÓ³Ù£¬ÇÒÎŞ·¨µ¯ĞÔ£¬ÎªÁË¸üºÃµÄĞ§¹û£¬ÆÕÍ¨Ä£Ê½ÏÂ²»×ß´úÀí»¬¶¯ -->
-		<!-- Èç¹ûÔÚscroll-view½«»áÎŞĞ§£¨Èç²»ÄÜÌ×ÔÚrecycle-listÀï£©£¬ĞèÒªÔÚÒ³Ãæ¼¶¹ö¶¯ -->
+		<!-- TODO: stickyéœ€è¦mc-stickyæ”¯æŒplaceholder -->
+		<!-- sticky ä»£ç†æ»‘åŠ¨æœ‰å»¶è¿Ÿï¼Œä¸”æ— æ³•å¼¹æ€§ï¼Œä¸ºäº†æ›´å¥½çš„æ•ˆæœï¼Œæ™®é€šæ¨¡å¼ä¸‹ä¸èµ°ä»£ç†æ»‘åŠ¨ -->
+		<!-- å¦‚æœåœ¨scroll-viewå°†ä¼šæ— æ•ˆï¼ˆå¦‚ä¸èƒ½å¥—åœ¨recycle-listé‡Œï¼‰ï¼Œéœ€è¦åœ¨é¡µé¢çº§æ»šåŠ¨ -->
 		<mc-sticky wx:if="{{ sticky }}" mc-class="mc-table__header" offsetTop="{{ offsetTop }}" placeholder>
 			<view 
 				wx:if="{{ doLayouted && headerHeightStyle && helper.hasFixed(columns) }}"
@@ -167,7 +167,7 @@
 				/>
 			</view>
 		</view>
-		<!-- ÁĞ±íÎŞÊı¾İ´¦Àí -->
+		<!-- åˆ—è¡¨æ— æ•°æ®å¤„ç† -->
 		<view class="mc-table__empty" wx:if="{{ dataSource.length === 0 }}">
 			<slot wx:if="{{ useEmptySlot }}" name="empty" />
 			<view wx:elif="{{ empty }}">{{ empty }}</view>
@@ -210,15 +210,19 @@ McComponent({
 	},
 	props: {
 		/**
-		 * ×¢Òâ£¬Èç¹ûÊ¹ÓÃmc-tabs, Ò»¿ªÊ¼Îªdisplay: none, ËùÓĞ¸ß¿í¼ÆËã¾ùÎª0;
-		 * ¿ÉÒÔÍ¨¹ı¸Ã×Ö¶ÎÀ´´¥·¢²¼¾ÖË¢ĞÂ
-		 * Í¬recycle-list
+		 * ä»…ç”¨äºçˆ¶å±‚display: noneå˜åŒ–çš„åœºæ™¯ 
+		 * 
+		 * æ³¨æ„ï¼Œå¦‚æœä½¿ç”¨mc-tabs, ä¸€å¼€å§‹ä¸ºdisplay: none, æ‰€æœ‰é«˜å®½è®¡ç®—å‡ä¸º0;
+		 * å¯ä»¥é€šè¿‡è¯¥å­—æ®µæ¥è§¦å‘å¸ƒå±€åˆ·æ–°
+		 * åŒrecycle-list
 		 */
 		show: {
 			type: Boolean,
 			value: true,
 			observer(v) {
-				v && this.refreshLayout();
+				v && this.refreshContainerWidth().then(() => {
+					this.refreshLayout();
+				});
 			}
 		},
 		sticky: {
@@ -235,11 +239,11 @@ McComponent({
 				this.rebuildData();
 				this.rebuildWidthRender();
 
-				// rowµÄ¸ß¶È
+				// rowçš„é«˜åº¦
 				this.refreshRowsHeight();
 			}
 		},
-		// tableµÄ¸ß¶È, Òç³ö¿É¹ö¶¯
+		// tableçš„é«˜åº¦, æº¢å‡ºå¯æ»šåŠ¨
 		height: { 
 			type: String,
 			value: 'auto'
@@ -248,19 +252,19 @@ McComponent({
 			type: [Number, String],
 			value: '100%'
 		},
-		// ÊÇ·ñ´øÓĞ×İÏò±ß¿ò
+		// æ˜¯å¦å¸¦æœ‰çºµå‘è¾¹æ¡†
 		stripe: {
 			type: Boolean,
 			value: false
 		},
-		// ÊÇ·ñ´øÓĞ×İÏò±ß¿ò
+		// æ˜¯å¦å¸¦æœ‰çºµå‘è¾¹æ¡†
 		border: {
 			type: Boolean,
 			value: false
 		},
 		empty: {
 			type: String,
-			value: 'ÔİÎŞÊı¾İ~'
+			value: 'æš‚æ— æ•°æ®~'
 		},
 		defaultSort: {
 			type: Object,
@@ -292,15 +296,6 @@ McComponent({
 		useEmptySlot: {
 			type: Boolean,
 			value: false
-		},
-
-		// ½öÓÃÓÚ¸¸²ãdisplay: none±ä»¯µÄ³¡¾°
-		show: {
-			type: Boolean,
-			value: true,
-			observer(v) {
-				v && this.refreshContainerWidth();
-			}
 		}
 	},
 	data: {
@@ -315,8 +310,8 @@ McComponent({
 		containerWidthStyle: 'width: auto',
 		contentWidth: 0,
 		headerHeight: 0,
-		headerHeightStyle: '', // ±íÍ·µÄ¸ß¶È
-		rowsHeight: [], // Ã¿ĞĞµÄ¸ß¶È
+		headerHeightStyle: '', // è¡¨å¤´çš„é«˜åº¦
+		rowsHeight: [], // æ¯è¡Œçš„é«˜åº¦
 		columns: [],
 		rebuildData: [],
 
@@ -337,7 +332,9 @@ McComponent({
 				tableBodyId: getUid('table-body'),
 			});
 
-			this.refreshContainerWidth();
+			this.refreshContainerWidth().then(() => {
+				this.refreshColumnsWidth();
+			});
 		},
 		ready() {
 			this.$emit('ready', this);
@@ -361,7 +358,7 @@ McComponent({
 		handleHeaderClick(e) {
 			const { prop, order } = e.detail;
 
-			// TODO: ÄÚ²¿ÌáÈ¡£¬ĞŞ¸ÄÁË¸¸²ã
+			// TODO: å†…éƒ¨æå–ï¼Œä¿®æ”¹äº†çˆ¶å±‚
 			this.setData({
 				defaultSort: {
 					prop,
@@ -373,14 +370,14 @@ McComponent({
 		},
 
 		/**
-		 * 1. ¿ªÆôenhanced£¬¿ØÖÆscrollTo£¬Ôì³É¶¶¶¯ÑÏÖØ
-		 * 2. binddragging¿ØÖÆÃ»ÓĞscrollĞ§¹ûÃ÷ÏÔ
+		 * 1. å¼€å¯enhancedï¼Œæ§åˆ¶scrollToï¼Œé€ æˆæŠ–åŠ¨ä¸¥é‡
+		 * 2. binddraggingæ§åˆ¶æ²¡æœ‰scrollæ•ˆæœæ˜æ˜¾
 		 * @return {[type]}   [description]
 		 */
 		handleScroll(e) {
 			const { trigger, delegate } = e.currentTarget.dataset;
 
-			this.scrollLeft = e.detail.scrollLeft; // Õâ¸öÖµ²»ÄÜÊµÊ±ÉèÖÃ£¬iOSÕæ»ú»á¶¶¶¯
+			this.scrollLeft = e.detail.scrollLeft; // è¿™ä¸ªå€¼ä¸èƒ½å®æ—¶è®¾ç½®ï¼ŒiOSçœŸæœºä¼šæŠ–åŠ¨
 			let states = {
 				isScrolling: e.detail.scrollLeft != 0,
 				isScrollingEnd: this.data.contentWidth - this.data.containerWidth === e.detail.scrollLeft
@@ -412,7 +409,7 @@ McComponent({
 				rebuildData: dataSource,
 			});
 
-			// ÈÃ¹ö¶¯Ìõ»Øµ½Ô­À´µÄÎ»ÖÃ
+			// è®©æ»šåŠ¨æ¡å›åˆ°åŸæ¥çš„ä½ç½®
 			wx.nextTick(() => {
 				this.scrollLeft && this.setData({
 					scrollLeft: this.scrollLeft,
@@ -448,7 +445,7 @@ McComponent({
 		},
 
 		/**
-		 * Ë¢ĞÂ²¼¾Ö
+		 * åˆ·æ–°å¸ƒå±€
 		 */
 		refreshLayout() {
 			this.refreshColumnsWidth();
@@ -457,24 +454,29 @@ McComponent({
 		},
 
 		/**
-		 * Ë¢ĞÂ³õÊ¼»¯ÏÔÊ¾Òş²Ø¿í¶ÈµÄ±ä»¯£¨¸¸²ãdisplay:noneÊ±£¬resÊÇnullµÄÎÊÌâ£©
+		 * åˆ·æ–°åˆå§‹åŒ–æ˜¾ç¤ºéšè—å®½åº¦çš„å˜åŒ–ï¼ˆçˆ¶å±‚display:noneæ—¶ï¼Œresæ˜¯nullçš„é—®é¢˜ï¼‰
 		 */
 		refreshContainerWidth() {
-			this.createSelectorQuery()
-				.select(`#${this.data.sticky ? this.data.tableHeaderId : this.data.tableBodyId}`)
-				.boundingClientRect((res) => {
-					const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
-					this.setData({
-						containerWidth: width,
-						containerWidthStyle: `width: ${width}px;`
-					});
-					this.refreshColumnsWidth();
-				})
-				.exec();
+			let asyncA = new Promise((resolve) => {
+				this.createSelectorQuery()
+					.select(`#${this.data.sticky ? this.data.tableHeaderId : this.data.tableBodyId}`)
+					.boundingClientRect((res) => {
+						const width = (res && res.width) || wx.getSystemInfoSync().windowWidth;
+						this.setData({
+							containerWidth: width,
+							containerWidthStyle: `width: ${width}px;`
+						});
+
+						resolve();
+					})
+					.exec();
+			});
+			let asyncB = new Promise(_ => setTimeout(_, 1000));
+			return Promise.race([asyncA, asyncB]);
 		},
 
 		/**
-		 * ¼ÆËãÃ¿ÁĞµÄ¿í¶È
+		 * è®¡ç®—æ¯åˆ—çš„å®½åº¦
 		 */
 		refreshColumnsWidth() {
 			if (!this.data.containerWidth) return;
@@ -504,7 +506,7 @@ McComponent({
 		},
 
 		/**
-		 * ¼ÆËã±íÍ·¸ß¶È
+		 * è®¡ç®—è¡¨å¤´é«˜åº¦
 		 */
 		async refreshHeaderHeight() {
 			if (!this.header) return;
@@ -518,7 +520,7 @@ McComponent({
 		},
 
 		/**
-		 * ¼ÆËãÃ¿ĞĞ¸ß¶È
+		 * è®¡ç®—æ¯è¡Œé«˜åº¦
 		 */
 		async refreshRowsHeight() {
 			if (!this.body) return;
