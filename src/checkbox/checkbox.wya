@@ -1,5 +1,5 @@
 <template>
-	<view class="mc-checkbox" bindtap="handleChange">
+	<view class="mc-checkbox" style="{{ mcStyle }}" bindtap="handleChange">
 		<view class="mc-checkbox-icon">
 			<mc-icon
 				type="{{ currentValue ? activeIcon : icon }}"

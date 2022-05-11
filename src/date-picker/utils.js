@@ -47,6 +47,20 @@ const createQuarterData = (minDate, maxDate) => {
 	return [yearArray, quarterArray];
 };
 
+const create24TimeData = () => {
+	let hours = Array.from(new Array(23 + 1).keys()).map((it) => ({
+		label: String(it).padStart(2, '0'),
+		value: it
+	}));
+	let minutes = Array.from(new Array(59 + 1).keys()).map((it) => {
+		return {
+			label: String(it).padStart(2, '0'),
+			value: it
+		};
+	});
+	return [hours, minutes];
+};
+
 export const createDataSource = (mode, opts = {}) => {
 	const { minDate, maxDate } = opts;
 	if (!(minDate instanceof Date)) {
@@ -58,6 +72,8 @@ export const createDataSource = (mode, opts = {}) => {
 	switch (mode) {
 		case 'date':
 			return createDateData(minDate, maxDate);
+		case 'datetime':
+			return [...createDateData(minDate, maxDate), ...create24TimeData()];
 		case 'quarter':
 			return createQuarterData(minDate, maxDate);
 		case 'month':

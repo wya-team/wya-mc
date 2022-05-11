@@ -174,12 +174,16 @@ export const splitDateStr = (dateStr) => {
 	if (typeof dateStr !== 'string') {
 		throw new Error('【@wya/mc utils/hackDate】参数类型错误，应为日期字符串');
 	}
-	if (dateStr.includes('-')) {
-		return dateStr.split('-').map((it) => Number(it));
-	} else if (dateStr.includes('/')) {
-		return dateStr.split('/').map((it) => Number(it));
-	}
-	return [];
+	const result = dateStr.match(/(\d{4})[-|/](\d{1,2})[-|/]?(\d{1,2})?\s?(\d{1,2})?:?(\d{1,2})?$/);
+	if (!result) return [];
+	const [matched, year, month, day, hour, minute] = result;
+	const dateValue = [];
+	if (year) dateValue.push(year);
+	if (month) dateValue.push(month);
+	if (day) dateValue.push(day);
+	if (hour) dateValue.push(hour);
+	if (minute) dateValue.push(minute);
+	return dateValue;
 };
 
 /**

@@ -80,9 +80,10 @@ McComponent({
 		...pickerViewProps,
 		...pickerPopupProps,
 		mode: {
-			type: String, // date、month、quarter daterange
+			type: String, // date、month、quarter daterange datetime
 			value: 'date'
 		},
+		format: String,
 		value: {
 			type: [String, Array],
 			value: '',
@@ -239,7 +240,23 @@ McComponent({
 			}
 		},
 		parseValue(value = []) {
-			return value.map((it) => preZero(it)).join('-');
+			let { format, mode } = this.data;
+			if (!format) {
+				if (['month', 'quarter'].includes(mode)) {
+					format = 'YYYY-MM';
+				} else if (['date', 'daterange'].includes(mode)) {
+					format = 'YYYY-MM-DD';
+				} else if (mode === 'datetime') {
+					format = 'YYYY-MM-DD HH:MM';
+				}
+			}
+			const [year, month, day, hour, minute] = value.map((it) => preZero(it));
+			let strValue = format.replace(/YYYY/, year);
+			strValue = strValue.replace(/MM/, month);
+			strValue = strValue.replace(/DD/, day);
+			strValue = strValue.replace(/HH/, hour);
+			strValue = strValue.replace(/MM/, minute);
+			return strValue;
 		},
 		handleOK() {
 			let pickValue = [];
