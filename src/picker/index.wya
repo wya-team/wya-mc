@@ -5,7 +5,7 @@
 			wrapper-class="{{paddingNone ? 'mc-picker__padding-none' : ''}}"
 			content-class="content-class"
 			indent="{{0}}"
-			content="{{extra}}"
+			content="{{content || extra}}"
 			label="{{label}}"
 			label-width="{{labelWidth}}"
 			border="{{border}}"
@@ -97,7 +97,8 @@ McComponent({
 		}
 	},
 	data: {
-		currentValue: []
+		currentValue: [],
+		content: ''
 	},
 	lifetimes: {
 		attached() {
@@ -131,8 +132,8 @@ McComponent({
 			}
 		},
 		handleLabelChange(event) {
-			event.detail.length > 0 && this.setData({
-				extra: event.detail.join(',')
+			this.setData({
+				content: event.detail.join(',')
 			});
 		},
 		handleChange(event) {
@@ -144,10 +145,9 @@ McComponent({
 			let { pickValue } = this.data;
 			pickValue = pickValue && pickValue.length ? pickValue : this.viewInstance.getDefaultValue();
 			const label = this.viewInstance.getLabelByValue(pickValue);
-			this.setData({
-				extra: label.join(','),
-				currentValue: pickValue
-			});
+
+			this.setData({ currentValue: pickValue });
+			
 			this.$emit('change', { value: this.data.currentValue, label });
 			this.parent && this.parent.fieldChange();
 		},
