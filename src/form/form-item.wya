@@ -1,7 +1,7 @@
 <template>
 	<view style="padding-left: {{indent}}rpx" class="mc-form-item mc-class">
 		<view class="mc-form-item__wrapper {{classes}}">
-			<view for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label  label-class">
+			<view for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label {{ required ? 'is-required' : '' }} label-class">
 				<block wx:if="{{label || !useLabelSlot}}">{{ label }}</block>
 				<slot name="label"></slot>
 			</view>
