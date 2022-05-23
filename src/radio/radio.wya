@@ -1,5 +1,5 @@
 <template>
-	<view class="mc-radio" bindtap="handleChange">
+	<view class="mc-radio" style="{{ mcStyle }}" bindtap="handleChange">
 		<view class="mc-radio-icon" >
 			<mc-icon
 				type="{{ value === name ? 'select-checked' : 'select' }}"
