@@ -208,10 +208,10 @@ McComponent({
 			if (maxlength > -1) {
 				value = value.length > maxlength ? value.substring(0, maxlength) : value;
 			}
-			if (/[-]{2,}/.test(value)) { // `--` -> `-`
-				value = '-';
-			}
 			if (value !== '' && ['number', 'digit'].includes(type)) {
+				if (/[-]{2,}/.test(value)) { // `--` -> `-`
+					value = '-';
+				}
 				let regex;
 				if (precision) {
 					regex = new RegExp(`(-*)(\\d*(?:\\.\\d{0,${precision}})?).*$`);
