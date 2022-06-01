@@ -106,6 +106,7 @@ Page({
 </script>
 <config>
 {
+	"navigationStyle": "custom",
 	"usingComponents": {
 		"mc-popup": "../../components/popup/index",
 		"mc-popup-swiper": "../../components/popup/popup-swiper",

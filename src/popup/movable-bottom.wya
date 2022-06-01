@@ -1,4 +1,22 @@
 <template>
+	<view 
+		class="mc-popup-movable__header" 
+		style="height: {{ heights.header }}px; z-index: {{ zIndex + 1 }}; "
+	/>
+	<!-- opacity: {{ 1 - opacity }}; -->
+	<mc-transition 
+		wx:if="{{ closeable }}" 
+		visible="{{ visible }}"
+		duration="{{ 300 }}"
+		mc-class="mc-popup-movable__header-close-icon" 
+		mc-style="opacity: {{ 1 - opacity }}; z-index: {{ zIndex + 1 }}; top: {{ heights.header + 20 }}px" 
+	>
+		<mc-icon 
+			type="close" 
+			mc-style="color: white; font-size: 28rpx"
+			bind:click="handleClose"
+		/>
+	</mc-transition> 
 	<movable-area 
 		class="mc-popup-movable"
 		style="z-index: {{ zIndex }}; {{ areaStyle  }}"
@@ -23,7 +41,24 @@
 				bind:scroll="handleScroll"
 				bind:scrolltolower="handleEndReached"
 			>
-				<view style="height: {{ placeTopHeight }}px" />
+				<view 
+					class="mc-popup-movable__placeholder"
+					style="height: {{ placeTopHeight }}px"
+				>
+					<mc-transition 
+						wx:if="{{ closeable }}" 
+						visible="{{ visible }}"
+						duration="{{ 300 }}"
+						mc-class="mc-popup-movable__close-icon" 
+						mc-style="opacity: {{ opacity }}" 
+					>
+						<mc-icon 
+							type="close" 
+							mc-style="color: white; font-size: 20rpx"
+							bind:click="handleClose"
+						/>
+					</mc-transition> 
+				</view>
 				<slot />
 			</scroll-view>
 		</movable-view>
@@ -32,14 +67,15 @@
 <script>
 import McComponent from '../common/component';
 
-const initStyle = (originH = 0) => {
+const initStyle = (heights = {}) => {
 	const systemInfo = wx.getSystemInfoSync();
 	const { windowWidth: w, windowHeight: h } = systemInfo;
+	const { content: originH = 0, header: headerH = 0 } = heights;
 	return {
 		// areaStyle: `width: ${w}px; height: ${2 * h}px; top: ${-(h - originH)}px`,
 		areaStyle: `width: ${w}px; height: ${h}px;`,
 		viewStyle: `width: ${w}px; height: ${2 * h}px;`,
-		placeTopHeight: h,
+		placeTopHeight: h + headerH,
 		y: -originH
 	};
 };
@@ -51,12 +87,15 @@ McComponent({
 			value: 1001,
 		},
 
-		contentHeight: {
-			type: Number,
-			value: 0,
+		heights: {
+			type: Object,
+			value: {
+				content: 0,
+				header: 0
+			},
 			observer() {
 				this.setData({
-					...initStyle(this.data.contentHeight)
+					...initStyle(this.data.heights)
 				});
 			}
 		},
@@ -73,10 +112,19 @@ McComponent({
 		scrollable: {
 			type: Boolean,
 			value: true
+		},
+		closeable: {
+			type: Boolean,
+			value: false
+		},
+		visible: {
+			type: Boolean,
+			value: false
 		}
 	},
 	data: {
-		...initStyle()
+		...initStyle(),
+		opacity: 1
 	},
 	lifetimes: {
 		attached() {
@@ -88,19 +136,25 @@ McComponent({
 	},
 	methods: {
 		getSize() {
-			if (!this.w || !this.h) {
+			if (!this.w || !this.h || !this.headerH) {
 				const systemInfo = wx.getSystemInfoSync();
-				const { windowWidth, windowHeight } = systemInfo;
+				const { windowWidth, windowHeight, safeArea } = systemInfo;
 
 				this.w = windowWidth;
 				this.h = windowHeight;
+				this.headerH = safeArea.top;
 			}
 			
 			return {
 				w: this.w,
 				h: this.h,
-				originH: this.data.contentHeight
+				headerH: this.headerH,
+				originH: this.data.heights.content
 			};
+		},
+
+		handleClose(e) {
+			this.close(e);
 		},
 
 		/**
@@ -116,10 +170,11 @@ McComponent({
 				this.triggerEvent('close', e);
 
 				this.setData({
-					y: -originH
+					y: -originH,
+					isFullsceen: false
 				});
 
-				this._tagEndH = this.data.contentHeight;
+				this._tagEndH = this.data.heights.content;
 			}, 300);
 		},
 
@@ -127,9 +182,10 @@ McComponent({
 		 * 全屏
 		 */
 		fullsceen(e) {
-			const { h } = this.getSize();
+			const { h, headerH } = this.getSize();
 			this.setData({
-				y: -h
+				y: -h,
+				opacity: 0
 			});
 
 			this._tagEndH = h;
@@ -143,10 +199,11 @@ McComponent({
 		recover(e) {
 			const { h, originH } = this.getSize();
 			this.setData({
-				y: -originH
+				y: -originH,
+				opacity: 1
 			});
 
-			this._tagEndH = this.data.contentHeight;
+			this._tagEndH = this.data.heights.content;
 
 			this.triggerEvent('recover', e);
 		},
@@ -166,7 +223,6 @@ McComponent({
 			this._tagStart = true;
 		},
 
-		// TODO: 确定是上移还是下移
 		handleMovableViewChange(e) {
 			if (!this._tagStart) return;
 			let diff = e.detail.y;
@@ -175,19 +231,25 @@ McComponent({
 			const height = -e.detail.y;
 
 			this._tagEndH = height;
+
+			const opacity = (h - this._tagEndH) / (h - this.data.heights.header - this.data.heights.content);
+			this.setData({
+				opacity: opacity > 1 ? 1 : opacity < 0 ? 0 : opacity
+			});
+
 		},
 
 		handleMovableViewTouchEnd(e) {
 			const { threshold } = this.data;
 			if (this._tagStart) {
-				const { h, originH } = this.getSize();
+				const { h, originH, headerH } = this.getSize();
 				// 距底部
 				let lowerThreshold = threshold || originH / 2;
 				lowerThreshold = Math.min(originH / 2, threshold);
 
 				// 距顶部
-				let upperThreshold = threshold || (h - originH) / 2;
-				upperThreshold = Math.min((h - originH) / 2, threshold);
+				let upperThreshold = threshold || (h - originH - headerH) / 2;
+				upperThreshold = Math.min((h - originH - headerH) / 2, threshold);
 
 				let methodKey = (this._tagEndH < originH && (originH - this._tagEndH) > lowerThreshold)
 					? 'close'
@@ -226,8 +288,52 @@ $opacity: 0;
 	position: fixed; 
 	background-color: rgba(0, 255, 0, $opacity); 
 	top: 0;
+	&__header {
+		position: fixed; 
+		top: 0;
+		background: white;
+		left: 0;
+		right: 0;
+	}
 	&__view {
 		background-color: rgba(0, 0, 255, $opacity);
+	}
+
+	&__placeholder {
+		position: relative;
+	}
+
+	&__close-icon {
+		position: absolute;
+		left: 30rpx;
+		bottom: -80rpx;
+		z-index: 1;
+		background: rgba(0, 0, 0, .5);
+		width: 44rpx;
+		height: 44rpx;
+		border-radius: 50%;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		transition: opacity .3s;
+	}
+
+	&__header-close-icon {
+		position: fixed;
+		left: 30rpx;
+
+		background: rgba(0, 0, 0, .5);
+		width: 60rpx;
+		height: 60rpx;
+		border-radius: 50%;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		transition: opacity .3s;
 	}
 }
 
@@ -235,6 +341,9 @@ $opacity: 0;
 <config>
 {
 	"component": true,
-	"usingComponents": {}
+	"usingComponents": {
+		"mc-transition": "../transition/index",
+		"mc-icon": "../icon/index"
+	}
 }
 </config>

@@ -10,10 +10,11 @@
 	<mc-movable-bottom 
 		wx:if="{{ visible }}"
 		
+		visible="{{ visible }}"
 		zIndex="{{ zIndex }}"
 		scrollable="{{ scrollable }}"
 		closeable="{{ closeable }}"
-		contentHeight="{{ originalContentHeight }}"
+		heights="{{ heights }}"
 
 		bind:scroll="handleScroll"
 		bind:scrolltolower="handleEndReached"
@@ -67,10 +68,7 @@ McComponent({
 		}
 	},
 	data: {
-		originalContentHeight: ''
-	},
-	attached() {
-		this.setData({ name: this.data.placement });
+		heights: {}
 	},
 	observers: {
 		visible(val) {
@@ -88,19 +86,29 @@ McComponent({
 					.boundingClientRect((res) => {
 						if (!res || !res.height) return;
 						let { height } = res;
-						const { windowHeight } = wx.getSystemInfoSync();
+						const { windowHeight, safeArea } = wx.getSystemInfoSync();
 						if (height > windowHeight) {
 							height = windowHeight;
 							console.error('[@wya/mc]: 高度不能超高整屏');
 						}
+
+						const headerHeight = safeArea.top;
 						this.setData({
-							originalContentHeight: height,
-							popupForceStyle: `;height: ${windowHeight}px!important;`
+							heights: {
+								header: headerHeight,
+								content: height
+							},
+							popupForceStyle: `;height: ${windowHeight - headerHeight}px!important;`
 						});
 					})
 					.exec();
 			});
 		}
+	},
+	lifetimes: {
+		attached() {
+			this.setData({ name: this.data.placement });
+		},
 	},
 	methods: {
 		handleClose() {
@@ -121,14 +129,16 @@ McComponent({
 		},
 
 		handleFullscreen() {
+			const h = wx.getSystemInfoSync().windowHeight - this.data.heights.header;
 			this.setData({
-				popupForceStyle: `;min-height: ${wx.getSystemInfoSync().windowHeight}px!important; height: unset!important;`
+				popupForceStyle: `;min-height: ${h}px!important; height: unset!important;`
 			});
 		},
 
 		handleRecover() {
+			const h = wx.getSystemInfoSync().windowHeight - this.data.heights.header;
 			this.setData({
-				popupForceStyle: `;height: ${wx.getSystemInfoSync().windowHeight}px!important;`
+				popupForceStyle: `;height: ${h}px!important;`
 			});
 		},
 
