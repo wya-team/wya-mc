@@ -119,17 +119,22 @@ McComponent({
 		// 数据中真实的value
 		parseDataByValue(dataSource, opts) {
 			const { value, data = [], col = 0 } = opts || {};
-			data[col] = [];
-			for (let i = 0, length = dataSource.length; i < length; i++) {
-				data[col].push(dataSource[i]);
-				if (dataSource[i].value === value[col] && dataSource[i].children instanceof Array) {
-					this.parseDataByValue(dataSource[i].children, { value, data, col: col + 1 });
+			data[col] = dataSource;
+			// 如果当前列没有选中的值，默认拿第一个
+			if (
+				(value[col] === undefined || value[col] === null) 
+				&& (dataSource[0] || {}).children instanceof Array 
+				&& (dataSource[0] || {}).children.length
+			) {
+				this.parseDataByValue(dataSource[0].children, { value, data, col: col + 1 });
+			} else {
+				for (let i = 0, length = dataSource.length; i < length; i++) {
+					if (dataSource[i].value === value[col] && dataSource[i].children instanceof Array) {
+						this.parseDataByValue(dataSource[i].children, { value, data, col: col + 1 });
+					}
 				}
 			}
-			// 如果当前列没有选中的值，默认拿第一个
-			if ((value[col] === undefined || value[col] === null) && (dataSource[0] || {}).children instanceof Array) {
-				data[col + 1] = (dataSource[0] || {}).children || [];
-			}
+			
 			return data;
 		},
 		formatValue(value, needUpdateCurrentData) {
