@@ -105,18 +105,13 @@ McComponent({
 		},
 
 		safeAreaTop: {
-			type: Number,
-			value: -1
+			type: String,
+			value: ''
 		},
 
 		safeAreaTopStyle: {
 			type: String,
 			value: ''
-		},
-
-		headerSlotHeight: {
-			type: Number,
-			value: 0
 		}
 	},
 	data: {
@@ -144,18 +139,19 @@ McComponent({
 							console.error('[@wya/mc]: 高度不能超高整屏');
 						}
 
-						let { headerSlotHeight, safeAreaTop } = this.data;
+						let { safeAreaTop } = this.data;
 
-						headerSlotHeight = Resize.rpx2px(headerSlotHeight);
-						safeAreaTop = safeAreaTop == -1 ? safeArea.top : Resize.rpx2px(safeAreaTop);
+						safeAreaTop = !safeAreaTop || safeAreaTop == 'auto' 
+							? safeArea.top 
+							: safeAreaTop.includes('rpx')
+								? Resize.rpx2px(+safeAreaTop.replace(/rpx/g, ''))
+								: +safeAreaTop.replace(/px/g, '');
 						this.setData({
 							heights: {
-								header: safeAreaTop + headerSlotHeight,
-								headerSlot: headerSlotHeight,
-								headerSafe: safeAreaTop,
+								header: safeAreaTop,
 								content: height
 							},
-							popupForceStyle: `;height: ${windowHeight - safeAreaTop - headerSlotHeight}px!important;`
+							popupForceStyle: `;height: ${windowHeight - safeAreaTop}px!important;`
 						});
 					})
 					.exec();

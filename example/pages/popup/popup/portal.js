@@ -16,6 +16,9 @@ export const PopupCenter = new Portal({
 	el: "#popup-center" 
 });
 
-export const PopupSwiper = new Portal({ 
-	el: "#popup-swiper" 
+export const PopupSwiper1 = new Portal({ 
+	el: "#popup-swiper-1" 
+});
+export const PopupSwiper2 = new Portal({ 
+	el: "#popup-swiper-2" 
 });

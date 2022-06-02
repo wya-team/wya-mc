@@ -1,12 +1,16 @@
 <template>
+	<!-- zIndex 不加1，是让滚动的内容层级更高一点 -->
 	<view 
+		wx:if="{{ opacity <= 0 }}"
 		class="mc-popup-movable__header-placeholder" 
-		style="height: {{ heights.headerSafe }}px; z-index: {{ zIndex + 1 }}; top: 0; background: white; {{ safeAreaTopStyle }}"
+		style="height: {{ heights.header }}px; z-index: {{ zIndex }}; top: 0; background: white; {{ safeAreaTopStyle }}"
 	/>
+
+	<!-- 考虑初始高度 -->
 	<view 
 		wx:if="{{ useHeaderSlot }}"
 		class="mc-popup-movable__header" 
-		style="opacity: {{ 1 - opacity }}; z-index: {{ zIndex + 1 }}; top: {{ heights.headerSafe }}px; height: {{ heights.headerSlot ? heights.headerSlot + 'px' : 'unset' }}"
+		style="opacity: {{ 1 - opacity }}; z-index: {{ zIndex + 1 }}; top: 0;"
 	>
 		<slot name="header" />
 	</view>

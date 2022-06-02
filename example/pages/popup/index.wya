@@ -8,7 +8,10 @@
 	</mc-list>
 
 	<mc-list>
-		<mc-list-item label="底部弹窗(可上下滑动)" bind:click="handleOpenSwiper" />
+		<mc-list-item label="底部弹窗(可上下滑动) - 全屏时展示顶部" bind:click="handleOpenSwiper1" />
+	</mc-list>
+	<mc-list>
+		<mc-list-item label="底部弹窗(可上下滑动) - 全屏时顶部定住" bind:click="handleOpenSwiper2" />
 	</mc-list>
 
 	<mc-popup id="popup-top" mc-style="height: 30%" placement="top" closeable close-icon-position="bottom-right">
@@ -28,22 +31,38 @@
 	</mc-popup>
 
 	<mc-popup-swiper 
-		id="popup-swiper"
+		id="popup-swiper-1"
 		mc-style="height: 80vh" 
 		closeable
 		useContentFooterSlot
 		useContentHeaderSlot
 		useHeaderSlot
-
-		headerSlotHeight="30"
+		safeAreaTop="{{ safeAreaTop }}"
 	>
 		<view style="padding: 30rpx">
 			<view wx:for="{{ 200 }}" wx:key="*this">底部弹出，上下可滑动 {{ item }}</view>
 		</view>
-		<view slot="header" style="background: white; height: 30rpx">
+		<view slot="header" style="background: red; height: {{ safeAreaTop }}px;">
 			<text>header</text>
 		</view>
-		<view slot="content-header">
+		<view slot="content-footer">
+			<text>content-footer</text>
+		</view>
+	</mc-popup-swiper>
+
+	<mc-popup-swiper 
+		id="popup-swiper-2"
+		mc-style="height: 80vh" 
+		closeable
+		useContentFooterSlot
+		useContentHeaderSlot
+		useHeaderSlot
+		safeAreaTop="{{ 0 }}"
+	>
+		<view style="padding: 30rpx; padding-top: {{ safeAreaTop }}px">
+			<view wx:for="{{ 200 }}" wx:key="*this">底部弹出，上下可滑动 {{ item }}</view>
+		</view>
+		<view slot="content-header" style="background: red; height: {{ safeAreaTop }}px;">
 			<text>content-header</text>
 		</view>
 		<view slot="content-footer">
@@ -52,9 +71,22 @@
 	</mc-popup-swiper>
 </template>
 <script>
-import { PopupTop, PopupBottom, PopupLeft, PopupRight, PopupCenter, PopupSwiper } from './popup/portal';
+import { PopupTop, PopupBottom, PopupLeft, PopupRight, PopupCenter, PopupSwiper1, PopupSwiper2 } from './popup/portal';
 
 Page({
+	data: {
+		safeAreaTop: 0,
+		show: false
+	},
+	onLoad() {
+		wx.nextTick(() => {
+			this.setData({
+				safeAreaTop: wx.getSystemInfoSync().safeArea.top + 50
+			});
+
+			console.log(this.data.safeAreaTop);
+		});
+	},
 	handleOpenTop() {
 		PopupTop.popup({
 			count: 10
@@ -103,14 +135,21 @@ Page({
 			console.log('close', err);
 		});
 	},
-	data: {
-		show: false
-	},
 	handleClose() {
 		Popup.destroy();
 	},
-	handleOpenSwiper() {
-		PopupSwiper.popup({
+	handleOpenSwiper1() {
+		PopupSwiper1.popup({
+
+		}).then((res) => {
+			console.log('sure', res);
+		}).catch((err) => {
+			console.log('close', err);
+		});
+	},
+
+	handleOpenSwiper2() {
+		PopupSwiper2.popup({
 
 		}).then((res) => {
 			console.log('sure', res);
