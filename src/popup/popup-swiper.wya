@@ -16,6 +16,12 @@
 		closeable="{{ closeable }}"
 		heights="{{ heights }}"
 
+		useHeaderSlot="{{ useHeaderSlot }}"
+		useContentHeaderSlot="{{ useContentHeaderSlot }}"
+		useContentFooterSlot="{{ useContentFooterSlot }}"
+
+		safeAreaTopStyle="{{ safeAreaTopStyle }}"
+
 		bind:scroll="handleScroll"
 		bind:scrolltolower="handleEndReached"
 
@@ -30,6 +36,22 @@
 		>
 			<slot />
 		</view>
+
+		<!-- 动态的头部 -->
+		<slot 
+			slot="header" 
+			name="header" 
+		/>
+
+		<slot 
+			slot="content-header" 
+			name="content-header" 
+		/>
+
+		<slot 
+			slot="content-footer" 
+			name="content-footer" 
+		/>
 	</mc-movable-bottom>
 </template>
 <script>
@@ -37,6 +59,7 @@ import McComponent from '../common/component';
 import { transition } from '../mixins/transition';
 import { popup } from '../mixins/popup';
 import TextareaHack from '../common/hack/textarea';
+import Resize from '../common/resize';
 
 McComponent({
 	mixins: [transition(false), popup],
@@ -65,6 +88,33 @@ McComponent({
 		scrollable: {
 			type: Boolean,
 			value: true
+		},
+		useHeaderSlot: {
+			type: Boolean,
+			value: false
+		},
+		useContentHeaderSlot: {
+			type: Boolean,
+			value: false
+		},
+		useContentFooterSlot: {
+			type: Boolean,
+			value: false
+		},
+
+		safeAreaTop: {
+			type: Number,
+			value: -1
+		},
+
+		safeAreaTopStyle: {
+			type: String,
+			value: ''
+		},
+
+		headerSlotHeight: {
+			type: Number,
+			value: 0
 		}
 	},
 	data: {
@@ -92,13 +142,18 @@ McComponent({
 							console.error('[@wya/mc]: 高度不能超高整屏');
 						}
 
-						const headerHeight = safeArea.top;
+						let { headerSlotHeight, safeAreaTop } = this.data;
+
+						headerSlotHeight = Resize.rpx2px(headerSlotHeight);
+						safeAreaTop = safeAreaTop == -1 ? safeArea.top : Resize.rpx2px(safeAreaTop);
 						this.setData({
 							heights: {
-								header: headerHeight,
+								header: safeAreaTop + headerSlotHeight,
+								headerSlot: headerSlotHeight,
+								headerSafe: safeAreaTop,
 								content: height
 							},
-							popupForceStyle: `;height: ${windowHeight - headerHeight}px!important;`
+							popupForceStyle: `;height: ${windowHeight - safeAreaTop - headerSlotHeight}px!important;`
 						});
 					})
 					.exec();
@@ -161,7 +216,7 @@ McComponent({
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background-color: rgba(0, 0, 0, .5);
+	background-color: rgba(0, 0, 0, .1);
 	height: 100%;
 	z-index: 1001;
 }

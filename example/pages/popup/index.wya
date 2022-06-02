@@ -27,11 +27,28 @@
 		<view>中间弹窗</view>
 	</mc-popup>
 
-	<mc-popup-swiper id="popup-swiper" mc-style="height: 80vh" closeable>
-		<view>
-			TODO: 集成recycle-list 或将其分离
+	<mc-popup-swiper 
+		id="popup-swiper"
+		mc-style="height: 80vh" 
+		closeable
+		useContentFooterSlot
+		useContentHeaderSlot
+		useHeaderSlot
+
+		headerSlotHeight="30"
+	>
+		<view style="padding: 30rpx">
+			<view wx:for="{{ 200 }}" wx:key="*this">底部弹出，上下可滑动 {{ item }}</view>
 		</view>
-		<view wx:for="{{ 200 }}" wx:key="*this">底部弹出，上下可滑动 {{ item }}</view>
+		<view slot="header" style="background: white; height: 30rpx">
+			<text>header</text>
+		</view>
+		<view slot="content-header">
+			<text>content-header</text>
+		</view>
+		<view slot="content-footer">
+			<text>content-footer</text>
+		</view>
 	</mc-popup-swiper>
 </template>
 <script>

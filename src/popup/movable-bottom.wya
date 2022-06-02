@@ -1,9 +1,15 @@
 <template>
 	<view 
-		class="mc-popup-movable__header" 
-		style="height: {{ heights.header }}px; z-index: {{ zIndex + 1 }}; "
+		class="mc-popup-movable__header-placeholder" 
+		style="height: {{ heights.headerSafe }}px; z-index: {{ zIndex + 1 }}; top: 0; background: white; {{ safeAreaTopStyle }}"
 	/>
-	<!-- opacity: {{ 1 - opacity }}; -->
+	<view 
+		wx:if="{{ useHeaderSlot }}"
+		class="mc-popup-movable__header" 
+		style="opacity: {{ 1 - opacity }}; z-index: {{ zIndex + 1 }}; top: {{ heights.headerSafe }}px; height: {{ heights.headerSlot ? heights.headerSlot + 'px' : 'unset' }}"
+	>
+		<slot name="header" />
+	</view>
 	<mc-transition 
 		wx:if="{{ closeable }}" 
 		visible="{{ visible }}"
@@ -32,7 +38,6 @@
 			bind:touchstart="handleMovableViewTouchStart"
 			bind:touchend="handleMovableViewTouchEnd"
 		>
-			<!-- TODO: 关闭的按钮 -->
 			<scroll-view 
 				style="position: relative; height: 100%;"
 				scrollY="{{ scrollable }}"
@@ -46,10 +51,10 @@
 					style="height: {{ placeTopHeight }}px"
 				>
 					<mc-transition 
-						wx:if="{{ closeable }}" 
+						wx:if="{{ isActive && closeable }}" 
 						visible="{{ visible }}"
 						duration="{{ 300 }}"
-						mc-class="mc-popup-movable__close-icon" 
+						mc-class="mc-popup-movable__inner-close-icon" 
 						mc-style="opacity: {{ opacity }}" 
 					>
 						<mc-icon 
@@ -60,6 +65,20 @@
 					</mc-transition> 
 				</view>
 				<slot />
+				
+				<view 
+					wx:if="{{ isActive && useContentHeaderSlot }}"
+					class="mc-popup-movable__content-header"
+					style="top: {{ placeTopHeight }}px"
+				>
+					<slot name="content-header" />
+				</view>
+				<view 
+					wx:if="{{ isActive && useContentFooterSlot }}"
+					class="mc-popup-movable__content-footer"
+				>
+					<slot name="content-footer" />
+				</view>
 			</scroll-view>
 		</movable-view>
 	</movable-area>
@@ -119,12 +138,35 @@ McComponent({
 		},
 		visible: {
 			type: Boolean,
+			value: false,
+			observer() {
+				this.resetActive();
+			}
+		},
+		useHeaderSlot: {
+			type: Boolean,
 			value: false
+		},
+
+		useContentHeaderSlot: {
+			type: Boolean,
+			value: false
+		},
+
+		useContentFooterSlot: {
+			type: Boolean,
+			value: false
+		},
+
+		safeAreaTopStyle: {
+			type: String,
+			value: ''
 		}
 	},
 	data: {
 		...initStyle(),
-		opacity: 1
+		opacity: 1,
+		isActive: false
 	},
 	lifetimes: {
 		attached() {
@@ -132,9 +174,21 @@ McComponent({
 
 			this._tagStartH = 0;
 			this._tagEndH = 0;
+
+			this.resetActive();
 		}
 	},
 	methods: {
+		/**
+		 * 延迟设置动画
+		 * @return {[type]} [description]
+		 */
+		async resetActive() {
+			await new Promise(_ => setTimeout(_, 300));
+			this.setData({
+				isActive: !!this.data.visible
+			});
+		},
 		getSize() {
 			if (!this.w || !this.h || !this.headerH) {
 				const systemInfo = wx.getSystemInfoSync();
@@ -290,8 +344,11 @@ $opacity: 0;
 	top: 0;
 	&__header {
 		position: fixed; 
-		top: 0;
-		background: white;
+		left: 0;
+		right: 0;
+	}
+	&__header-placeholder {
+		position: fixed; 
 		left: 0;
 		right: 0;
 	}
@@ -303,7 +360,7 @@ $opacity: 0;
 		position: relative;
 	}
 
-	&__close-icon {
+	&__inner-close-icon {
 		position: absolute;
 		left: 30rpx;
 		bottom: -80rpx;
@@ -334,6 +391,19 @@ $opacity: 0;
 		justify-content: center;
 
 		transition: opacity .3s;
+	}
+
+	&__content-header {
+		position: fixed;
+		left: 0;
+		right: 0;
+	}
+
+	&__content-footer {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
 	}
 }
 
