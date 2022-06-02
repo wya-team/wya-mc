@@ -38,6 +38,7 @@
 			bind:touchstart="handleMovableViewTouchStart"
 			bind:touchend="handleMovableViewTouchEnd"
 		>
+			<!-- 不考虑集成mc-recycle-list, 出现双movavle -->
 			<scroll-view 
 				style="position: relative; height: 100%;"
 				scrollY="{{ scrollable }}"
@@ -188,6 +189,8 @@ McComponent({
 			this.setData({
 				isActive: !!this.data.visible
 			});
+
+			this.triggerEvent('active', this.data.isActive);
 		},
 		getSize() {
 			if (!this.w || !this.h || !this.headerH) {

@@ -1,3 +1,4 @@
+<!-- 注意，这里不允许出现双滚动 -->
 <template>
 	<mc-transition 
 		wx:if="{{ mask }}" 
@@ -25,6 +26,7 @@
 		bind:scroll="handleScroll"
 		bind:scrolltolower="handleEndReached"
 
+		bind:visible-change="handleActive"
 		bind:close="handleClose"
 		bind:fullscreen="handleFullscreen"
 		bind:recover="handleRecover"
@@ -202,6 +204,9 @@ McComponent({
 		},
 		handleEndReached(e) {
 			this.triggerEvent('scrolltolower', e.detail);
+		},
+		handleActive(e) {
+			this.triggerEvent('visible-change', e.detail);
 		}
 	}
 });
