@@ -18,6 +18,7 @@
 		heights="{{ heights }}"
 
 		useHeaderSlot="{{ useHeaderSlot }}"
+		useFooterSlot="{{ useFooterSlot }}"
 		useContentHeaderSlot="{{ useContentHeaderSlot }}"
 		useContentFooterSlot="{{ useContentFooterSlot }}"
 
@@ -45,6 +46,12 @@
 			name="header" 
 		/>
 
+		<slot 
+			slot="footer" 
+			name="footer" 
+		/>
+
+		<!-- 以下iOS13版本存在兼容性问题，滚动后，位置未发生变更（TODO: Fix） -->
 		<slot 
 			slot="content-header" 
 			name="content-header" 
@@ -92,6 +99,10 @@ McComponent({
 			value: true
 		},
 		useHeaderSlot: {
+			type: Boolean,
+			value: false
+		},
+		useFooterSlot: {
 			type: Boolean,
 			value: false
 		},

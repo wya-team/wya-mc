@@ -37,6 +37,7 @@
 		useContentFooterSlot
 		useContentHeaderSlot
 		useHeaderSlot
+		useFooterSlot
 		safeAreaTop="{{ safeAreaTop }}"
 	>
 		<view style="padding: 30rpx">
@@ -45,8 +46,8 @@
 		<view slot="header" style="background: red; height: {{ safeAreaTop }}px;">
 			<text>header</text>
 		</view>
-		<view slot="content-footer">
-			<text>content-footer</text>
+		<view slot="footer" style="background: yellow;">
+			<text>footer</text>
 		</view>
 	</mc-popup-swiper>
 

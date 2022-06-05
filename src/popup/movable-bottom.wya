@@ -14,6 +14,13 @@
 	>
 		<slot name="header" />
 	</view>
+	<view 
+		wx:if="{{ useFooterSlot }}"
+		class="mc-popup-movable__footer" 
+		style="opacity: {{ 1 - opacity }}; z-index: {{ zIndex + 1 }}; bottom: 0;"
+	>
+		<slot name="footer" />
+	</view>
 	<mc-transition 
 		wx:if="{{ closeable }}" 
 		visible="{{ visible }}"
@@ -149,6 +156,10 @@ McComponent({
 			}
 		},
 		useHeaderSlot: {
+			type: Boolean,
+			value: false
+		},
+		useFooterSlot: {
 			type: Boolean,
 			value: false
 		},
@@ -350,6 +361,11 @@ $opacity: 0;
 	background-color: rgba(0, 255, 0, $opacity); 
 	top: 0;
 	&__header {
+		position: fixed; 
+		left: 0;
+		right: 0;
+	}
+	&__footer {
 		position: fixed; 
 		left: 0;
 		right: 0;
