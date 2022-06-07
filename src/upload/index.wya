@@ -370,7 +370,7 @@ McComponent({
 						.then((res) => {
 							response = res || data;
 							fn();
-						}).catch(() => {
+						}).catch((e) => {
 							onError(e || { msg: 'post-after reject' });
 						});
 				} else {
