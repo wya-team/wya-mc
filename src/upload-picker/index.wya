@@ -445,7 +445,7 @@ McComponent({
 
 					this.setData(this.computed(currentValue));
 
-					fns.onFileSuccess && fns.onFileSuccess(res, type);
+					fns.onFileSuccess && fns.onFileSuccess(res, ...args);
 					this.sync(currentValue[type], type);
 				};
 
