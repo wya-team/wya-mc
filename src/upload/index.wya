@@ -367,8 +367,8 @@ McComponent({
 
 				if (response && response.then) {
 					response
-						.then((res) => {
-							response = res || data;
+						.then((rst) => {
+							response = rst || res.data;
 							fn();
 						}).catch((e) => {
 							onError(e || { msg: 'post-after reject' });

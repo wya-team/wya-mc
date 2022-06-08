@@ -129,7 +129,10 @@ McComponent({
 				this.parseDataByValue(dataSource[0].children, { value, data, col: col + 1 });
 			} else {
 				for (let i = 0, length = dataSource.length; i < length; i++) {
-					if (dataSource[i].value === value[col] && dataSource[i].children instanceof Array) {
+					if (
+						dataSource[i].value === value[col] 
+						&& dataSource[i].children instanceof Array
+						&& dataSource[i].children.length) {
 						this.parseDataByValue(dataSource[i].children, { value, data, col: col + 1 });
 					}
 				}
