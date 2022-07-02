@@ -1,7 +1,7 @@
 <template>
 	<wxs src="./helper.wxs" module="helper" />
 	<view 
-		class="mc-table mc-class {{ border ? 'has-border' : ''}} {{ isScrolling ? '' : 'is-scrolling-none' }} {{ !allowScroll || isScrollingEnd ? 'is-scrolling-right-none' : ''}}"
+		class="mc-table mc-class {{ border ? 'has-border' : ''}} {{ allowScroll && isScrolling ? '' : 'is-scrolling-none' }} {{ !allowScroll || isScrollingEnd ? 'is-scrolling-right-none' : ''}}"
 		id="{{ tableId }}"
 	>
 		<!-- TODO: sticky需要mc-sticky支持placeholder -->
@@ -316,7 +316,7 @@ McComponent({
 		rebuildData: [],
 
 		allowScroll: false,
-		isScrolling: false,
+		isScrolling: true, // 手机端首次加载需要展示阴影
 		isScrollingEnd: false,
 		doLayouted: false,
 		hasFixed: false
