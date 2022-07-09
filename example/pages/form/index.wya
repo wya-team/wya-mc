@@ -3,7 +3,7 @@
 		mc-class="g-m-t-40" 
 		border 
 		label-width="{{180}}" 
-		label-position="top"
+		label-position="left"
 		model="{{formValidate}}"
 		rules="{{ruleValidate}}"
 		bind:ready="handleReady"

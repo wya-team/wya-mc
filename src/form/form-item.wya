@@ -1,15 +1,16 @@
 <template>
-	<view style="padding-left: {{indent}}rpx" class="mc-form-item mc-class">
-		<view class="mc-form-item__wrapper {{classes}}">
-			<view for="{{labelFor}}" style="{{labelStyle}}" class="mc-form-item__label {{ required ? 'is-required' : '' }} label-class">
-				<block wx:if="{{label || !useLabelSlot}}">{{ label }}</block>
+	<view wx:if="{{ !isStyleless }}" style="padding-left: {{ indent }}rpx" class="mc-form-item mc-class">
+		<view class="mc-form-item__wrapper {{ classes }}">
+			<view for="{{labelFor}}" style="{{ labelStyle }}" class="mc-form-item__label {{ required ? 'is-required' : '' }} label-class">
+				<block wx:if="{{ label || !useLabelSlot }}">{{ label }}</block>
 				<slot name="label"></slot>
 			</view>
-			<view style="{{contentStyle}}" class="mc-form-item__content content-class">
+			<view style="{{ contentStyle }}" class="mc-form-item__content content-class">
 				<slot />
 			</view>
 		</view>
 	</view>
+	<slot wx:else />
 </template>
 <script>
 // TODO: 按需加载async-validator, 如getApp().AsyncValidator
@@ -29,6 +30,7 @@ McComponent({
 				// 下面两个方法内部都用到了parent,所以需要在拿到parent之后调用
 				this.setLabelStyle(this.data.labelWidth);
 				this.setLabelPosition(this.data.labelPosition);
+				this.setStyleLess(this.data.styleless);
 				this.setItemDivider();
 				this.setRules();
 				this.setFieldValue(this.data.prop);
@@ -79,14 +81,27 @@ McComponent({
 		indent: {
 			type: Number,
 			value: 32
+		},
+		styleless: {
+			type: Boolean,
+			value: false,
+			observer(val) {
+				this.parent && this.setStyleLess(val);
+			}
 		}
 	},
 	data: {
+		isStyleless: false
 	},
 	lifetimes: {
 		
 	},
 	methods: {
+		setStyleLess(styleless) {
+			this.setData({
+				isStyleless: styleless || this.parent.data.styleless
+			});
+		},
 		setLabelStyle(labelWidth) {
 			const width = labelWidth || this.parent.data.labelWidth;
 			this.setData({

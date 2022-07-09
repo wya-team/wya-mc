@@ -1,5 +1,8 @@
 <template>
-	<form class="mc-form {{border ? 'mc-hairline__top-bottom' : ''}} mc-class" style="{{mcStyle}}">
+	<form wx:if="{{ !styleless }}" class="mc-form {{border ? 'mc-hairline__top-bottom' : ''}} mc-class" style="{{ mcStyle }}">
+		<slot />
+	</form>
+	<form wx:else>
 		<slot />
 	</form>
 </template>
@@ -45,6 +48,10 @@ McComponent({
 			type: Boolean,
 			value: true
 		},
+		styleless: {
+			type: Boolean,
+			value: false
+		}
 	},
 	lifetimes: {
 		ready() {
