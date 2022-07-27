@@ -14,6 +14,13 @@
 		bind:change="handleDateChange"
 	>
 	</mc-time-picker>
+	<mc-time-picker
+		value="{{rangeValue}}"
+		label="时间范围"
+		title="选择时间"
+		mode="range"
+		bind:change="handleDateChange"
+	/>
 	<mc-time-picker-view bind:change="handleViewChange" />
 	<mc-time-picker-view mode="12" bind:change="handleViewChange" />
 </template>
@@ -24,7 +31,8 @@ import Portal from '../../components/portal/index';
 Page({
 	data: {
 		dateValue: '05:30',
-		timeValue: '01:10'
+		timeValue: '01:10',
+		rangeValue: []
 	},
 	onShow() {
 		setTimeout(() => {

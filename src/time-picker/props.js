@@ -8,10 +8,14 @@ export const pickerViewProps = {
 		value: ''
 	},
 	mode: {
-		type: String, // date、month、quarter
+		type: String, // 12, 24, range; range模式下为24小时制
 		value: '24',
 	},
-	// TODO: 最大值、最小值
+	// mode为range时有效
+	separator: {
+		type: String,
+		value: '-'
+	}
 };
 
 export const pickerPopupProps = {

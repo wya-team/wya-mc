@@ -6,12 +6,29 @@
 		indicator-class="{{indicatorClass}}" 
 		style="width: 100%"
 		bindchange="handleChange" 
+		bindpickstart="handlePickStart"
+		bindpickend="handlePickEnd"
 	>
-		<picker-view-column wx:for="{{dataSource}}" wx:for-item="column" wx:key="index">
-			<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
-				<view class="mc-picker-view__item-text">{{item.label}}</view>
-			</view>
-		</picker-view-column>
+		<block wx:if="{{ mode !== 'range' }}">
+			<picker-view-column wx:for="{{ dataSource }}" wx:for-item="column" wx:key="index">
+				<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
+					<view class="mc-picker-view__item-text">{{item.label}}</view>
+				</view>
+			</picker-view-column>
+		</block>
+		<block wx:else>
+			<picker-view-column wx:for="{{ [dataSource[0], dataSource[1]] }}" wx:for-item="column" wx:key="index">
+				<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
+					<view class="mc-picker-view__item-text">{{item.label}}</view>
+				</view>
+			</picker-view-column>
+			<view class="mc-picker-view__separator">{{ separator }}</view>
+			<picker-view-column wx:for="{{ [dataSource[2], dataSource[3]] }}" wx:for-item="column" wx:key="index">
+				<view class="mc-picker-view__item" wx:for="{{column}}" wx:key="value" style="height: 80rpx">
+					<view class="mc-picker-view__item-text">{{item.label}}</view>
+				</view>
+			</picker-view-column>
+		</block>
 	</picker-view>
 </template>
 <script>
@@ -66,6 +83,12 @@ McComponent({
 				return this.data.dataSource[index][cur].value;
 			});
 		},
+		handlePickStart(event) {
+			this.isTouching = true;
+		},
+		handlePickEnd(event) {
+			this.isTouching = false;
+		},
 		handleChange(event) {
 			const { dataSource } = this.data;
 			let { value } = event.detail;
@@ -110,6 +133,10 @@ McComponent({
 		white-space:nowrap;
 		overflow:hidden;
 		text-overflow:ellipsis;
+	}
+	&__separator {
+		display: flex;
+		align-items: center;
 	}
 }
 </style>

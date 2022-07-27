@@ -40,6 +40,8 @@ export const createDataSource = (mode, opts = {}) => {
 			return create12TimeData();
 		case '24':
 			return create24TimeData();
+		case 'range':
+			return [...create24TimeData(), ...create24TimeData()];
 		default:
 			return [];
 	}

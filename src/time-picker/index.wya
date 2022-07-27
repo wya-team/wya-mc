@@ -64,33 +64,13 @@ McComponent({
 		...pickerPopupProps,
 		value: {
 			type: String, // 为24小时制的 时间字符串
+			optionalTypes: [Array],
 			value: '',
-			observer(val) {
-				let formatValue = this.formatValue(val);
-				let formatContent = this.formatContent(formatValue);
-				if (!isEqualWith(formatValue, this.data.currentValue)) {
-					this.setData({
-						currentValue: formatValue,
-						pickValue: formatValue
-					});
-				}
-				if (!isEqualWith(formatContent, this.data.content)) {
-					this.setData({ content: formatContent });
-				}
-			}
 		},
 		defaultValue: {
 			type: String,
+			optionalTypes: [Array],
 			value: '',
-			observer(val) {
-				let formatValue = this.formatValue(val);
-				if (!isEqualWith(formatValue, this.data.currentValue)) {
-					this.setData({
-						currentValue: formatValue,
-						pickValue: formatValue,
-					});	
-				}
-			}
 		},
 		label: String,
 		labelWidth: {
@@ -118,6 +98,23 @@ McComponent({
 		currentValue: [],
 		content: ''
 	},
+	observers: {
+		mode(mode) {
+			this.setData({ isRange: mode === 'range' });
+		},
+		'defaultValue, value': function (defaultValue, value) {
+			const updateContent = !!(value && value.length);
+			let val = value && value.length ? value : defaultValue;
+			if (this.data.mode === 'range' && val === '') {
+				val = [];
+			}
+			if (Array.isArray(val)) {
+				this.initArrayTime(val, updateContent);
+			} else {
+				this.initStringTime(val, updateContent);
+			}
+		}
+	},
 	lifetimes: {
 		attached() {
 			this.Func = new Portal({ 
@@ -125,10 +122,39 @@ McComponent({
 			});
 		}
 	},
-	destroyed() {
-	
-	},
 	methods: {
+		initStringTime(val, updateContent) {
+			let formatValue = this.formatValue(val);
+			if (!isEqualWith(formatValue, this.data.currentValue)) {
+				this.setData({
+					currentValue: formatValue,
+					pickValue: formatValue
+				});
+			}
+			
+			let formatContent = this.formatContent(formatValue);
+			if (updateContent && !isEqualWith(formatContent, this.data.content)) {
+				this.setData({ content: formatContent });
+			}
+		},
+		initArrayTime(timeRange, updateContent) {
+			const formateValueRange = [];
+			const isEqual = timeRange.every((date, index) => {
+				let formatValue = this.formatValue(date);
+				formateValueRange.push(...formatValue);
+				return !isEqualWith(formatValue, this.data.currentValue[index]);
+			});
+			if (isEqual) {
+				this.setData({
+					currentValue: formateValueRange,
+					pickValue: formateValueRange,
+				});	
+			}
+			const rangeContent = timeRange.join(this.data.separator);
+			if (updateContent && !isEqualWith(rangeContent, this.data.content)) {
+				this.setData({ content: rangeContent });
+			}
+		},
 		// 外部传入的时间转换成组件内需要的数组格式
 		formatValue(value) {
 			let [hour, minute] = value.split(':');
@@ -175,6 +201,9 @@ McComponent({
 					hour += 12;
 				}
 				return `${preZero(hour)}:${preZero(minute)}`;
+			} else if (this.data.isRange) {
+				let [startHour, startMinute, endHour, endMinute] = value;
+				return [`${preZero(startHour)}:${preZero(startMinute)}`, `${preZero(endHour)}:${preZero(endMinute)}`];
 			} else {
 				let [hour, minute] = value;
 				return `${preZero(hour)}:${preZero(minute)}`;
@@ -187,7 +216,30 @@ McComponent({
 			if (this.Func && !this.data.disabled) {
 				this.Func.popup({
 					context: this.selectComponent(`#${this.data.tag}`),
-					title: this.data.title
+					title: this.data.title,
+					onBeforeSure: () => {
+						if (this.viewInstance.isTouching) return false;
+						if (this.data.isRange) {
+							if (this.data.pickValue.length == 0) {
+								this.setData({ pickValue: [0, 0, 0, 0] });
+							}
+							if (this.data.pickValue.length != 4) {
+								wx.showToast({ title: '请选择范围', icon: 'none' });
+								return false;
+							} else {
+								const [startHour, startMinute] = this.data.pickValue.slice(0, 2);
+								const [endHour, endMinute] = this.data.pickValue.slice(2, 4);
+								if (startHour > endHour || (startHour == endHour && startMinute >= endMinute)) {
+									wx.showToast({ title: '开始时间不能大于等于结束时间', icon: 'none' });
+									return false;
+								}
+							}
+						}
+						return true;
+					},
+					onBeforeClose: () => {
+						return !this.viewInstance.isTouching;
+					}
 				}).then((res) => {
 					this.handleOK();
 				}).catch((err) => {
@@ -203,8 +255,14 @@ McComponent({
 		},
 		handleOK() {
 			const pickValue = this.data.pickValue || this.viewInstance.getDefaultValue();
+			let content = '';
+			if (this.data.isRange) {
+				content = this.formatContent(pickValue.slice(0, 2)) + this.data.separator + this.formatContent(pickValue.slice(2, 4));
+			} else {
+				content = this.formatContent(pickValue);
+			}
 			this.setData({
-				content: this.formatContent(pickValue),
+				content,
 				currentValue: pickValue
 			});
 			this.$emit('change', { value: this.parseValue(pickValue) });
