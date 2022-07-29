@@ -29,13 +29,13 @@
 				class="mc-date-picker__range--item {{ currentSelected === 0 ? 'is-active' : ''}}" 
 				data-index="{{ 0 }}" 
 				bind:tap="handleSelected"
-			>{{ pickValue[0] ? utils.join(pickValue[0], '-') : '请选择' }}</view>
+			>{{ startDateStr || '请选择' }}</view>
 			<view>至</view>
 			<view 
 				class="mc-date-picker__range--item {{ currentSelected === 1 ? 'is-active' : ''}}" 
 				data-index="{{ 1 }}" 
 				bind:tap="handleSelected"
-			>{{ pickValue[1] ? utils.join(pickValue[1], '-') : '请选择' }}</view>
+			>{{ endDateStr || '请选择' }}</view>
 		</view>
 		<mc-picker-view
 			value="{{isRange ? pickValue[currentSelected] : currentValue}}"
@@ -80,7 +80,7 @@ McComponent({
 		...pickerViewProps,
 		...pickerPopupProps,
 		mode: {
-			type: String, // date、month、quarter daterange datetime
+			type: String, // date、month、quarter daterange datetime datetimerange, monthrange
 			value: 'date'
 		},
 		format: String,
@@ -112,7 +112,9 @@ McComponent({
 		disabled: {
 			type: Boolean,
 			value: false
-		}
+		},
+		// mode为range时，是否允许选择同一天
+		intraday: Boolean
 	},
 	data: {
 		currentValue: [],
@@ -138,6 +140,14 @@ McComponent({
 				this.initArrayDate(val, updateContent);
 			} else {
 				this.initStringDate(val, updateContent);
+			}
+		},
+		pickValue(pickValue) {
+			if (this.data.isRange) {
+				this.setData({
+					startDateStr: pickValue[0] ? this.parseValue(pickValue[0].map((it) => String(it).padStart(2, '0'))) : undefined,
+					endDateStr: pickValue[1] ? this.parseValue(pickValue[1].map((it) => String(it).padStart(2, '0'))) : undefined,
+				});
 			}
 		}
 	},
@@ -203,12 +213,16 @@ McComponent({
 								wx.showToast({ title: '请选择范围', icon: 'none' });
 								return false;
 							} else {
-								const [startYear, startMonth, startDay] = this.data.pickValue[0];
-								const startTime = new Date(startYear, startMonth - 1, startDay).getTime();
-								const [endYear, endMonth, endDay] = this.data.pickValue[1];
-								const endTime = new Date(endYear, endMonth - 1, endDay).getTime();
-								if (startTime >= endTime) {
-									wx.showToast({ title: '开始时间不能大于等于结束时间', icon: 'none' });
+								const [startYear, startMonth, startDay = 1, startHour = 0, startMinute = 0] = this.data.pickValue[0];
+								const startTime = new Date(startYear, startMonth - 1, startDay, startHour, startMinute).getTime();
+								const [endYear, endMonth, endDay = 1, endHour = 0, endMinute = 0] = this.data.pickValue[1];
+								const endTime = new Date(endYear, endMonth - 1, endDay, endHour, endMinute).getTime();
+								if (!this.data.intraday && startTime == endTime) {
+									wx.showToast({ title: '开始时间不能等于结束时间', icon: 'none' });
+									return false;
+								}
+								if (startTime > endTime) {
+									wx.showToast({ title: '开始时间不能大于结束时间', icon: 'none' });
 									return false;
 								}
 							}
@@ -242,11 +256,11 @@ McComponent({
 		parseValue(value = []) {
 			let { format, mode } = this.data;
 			if (!format) {
-				if (['month', 'quarter'].includes(mode)) {
+				if (['month', 'quarter', 'monthrange'].includes(mode)) {
 					format = 'YYYY-MM';
 				} else if (['date', 'daterange'].includes(mode)) {
 					format = 'YYYY-MM-DD';
-				} else if (mode === 'datetime') {
+				} else if (['datetime', 'datetimerange'].includes(mode)) {
 					format = 'YYYY-MM-DD HH:MM';
 				}
 			}
