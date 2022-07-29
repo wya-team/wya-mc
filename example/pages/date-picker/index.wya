@@ -1,8 +1,8 @@
 <template>
 	<mc-date-picker
 		value="{{dateValue}}"
-		label="日期"
-		mode="date"
+		label="日期时间"
+		mode="datetime"
 		minDate="1970-01-01"
 		maxDate="{{maxDate}}"
 		defaultValue="{{defaultValue}}"
@@ -10,6 +10,12 @@
 		bind:change="handleDateChange"
 	>
 	</mc-date-picker>
+	<mc-date-picker 
+		value="{{dateRangeValue}}"
+		label="日期时间范围"
+		mode="datetimerange"
+		title="选择日期范围"
+	/>
 	<mc-date-picker 
 		value="{{dateRangeValue}}"
 		label="日期范围"
@@ -21,8 +27,13 @@
 		label="月份"
 		mode="month"
 		title="选择月份"
-	>
-	</mc-date-picker>
+	/>
+	<mc-date-picker 
+		value="{{dateRangeValue}}"
+		label="月份范围"
+		mode="monthrange"
+		title="选择日期范围"
+	/>
 	<mc-date-picker 
 		value="{{quarterValue}}"
 		label="季度"
@@ -38,7 +49,7 @@ import Portal from '../../components/portal/index';
 
 Page({
 	data: {
-		dateValue: '',
+		dateValue: '2022-07-02 00:00',
 		dateRangeValue: [],
 		monthValue: '2020-09',
 		quarterValue: '2020-01',
@@ -54,7 +65,7 @@ Page({
 		// 	});
 		// }, 5000);
 		this.setData({
-			defaultValue: '2020-10-11'
+			defaultValue: '2020-10-11 19:00'
 		});
 	},
 	handleDateChange(event) {

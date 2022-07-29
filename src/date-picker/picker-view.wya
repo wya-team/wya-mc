@@ -63,9 +63,9 @@ McComponent({
 					}),
 				});
 				this.setData({ currentValue: this.formatValue(this.data.value) });
-				if (mode === 'date') {
+				if (['date', 'daterange'].includes(mode)) {
 					this.rebuildDataSource(this.data.value);
-				} else if (mode === 'datetime') {
+				} else if (['datetime', 'datetimerange'].includes(mode)) {
 					this.rebuildDateTimeDataSource(this.data.value);
 				}
 			}
@@ -127,9 +127,15 @@ McComponent({
 			let { value } = event.detail;
 			let parsedValue = this.parserValue(value);
 
-			if (this.data.mode === 'date') {
-				parsedValue = this.rebuildDataSource(parsedValue);
-				value = this.formatValue(parsedValue);
+			if (!['month', 'quarter'].includes(this.data.mode)) {
+				let timeValue = []; 
+				let timeParsedValue = [];
+				if (this.data.mode.includes('datetime')) {
+					timeValue = [value[3], value[4]];
+					timeParsedValue = [parsedValue[3], parsedValue[4]];
+				}
+				parsedValue = [...this.rebuildDataSource(parsedValue), ...timeParsedValue];
+				value = [...this.formatValue(parsedValue), ...timeValue];
 			}
 			
 			this.setData({ currentValue: value });
