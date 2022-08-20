@@ -506,3 +506,117 @@
 	position: absolute;
 	right: 15px;
 }
+
+
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="10"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="10"]:before {
+	content: "1" 
+}.ql-editor .ql-lineHeight-10 {
+	line-height: 1;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="12"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="12"]:before {
+	content: "1.2" 
+}.ql-editor .ql-lineHeight-12 {
+	line-height: 1.2;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="14"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="14"]:before {
+	content: "1.4" 
+}.ql-editor .ql-lineHeight-14 {
+	line-height: 1.4;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="16"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="16"]:before {
+	content: "1.6" 
+}.ql-editor .ql-lineHeight-16 {
+	line-height: 1.6;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="18"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="18"]:before {
+	content: "1.8" 
+}.ql-editor .ql-lineHeight-18 {
+	line-height: 1.8;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="20"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="20"]:before {
+	content: "2" 
+}.ql-editor .ql-lineHeight-20 {
+	line-height: 2;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="22"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="22"]:before {
+	content: "2.2" 
+}.ql-editor .ql-lineHeight-22 {
+	line-height: 2.2;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="24"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="24"]:before {
+	content: "2.4" 
+}.ql-editor .ql-lineHeight-24 {
+	line-height: 2.4;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="26"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="26"]:before {
+	content: "2.6" 
+}.ql-editor .ql-lineHeight-26 {
+	line-height: 2.6;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="28"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="28"]:before {
+	content: "2.8" 
+}.ql-editor .ql-lineHeight-28 {
+	line-height: 2.8;
+}.ql-snow .ql-lineHeight.ql-picker .ql-picker-item[data-value="30"]:before,
+.ql-snow .ql-lineHeight.ql-picker .ql-picker-label[data-value="30"]:before {
+	content: "3" 
+}.ql-editor .ql-lineHeight-30 {
+	line-height: 3;
+}
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="0px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="0px"]:before {
+	content: "0px"
+}.ql-editor .ql-letterSpacing-0px {
+	letter-spacing: 0px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="1px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="1px"]:before {
+	content: "1px"
+}.ql-editor .ql-letterSpacing-1px {
+	letter-spacing: 1px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="2px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="2px"]:before {
+	content: "2px"
+}.ql-editor .ql-letterSpacing-2px {
+	letter-spacing: 2px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="3px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="3px"]:before {
+	content: "3px"
+}.ql-editor .ql-letterSpacing-3px {
+	letter-spacing: 3px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="4px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="4px"]:before {
+	content: "4px"
+}.ql-editor .ql-letterSpacing-4px {
+	letter-spacing: 4px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="5px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="5px"]:before {
+	content: "5px"
+}.ql-editor .ql-letterSpacing-5px {
+	letter-spacing: 5px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="6px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="6px"]:before {
+	content: "6px"
+}.ql-editor .ql-letterSpacing-6px {
+	letter-spacing: 6px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="7px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="7px"]:before {
+	content: "7px"
+}.ql-editor .ql-letterSpacing-7px {
+	letter-spacing: 7px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="8px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="8px"]:before {
+	content: "8px"
+}.ql-editor .ql-letterSpacing-8px {
+	letter-spacing: 8px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="9px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="9px"]:before {
+	content: "9px"
+}.ql-editor .ql-letterSpacing-9px {
+	letter-spacing: 9px;
+}.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="10px"]:before,
+.ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="10px"]:before {
+	content: "10px"
+}.ql-editor .ql-letterSpacing-10px {
+	letter-spacing: 10px;
+}
