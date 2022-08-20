@@ -568,55 +568,55 @@
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="0px"]:before {
 	content: "0px"
 }.ql-editor .ql-letterSpacing-0px {
-	letter-spacing: 0px;
+	letter-spacing: 0rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="1px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="1px"]:before {
 	content: "1px"
 }.ql-editor .ql-letterSpacing-1px {
-	letter-spacing: 1px;
+	letter-spacing: 2rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="2px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="2px"]:before {
 	content: "2px"
 }.ql-editor .ql-letterSpacing-2px {
-	letter-spacing: 2px;
+	letter-spacing: 4rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="3px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="3px"]:before {
 	content: "3px"
 }.ql-editor .ql-letterSpacing-3px {
-	letter-spacing: 3px;
+	letter-spacing: 6rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="4px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="4px"]:before {
 	content: "4px"
 }.ql-editor .ql-letterSpacing-4px {
-	letter-spacing: 4px;
+	letter-spacing: 8rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="5px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="5px"]:before {
 	content: "5px"
 }.ql-editor .ql-letterSpacing-5px {
-	letter-spacing: 5px;
+	letter-spacing: 10rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="6px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="6px"]:before {
 	content: "6px"
 }.ql-editor .ql-letterSpacing-6px {
-	letter-spacing: 6px;
+	letter-spacing: 12rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="7px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="7px"]:before {
 	content: "7px"
 }.ql-editor .ql-letterSpacing-7px {
-	letter-spacing: 7px;
+	letter-spacing: 14rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="8px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="8px"]:before {
 	content: "8px"
 }.ql-editor .ql-letterSpacing-8px {
-	letter-spacing: 8px;
+	letter-spacing: 16rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="9px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="9px"]:before {
 	content: "9px"
 }.ql-editor .ql-letterSpacing-9px {
-	letter-spacing: 9px;
+	letter-spacing: 18rpx;
 }.ql-snow .ql-letterSpacing.ql-picker .ql-picker-item[data-value="10px"]:before,
 .ql-snow .ql-letterSpacing.ql-picker .ql-picker-label[data-value="10px"]:before {
 	content: "10px"
 }.ql-editor .ql-letterSpacing-10px {
-	letter-spacing: 10px;
+	letter-spacing: 20rpx;
 }
