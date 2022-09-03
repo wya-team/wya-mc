@@ -45,6 +45,12 @@ McComponent({
 			type: String,
 			observer: 'update'
 		},
+
+		tabStyle: {
+			type: String,
+			observer: 'update'
+		},
+		
 		name: {
 			type: [String, Number],
 			value: '',
