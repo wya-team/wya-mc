@@ -8,6 +8,7 @@
 		hideTabBar="{{ hideTabBar }}"
 		maskClosable="{{ maskClosable }}"
 		maskStyle="{{ maskStyle }}"
+		safeArea="{{ true }}"
 		bind:close="handleClose"
 	>
 		<view 

@@ -5,6 +5,7 @@
 		visible="{{visible}}" 
 		mask-closable="{{ maskClosable }}"
 		hideTabBar="{{ hideTabBar }}"
+		safeArea="{{ true }}"
 		bind:close="handleCancel"
 	>
 		<view wx:if="{{showToolbar}}" class="mc-picker-popup__header">

@@ -11,7 +11,7 @@
 	<view 
 		wx:if="{{inited}}" 
 		class="mc-popup {{classes}} mc-popup__{{placement}} mc-popup__round mc-class"
-		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{mcStyle}}"
+		style="-webkit-transition-duration:{{ currentDuration }}ms; transition-duration:{{ currentDuration }}ms; {{ display ? '' : 'display: none;' }}; {{ placement === 'bottom' && safeArea ? 'padding-bottom: env(safe-area-inset-bottom);' : '' }} {{mcStyle}}"
 		catch:transitionend="onTransitionEnd"
 		catch:touchmove="preventToucheMove" 
 	>
@@ -61,6 +61,7 @@ McComponent({
 			type: Number,
 			value: 1000,
 		},
+		safeArea: Boolean
 	},
 	data: {
 	},
