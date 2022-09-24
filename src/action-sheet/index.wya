@@ -177,6 +177,9 @@ McComponent({
 		font-size: 28rpx;
 		line-height: 40rpx;
 	}
+	.mc-action-sheet__cancel {
+		flex-direction: column;
+	}
 	.mc-action-sheet__cancel,
 	.mc-action-sheet__item {
 		font-weight: normal;
@@ -202,6 +205,7 @@ McComponent({
 		display: block;
 		content: " ";
 		height: 10rpx;
+		width: 100%;
 		background-color: #F2F2F2;
 	}
 	.mc-action-sheet__subname {
