@@ -242,7 +242,8 @@ McComponent({
 			type: Object,
 			value: DEFAULT_UPLOAD_OPTIONS
 		},
-		useReady: Boolean
+		useReady: Boolean,
+		formatter: null
 	},
 	data: {
 		currentValue: {
@@ -352,7 +353,7 @@ McComponent({
 		},
 
 		getUrl(res) {
-			return this.data.formatter ? this.data.formatter(res) : res[this.data.urlKey || 'url'];
+			return this.data.formatter && typeof this.data.formatter === 'function' ? this.data.formatter(res) : res[this.data.urlKey || 'url'];
 		},
 		handlePreviewImage(event) {
 			const { index, src } = event.target.dataset;
