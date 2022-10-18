@@ -40,7 +40,7 @@
 				class="mc-input__textarea {{!currentValue ? placeholderClass : ''}}"
 				style="{{ textareaStyle }}; height: {{textareaHeight}}px; overflow-y: auto; box-sizing: border-box; word-break: break-all;  {{!currentValue ? placeholderStyle : ''}}"
 			>
-				{{currentValue || placeholder}}
+				<text>{{currentValue || placeholder}}</text>
 			</view>
 		</block>
 		<input 

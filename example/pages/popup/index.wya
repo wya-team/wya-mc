@@ -19,7 +19,9 @@
 	</mc-popup>
 	<mc-popup id="popup-bottom" mc-style="height: 30%" placement="bottom">
 		<view >底部弹窗</view>
+		<mc-list-item label="顶部弹窗" bind:click="handleOpenTop" />
 	</mc-popup>
+	<mc-input type="textarea" viewPlaceholder="{{ true }}" />
 	<mc-popup id="popup-right" mc-style="width: 30%; height: 100%" placement="right">
 		<view >右部弹窗</view>
 	</mc-popup>
@@ -163,12 +165,12 @@ Page({
 </script>
 <config>
 {
-	"navigationStyle": "custom",
 	"usingComponents": {
 		"mc-popup": "../../components/popup/index",
 		"mc-popup-swiper": "../../components/popup/popup-swiper",
 		"mc-list": "../../components/list/index",
-		"mc-list-item": "../../components/list/list-item"
+		"mc-list-item": "../../components/list/list-item",
+		"mc-input": "../../components/input/index"
 	}
 }
 </config>

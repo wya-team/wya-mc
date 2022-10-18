@@ -73,7 +73,7 @@ McComponent({
 							this.setData({ contentHeight: 0 });
 						}, 20);
 					}
-					this.children && this.children.length && TextareaHack.toggle(!isActive, this.children);
+					this.children && this.children.length && TextareaHack.toggleInCollapseItem(!isActive, this.children);
 				}).catch((err) => {
 					console.log(err, 'err');
 				});

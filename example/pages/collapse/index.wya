@@ -5,7 +5,7 @@
 				title1
 			</view>
 			<view slot="content" class="_content">
-				content1
+			<mc-input type="textarea" style="margin: 24rpx;" textarea-style="height: 120rpx"></mc-input>
 			</view>
 		</mc-collapse-item>
 		<mc-collapse-item name="2" mc-class="item">
@@ -95,7 +95,8 @@ Page({
 {
 	"usingComponents": {
 		"mc-collapse": "../../components/collapse/index",
-		"mc-collapse-item": "../../components/collapse/collapse-item"
+		"mc-collapse-item": "../../components/collapse/collapse-item",
+		"mc-input": "../../components/input/index"
 	}
 }
 </config>

@@ -73,7 +73,7 @@ McComponent({
 			// this.preVisible 未变化前的visible值，visible属性的监听在mixins transition 中，重写导致弹窗出不来，所以采用本地做标记
 			if (this.preVisible !== val) {
 				this.preVisible = val;
-				TextareaHack.toggle(val);	
+				TextareaHack.toggle(val, this);	
 			}
 		}
 	},
