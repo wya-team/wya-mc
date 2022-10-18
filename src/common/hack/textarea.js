@@ -39,7 +39,7 @@ class TextareaHack {
 			});
 		} else {
 			this.instanceList.forEach((instance) => {
-				instance.relatedPopList = (instance.relatedPopList || []).filter((it) => it === popInstance);
+				instance.relatedPopList = (instance.relatedPopList || []).filter((it) => it != popInstance);
 			});
 		}
 
