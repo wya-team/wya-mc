@@ -1,10 +1,14 @@
 import { basic } from '../mixins/basic';
 
+// TODO: 弃用mc-class和mcStyle -> custom-class + customStyle
 function McComponent(mcOptions) {
 	if (mcOptions === undefined) { mcOptions = {}; }
 	const { externalClasses = [], mixins = [], props = {}, properties = {}, options, ...restOpts } = mcOptions;
 	if (!externalClasses.includes('mc-class')) {
 		externalClasses.push('mc-class');
+	}
+	if (!externalClasses.includes('custom-class')) {
+		externalClasses.push('custom-class');
 	}
 	mixins.push(basic);
 	let opts = {
@@ -19,7 +23,8 @@ function McComponent(mcOptions) {
 		properties: {
 			...props,
 			...properties,
-			mcStyle: String
+			mcStyle: String,
+			customStyle: String
 		},
 	};
 	Component(opts);

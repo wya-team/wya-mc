@@ -1,7 +1,7 @@
 <template>
 	<text
-		class="c-icon iconfont icon-{{type}} mc-class"
-		style="{{inherit ? 'color: inherit !important' : '' }};{{mcStyle}}"
+		class="c-icon iconfont icon-{{type}} mc-class custom-class"
+		style="{{inherit ? 'color: inherit !important' : '' }}; {{ mcStyle || customStyle }}"
 		bindtap="handleClick"
 	/>
 </template>

@@ -1,28 +1,20 @@
 <template>
+	<!-- canvasStyle是根据ratio后含高度的 -->
 	<canvas
 		type="2d"
 		disable-scroll="true"
 		bindtouchstart="handleStart"
 		bindtouchmove="handleMove"
 		bindtouchend="handleEnd"
-		style="width: {{ width }}rpx; height: {{ height }}rpx; background-color: rgba(255, 255, 255, 0)"
-		id="{{elementId}}"
-	></canvas>
-	<canvas
-		type="2d"
-		disable-scroll="true"
-		style="position: fixed; top: -{{width}}rpx; left: -{{height}}rpx; width: {{width}}rpx; height: {{height}}rpx;"
-		id="export-mc-imgs-crop"
-	>
-	</canvas>
+		style="opacity: 0; background-color: rgba(255, 255, 255, 0); {{ mcStyle || customStyle }}; {{ canvasStyle }}"
+		id="{{ elementId }}"
+	/>
 </template>
 <script>
-/**
- * TODO: 优化代码逻辑 ~ ~！
- */
+import McComponent from '../common/component';
 
-Component({
-	properties: {
+McComponent({
+	props: {
 		src: {
 			type: String,
 			value: '',
@@ -57,14 +49,14 @@ Component({
 			value: 40
 		},
 
-		// 裁剪区域高
-		height: {
-			type: Number,
-			value: 750
+		// 裁剪比例
+		ratio: {
+			type: String,
+			value: "1:1"
 		},
 
-		// 裁剪区域宽
-		width: {
+		// 输出图片的大小
+		destWidth: {
 			type: Number,
 			value: 750
 		},
@@ -81,12 +73,23 @@ Component({
 			value: 'import-mc-imgs-crop'
 		}
 	},
-	data: {},
+	data: {
+		canvasStyle: ''
+	},
 	lifetimes: {
 		attached() {
-			this.rotate = this.properties.rotate;
-			this.scale = this.properties.scale;
-			
+			const ratio = this.data.ratio.split(':');
+			this.ratioW = ratio[0];
+			this.ratioH = ratio[1] || ratio[0];
+
+			this.ratio = this.ratioW / this.ratioH;
+
+			this.destWidth = this.data.destWidth;
+			this.destHeight = this.data.destWidth / this.ratio;
+
+			this.rotate = this.data.rotate;
+			this.scale = this.data.scale;
+
 			this.image = {
 				width: 0, 
 				height: 0,
@@ -110,35 +113,62 @@ Component({
 	},
 	methods: {
 		init() {
-			const { elementId } = this.properties;
+			const { elementId } = this.data;
 			const query = this.createSelectorQuery();
 			query.select(`#${elementId}`)
 				.fields({ node: true, size: true })
 				.exec((res) => {
-					const { width, height } = this.properties;
+					const { canvas } = this.getDimensions();
+
 					this.canvas = res[0].node;
-					this.canvas.width = width;
-					this.canvas.height = height;
+					this.canvas.width = canvas.width;
+					this.canvas.height = canvas.height;
 
 					this.ctx = res[0].node.getContext('2d');
 
+					this.setCanvasStyle(res[0].width);
 					this.paintBound();
 					this.loadImage();
 				});
 		},
 
+		setCanvasStyle(w) {
+			const [borderX, borderY] = this.getBorders();
+
+			const h = (w - borderX * 2) / this.ratio + borderY * 2;
+
+			let content = `height: ${h}px;`;
+			this.setData({
+				canvasStyle: content
+			});
+
+			const done = wx.nextTick || setTimeout;
+			// 减少不抖动
+			done(() => {
+				content += 'opacity: 1';
+				this.setData({
+					canvasStyle: content
+				});
+			});
+		},
+
 		loadImage() {
 			if (!this.canvas) return;
 			let image = this.canvas.createImage();
-			image.src = this.properties.src;
+			image.src = this.data.src;
 			image.onload = (e) => {
-				const imageState = this.getInitialSize(image.width, image.height);
+				let imageState = {};
+				const { width, height } = this.getInitialSize(image.width, image.height);
 
 				imageState.x = 0.5;
 				imageState.y = 0.5;
 				imageState.resource = image;
 
-				this.image = imageState;
+				this.image = {
+					width,
+					height,
+					...imageState
+				};
 				this.repaint();
 			};
 		},
@@ -154,7 +184,8 @@ Component({
 		 * 绘制边框
 		 */
 		paintBound() {
-			let { borderRadius, color, width, height } = this.data;
+			const { borderRadius, color } = this.data;
+			const { width, height } = this.canvas;
 
 			this.ctx.clearRect(0, 0, width, height);
 
@@ -181,25 +212,23 @@ Component({
 		 * 绘制图片
 		 */
 		paintImage() {
-			const { image } = this;
+			const { image, rotate } = this;
 			if (!image.resource) return;
-			const { rotate } = this;
-			const { canvas } = this.getDimensions();
-
+			const { width, height } = this.canvas;
 			const position = this.calculatePosition();
 
 			this.ctx.save();
-			this.ctx.translate(canvas.width / 2, canvas.height / 2);
+			this.ctx.translate(width / 2, height / 2);
 			this.ctx.rotate(rotate * Math.PI / 180);
 			this.ctx.translate( 
-				-(canvas.width / 2), 
-				-(canvas.height / 2)
+				-(width / 2), 
+				-(height / 2)
 			);
 
 			this.ctx.scale(1, 1);
 			// 在源图像上方显示目标图像
 			this.ctx.globalCompositeOperation = 'destination-over';
-			
+
 			this.ctx.drawImage(
 				image.resource,
 				position.x,
@@ -216,17 +245,14 @@ Component({
 		 */
 		getDimensions() {
 			const { rotate } = this;
-			const { width, height, border } = this.properties;
+			const { border } = this.data;
 
-			const canvas = {};
+			const canvas = {
+				width: this.destWidth,
+				height: this.destHeight
+			};
 
 			const [borderX, borderY] = this.getBorders(border);
-
-			const canvasWidth = width;
-			const canvasHeight = height;
-
-			canvas.width = canvasWidth;
-			canvas.height = canvasHeight;
 
 			canvas.width += borderX * 2;
 			canvas.height += borderY * 2;
@@ -234,9 +260,9 @@ Component({
 			return {
 				canvas,
 				rotate,
-				width,
-				height,
-				border
+				border,
+				width: this.destWidth,
+				height: this.destHeight
 			};
 		},
 
@@ -247,15 +273,14 @@ Component({
 			let newHeight;
 			let newWidth;
 
-			const dimensions = this.getDimensions();
-			const canvasRatio = dimensions.height / dimensions.width;
+			const canvasRatio = this.destHeight / this.destWidth;
 			const imageRatio = height / width;
 
 			if (canvasRatio > imageRatio) {
-				newHeight = dimensions.height; // 高度占满
+				newHeight = this.destHeight; // 高度占满
 				newWidth = width * (newHeight / height);
 			} else {
-				newWidth = dimensions.width; // 宽度占满
+				newWidth = this.destWidth; // 宽度占满
 				newHeight = height * (newWidth / width);
 			}
 
@@ -311,6 +336,7 @@ Component({
 				x: image.x,
 				y: image.y
 			};
+
 			const width = 1 / scale * this.getXScale();
 			const height = 1 / scale * this.getYScale();
 
@@ -351,7 +377,7 @@ Component({
 		 */
 		getXScale() {
 			const { image } = this;
-			const { width, height } = this.data;
+			const { width, height } = this.canvas;
 
 			const canvasAspect = width / height;
 			const imageAspect = image.width / image.height;
@@ -363,7 +389,7 @@ Component({
 		 */
 		getYScale() {
 			const { image } = this;
-			const { width, height } = this.data;
+			const { width, height } = this.canvas;
 
 			const canvasAspect = height / width;
 			const imageAspect = image.height / image.width;
@@ -393,7 +419,6 @@ Component({
 				};
 				return;
 			}
-			
 		},
 
 		/**
@@ -497,50 +522,57 @@ Component({
 		// 外部调用
 		getImage() {
 			return new Promise((resolve, reject) => {
-				const query = this.createSelectorQuery();
-				query.select(`#export-mc-imgs-crop`)
-					.fields({ node: true, size: true })
-					.exec((res) => {
-						// 获取相对坐标
-						const cropRect = this.getCroppingRect();
-						const { image, rotate } = this;
+				// 获取相对坐标
+				const croppingRect = this.getCroppingRect();
+				const { image, rotate, scale, destWidth, destHeight } = this;
 
-						// 获取实际像素坐标
-						cropRect.x *= image.resource.width;
-						cropRect.y *= image.resource.height;
-						cropRect.width *= image.resource.width;
-						cropRect.height *= image.resource.height;
-						const canvas = res[0].node;
-						canvas.width = cropRect.width;
-						canvas.height = cropRect.height;
-
-						// 在正确的位置绘制全尺寸图像,
-						// 图像被截断到画布的大小.
-						const ctx = canvas.getContext('2d');
-
-						ctx.translate(canvas.width / 2, canvas.height / 2);
-						ctx.rotate(rotate * Math.PI / 180);
-						ctx.translate(-(canvas.width / 2), -(canvas.height / 2));
-						ctx.drawImage(image.resource, -cropRect.x, -cropRect.y);
-
-						// 目前微信只支持保存在本地
-						wx.canvasToTempFilePath({
-							x: 0,
-							y: 0,
-							width: cropRect.width,
-							height: cropRect.height,
-							destWidth: cropRect.width,
-							destHeight: cropRect.height,
-							canvas,
-							success(res) {
-								resolve(res.tempFilePath);
-							},
-							fail(res) {
-								console.log(res);
-								reject(res);
-							}
-						});
+				try {
+					const canvas = wx.createOffscreenCanvas({ 
+						type: '2d',
+						width: destWidth,
+						height: destHeight,
+						compInst: this
 					});
+
+					canvas.width = destWidth;
+					canvas.height = destHeight;
+
+					// 在正确的位置绘制全尺寸图像,
+					// 图像被截断到画布的大小.
+					const ctx = canvas.getContext('2d');
+					ctx.translate(canvas.width / 2, canvas.height / 2);
+					ctx.rotate(rotate * Math.PI / 180);
+					ctx.translate(-(canvas.width / 2), -(canvas.height / 2));
+					ctx.drawImage(
+						image.resource, 
+						-croppingRect.x * image.width * scale, 
+						-croppingRect.y * image.height * scale,
+						image.width * scale,
+						image.height * scale
+					);
+
+					// 真机不支持离线canvas用wx.canvasToTempFilePath
+					const b64Data = canvas.toDataURL();
+					const time = new Date().getTime();
+					const filePath = `${wx.env.USER_DATA_PATH}/temp_image_${time}.png`;
+					// base64格式的图片要去除逗号前面的部分才能正确解码
+					const buffer = wx.base64ToArrayBuffer(b64Data.substring(b64Data.indexOf(',') + 1));
+					// 写入临时文件
+					wx.getFileSystemManager().writeFile({
+						filePath,
+						data: buffer,
+						encoding: 'utf8',
+						success(res) {
+							resolve(filePath);
+						},
+						fail(res) {
+							console.log(res);
+							reject(res);
+						}
+					});
+				} catch (e) {
+					console.error(`[@wya/mc]: wx.createOffscreenCanvas 2.22.0以上`, e);
+				}
 			});
 		}
 	}
