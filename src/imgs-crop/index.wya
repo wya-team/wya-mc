@@ -51,7 +51,7 @@ McComponent({
 
 		// 裁剪比例
 		ratio: {
-			type: String,
+			type: [Number, String],
 			value: "1:1"
 		},
 
@@ -78,11 +78,15 @@ McComponent({
 	},
 	lifetimes: {
 		attached() {
-			const ratio = this.data.ratio.split(':');
-			this.ratioW = ratio[0];
-			this.ratioH = ratio[1] || ratio[0];
-
-			this.ratio = this.ratioW / this.ratioH;
+			const { ratio } = this.data;
+			if (typeof ratio === 'number') {
+				this.ratio = ratio;
+			} else if (typeof ratio === 'string') {
+				const [w, h] = ratio.replace(/(\*|:|;|,)/g, ':').split(':');
+				this.ratio = w / (h || w);
+			} else {
+				this.ratio = 1;
+			}
 
 			this.destWidth = this.data.destWidth;
 			this.destHeight = this.data.destWidth / this.ratio;
