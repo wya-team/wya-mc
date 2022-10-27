@@ -91,6 +91,9 @@ McComponent({
 			this.destWidth = this.data.destWidth;
 			this.destHeight = this.data.destWidth / this.ratio;
 
+			this.elementWidth = null;
+			this.elementHeight = null;
+
 			this.rotate = this.data.rotate;
 			this.scale = this.data.scale;
 
@@ -123,25 +126,32 @@ McComponent({
 				.fields({ node: true, size: true })
 				.exec((res) => {
 					const { canvas } = this.getDimensions();
-
+					
 					this.canvas = res[0].node;
 					this.canvas.width = canvas.width;
 					this.canvas.height = canvas.height;
 
 					this.ctx = res[0].node.getContext('2d');
 
-					this.setCanvasStyle(res[0].width);
+					this.setCanvasElSize(res);
+					this.setCanvasStyle();
 					this.paintBound();
 					this.loadImage();
 				});
 		},
 
-		setCanvasStyle(w) {
+		setCanvasElSize(e) {
 			const [borderX, borderY] = this.getBorders();
 
+			const w = e[0].width;
 			const h = (w - borderX * 2) / this.ratio + borderY * 2;
 
-			let content = `height: ${h}px;`;
+			this.elementWidth = w;
+			this.elementHeight = h;
+		},
+
+		setCanvasStyle() {
+			let content = `height: ${this.elementHeight}px;`;
 			this.setData({
 				canvasStyle: content
 			});
@@ -258,6 +268,7 @@ McComponent({
 
 			const [borderX, borderY] = this.getBorders(border);
 
+			// 画布的实际宽高
 			canvas.width += borderX * 2;
 			canvas.height += borderY * 2;
 
@@ -265,8 +276,9 @@ McComponent({
 				canvas,
 				rotate,
 				border,
-				width: this.destWidth,
-				height: this.destHeight
+				// 元素宽高，不会影响画布
+				width: this.elementWidth,
+				height: this.elementHeight
 			};
 		},
 
