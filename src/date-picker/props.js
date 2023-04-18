@@ -13,7 +13,7 @@ export const pickerViewProps = {
 	},
 	maxDate: {
 		type: String,
-		value: '2030/12/31 23:59'
+		value: '2099/12/31 23:59'
 	},
 };
 
